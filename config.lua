@@ -253,7 +253,7 @@ return {
 			password = CONFIG.PASSWORD,
 			fow = 0,
 			usgnOnly = 1,
-			gameMode = 1,
+			mode = 1,
 			maxClientsIP = 2,
 			idleKick = 0,
 			hudScale = 1,
