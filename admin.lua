@@ -125,7 +125,7 @@ sea.addEvent("onHookSay", function(player, words)
 
 			return 1
 		elseif command =='m' then
-			if gettile(player.tileX, player.tileY).SAFE then
+			if sea.tile[player.tileX][player.tileY].zone.SAFE then
 				player:message("You may not spawn a monster in a safe zone.")
 				
 				return 1

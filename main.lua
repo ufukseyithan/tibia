@@ -4,7 +4,7 @@ return {
     version = "1.0",
     description = "RPG Tibia mod.",
 
-    namespace = "rpg",
+    namespace = "tibia",
 
     scripts = {
         "server"

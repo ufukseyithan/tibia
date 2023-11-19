@@ -1,30 +1,25 @@
-CONFIG = {
-	-- password of the server once it has loaded completely. you should use this instead of sv_password because it sets it after everything is complete.
-	PASSWORD = "", 
+tibia.config = {
+	password = "", 
 	
 	-- maximum number of monsters on the map at one time. if set to 0, monsters.lua is not loaded at all.
-	MAXMONSTERS = 192, 
+	maxMonsters = 192, 
 	-- maximum inventory items a player can carry.
-	MAXITEMS = 50, 
+	maxItems = 50, 
 	-- maximum height an item stack on the ground can be (they can be as high as you want, but only the top few will be shown when this is set).
-	MAXHEIGHT = 5, 
+	maxHeight = 5, 
 	
-	-- print colour codes to console? 
-	PRINTCOLOURTOCONSOLE = true,
-	
-	EXP = {
+	exp = {
 		-- function for calculation experience for each level.
-		CALC = function(level)
+		calc = function(level)
 			level = level - 1
 			return (level)^3 - 3 * (level)^2 + 8 * (level)
-		end,
-		STATS = 1, --ignore
+		end
 	}, 
 	
-	STATS = {'Experience', 'Level', 'Money'}, --ignore
+	stats = {'Experience', 'Level', 'Money'}, --ignore
 
 	-- slot names for each slot. can be customised.
-	SLOTS = {
+	slots = {
 		"Head", 
 		"Torso", 
 		"Right Hand", 
@@ -37,14 +32,14 @@ CONFIG = {
 	}, 
 	
 	-- colour for hudtxt (only one for now... no point then)
-	HUDTXT = {
-		SAFE = 49, 
+	hudTxt = {
+		safe = 49, 
 	}, 
 	-- pixels to leave between each line of hudtxt
-	PIXELS = 14, 
+	pixels = 14, 
 	
 	-- used for ^[1-9a-z] colour codes
-	COLOURS = {
+	colours = {
 		"192192192",
 		"128128128",
 		"255000000",
@@ -84,29 +79,29 @@ CONFIG = {
 	}, 
 	
 	-- tiles that cannot be walked on unless you have an item that allows water walking (or was it a specific mount only?)
-	WATERTILES = {34},
+	waterTiles = {34},
 	
 	-- if map data (safe zone, houses, monster spawn etc) is not found, use this
-	DEFAULTMAP = 'rpg_mapb', 
+	defaultMap = 'rpg_mapb', 
 	
 	-- experience gained will be multiplied by this value.
-	EXPRATE = 1, 
+	expRAte = 1, 
 	-- money loot will be multiplied by this value.
-	MONEYRATE = 1, 
+	moneyRate = 1, 
 	-- drop chance will be multiplied by this value.
-	DROPRATE = 1, 
+	dropRate = 1, 
 	-- player death money loot will be multiplied by this value.
-	PLAYERMONEYRATE = 1, 
+	playerMoneyRate = 1, 
 	-- player drop chance will be this value out of 10000. i.e. 2000 means 20%
-	PLAYERDROPRATE = 2000, 
+	playerDropRate = 2000, 
 	
-	EXHAUST = {
+	exhaust = {
 		-- ms after each talk, any faster, the message will not be showed
-		TALK = 500, 
+		talk = 500, 
 		-- ms after each pick up attempt, any faster, the pick up will be aborted
-		PICK = 500, 
+		pick = 500, 
 		-- ms after each use attempt, any faster, the use will be aborted
-		USE = 2000, 
+		use = 2000, 
 	},
 	
 	WEAPONRANGE = { -- range of cs2d weapons. e.g. [50] = 27 means wpnid 50 has range of 27 pixels. i should get around to change this to ingame ids some time
@@ -125,7 +120,7 @@ CONFIG = {
 	}
 }
 
-SAFEZONE = { -- safezones e.g. {{x1, y1},{x2, y2}} means a rectangular area from (x1, y1) to (x2, y2)
+tibia.config.safeZone = { -- safezones e.g. {{x1, y1},{x2, y2}} means a rectangular area from (x1, y1) to (x2, y2)
 	['rpg_mapb'] = {
 		{{2,2},{29,19}},
 		{{74,0},{108,44}},
@@ -140,18 +135,18 @@ SAFEZONE = { -- safezones e.g. {{x1, y1},{x2, y2}} means a rectangular area from
 	}
 }
 
-NOPVPZONE = { -- non-pvp zones, preventing pvp within the area. syntax same as above
+tibia.config.noPvpZone = { -- non-pvp zones, preventing pvp within the area. syntax same as above
 	['rpg_mapb'] = {
 	}
 }
 
-NOMONSTERSZONE = { -- no-monsters zones, preventing monsters spawning/entering/attacking inside the area. syntax same as above
+tibia.config.noMonstersZone = { -- no-monsters zones, preventing monsters spawning/entering/attacking inside the area. syntax same as above
 	['rpg_mapb'] = {
 		{{88,32},{98,43}},
 	}
 }
 
-PVPZONE = { -- deathmatch zones, if a player dies in this area, he will drop $100 and nothing else. monsters DO spawn here now, but you can set it to be a no-monsters zone to prevent that. guess the syntax
+tibia.config.pvpZone = { -- deathmatch zones, if a player dies in this area, he will drop $100 and nothing else. monsters DO spawn here now, but you can set it to be a no-monsters zone to prevent that. guess the syntax
 	['rpg_mapb'] = {
 		{{88,32},{98,43}},
 	}
@@ -170,9 +165,9 @@ PVPZONE = { -- deathmatch zones, if a player dies in this area, he will drop $10
 			this also helps to open/close doors as long as you name the triggers in the houses as HOUSEID_DOORID
 			e.g. for the first house, doors = {[1] = {}} means a door with a trigger 1_1 will open if you have door rights.
 			
-		I DID NOT NOTICE THAT I HAVE DONE DOCUMENTATION FOR HOUSES ALREADY. I WILL JUST COPY IT OVER AND LEAVE TWO SETS FOR YOU TO READ.
+		I DID NOT NOTICE THAT I HAVE DONE DOCUMENTATION FOR houses ALREADY. I WILL JUST COPY IT OVER AND LEAVE TWO SETS FOR YOU TO READ.
 		
-		HOUSES
+		houses
 		For house areas, they have to be rectangular.
 		Fill in the house areas in config.lua
 
@@ -189,7 +184,7 @@ PVPZONE = { -- deathmatch zones, if a player dies in this area, he will drop $10
 		doors is the list of doors as represented in the map.
 		e.g. if the name of the door is 12_3, it is door 3 of house 12.
 ]]
-HOUSES = { 
+tibia.config.houses = { 
 	['rpg_mapb'] = {
 		{pos1 = {87,2}, pos2 = {89,5}, ent = {89,6}, door = {89,5}, price = 300, owner = nil, endtime = nil, allow = {}, doors = {[1] = {}}}, -- 1_1
 		{pos1 = {91,2}, pos2 = {93,5}, ent = {93,6}, door = {93,5}, price = 300, owner = nil, endtime = nil, allow = {}, doors = {[1] = {}}}, -- 2_1
@@ -227,6 +222,13 @@ HOUSES = {
 	}
 }
 
+tibia.config.expTable = {
+	__index = function(t, level)
+		return tibia.config.exp.calc(k)
+	end
+}
+setmetatable(tibia.config.expTable, tibia.config.expTable)
+
 return {
 	player = {
 		data = {
@@ -250,7 +252,7 @@ return {
 
 	server = {
 		setting = {
-			password = CONFIG.PASSWORD,
+			password = tibia.config.password,
 			fow = 0,
 			usgnOnly = 1,
 			mode = 1,

@@ -5,76 +5,66 @@ map = _map
 math.randomseed(os.time())
 
 dir = 'sys/lua/sea-framework/app/tibia/'
-dofile(dir .. 'config.lua')
 
-EXPTABLE = {}
-for level = 1, 500 do
-	EXPTABLE[level] = CONFIG.EXP.CALC(level)
-end
-EXPTABLE.__index = function(t, k)
-	t[k] = CONFIG.EXP.CALC(k)
-	return t[k]
-end
-setmetatable(EXPTABLE, EXPTABLE)
-
-mapName = map'name'
-PVPZONE = PVPZONE[mapName] or PVPZONE[CONFIG.DEFAULTMAP]
-NOPVPZONE = NOPVPZONE[mapName] or NOPVPZONE[CONFIG.DEFAULTMAP]
-NOMONSTERSZONE = NOMONSTERSZONE[mapName] or NOMONSTERSZONE[CONFIG.DEFAULTMAP]
-SAFEZONE = SAFEZONE[mapName] or SAFEZONE[CONFIG.DEFAULTMAP]
-HOUSES = HOUSES[mapName] or HOUSES[CONFIG.DEFAULTMAP]
-GROUNDITEMS = {}
-TILEZONE = {}
+local mapName = sea.map.name
+tibia.pvpZone = tibia.config.pvpZone[mapName] or tibia.config.pvpZone[tibia.config.defaultMap]
+tibia.noPvpZone = tibia.config.noPvpZone[mapName] or tibia.config.noPvpZone[tibia.config.defaultMap]
+tibia.noMonstersZone = tibia.config.noMonstersZone[mapName] or tibia.config.noMonstersZone[tibia.config.defaultMap]
+tibia.safeZone = tibia.config.safeZone[mapName] or tibia.config.safeZone[tibia.config.defaultMap]
+tibia.houses = tibia.config.houses[mapName] or tibia.config.houses[tibia.config.defaultMap]
+tibia.groundItems = {}
+tibia.tileZone = {}
 
 for y = 0, sea.map.xSize do
-	GROUNDITEMS[y], TILEZONE[y] = {}, {}
+	tibia.groundItems[y], tibia.tileZone[y] = {}, {}
+
 	for x = 0, sea.map.xSize do
-		GROUNDITEMS[y][x], TILEZONE[y][x] = {}, {}
+		tibia.groundItems[y][x], tibia.tileZone[y][x] = {}, {}
 
-		for i, v in ipairs(SAFEZONE) do
-			TILEZONE[y][x].SAFE = (x >= v[1][1] and x <= v[2][1] and y >= v[1][2] and y <= v[2][2])
-			if TILEZONE[y][x].SAFE then
-				TILEZONE[y][x].NOPVP = true
-				TILEZONE[y][x].NOMONSTERS = true
-				TILEZONE[y][x].PVP = false
+		for i, v in ipairs(tibia.config.safeZone) do
+			tibia.tileZone[y][x].SAFE = (x >= v[1][1] and x <= v[2][1] and y >= v[1][2] and y <= v[2][2])
+			if tibia.tileZone[y][x].SAFE then
+				tibia.tileZone[y][x].NOPVP = true
+				tibia.tileZone[y][x].NOMONSTERS = true
+				tibia.tileZone[y][x].PVP = false
 				break
 			end
 		end
 
-		for i, v in ipairs(NOPVPZONE) do
-			TILEZONE[y][x].NOPVP = (x >= v[1][1] and x <= v[2][1] and y >= v[1][2] and y <= v[2][2])
-			if TILEZONE[y][x].NOPVP then
-				TILEZONE[y][x].NOMONSTERS = false
-				TILEZONE[y][x].SAFE = false
+		for i, v in ipairs(tibia.config.noPvpZone) do
+			tibia.tileZone[y][x].NOPVP = (x >= v[1][1] and x <= v[2][1] and y >= v[1][2] and y <= v[2][2])
+			if tibia.tileZone[y][x].NOPVP then
+				tibia.tileZone[y][x].NOMONSTERS = false
+				tibia.tileZone[y][x].SAFE = false
 				break
 			end
 		end
 
-		for i, v in ipairs(NOMONSTERSZONE) do
-			TILEZONE[y][x].NOMONSTERS = (x >= v[1][1] and x <= v[2][1] and y >= v[1][2] and y <= v[2][2])
-			if TILEZONE[y][x].NOMONSTERS then
-				if TILEZONE[y][x].NOPVP then
-					TILEZONE[y][x].SAFE = true
+		for i, v in ipairs(tibia.config.noMonstersZone) do
+			tibia.tileZone[y][x].NOMONSTERS = (x >= v[1][1] and x <= v[2][1] and y >= v[1][2] and y <= v[2][2])
+			if tibia.tileZone[y][x].NOMONSTERS then
+				if tibia.tileZone[y][x].NOPVP then
+					tibia.tileZone[y][x].SAFE = true
 				else
-					TILEZONE[y][x].SAFE = false
+					tibia.tileZone[y][x].SAFE = false
 				end
 			end
 		end
 
-		for i, v in ipairs(PVPZONE) do
-			TILEZONE[y][x].PVP = (x >= v[1][1] and x <= v[2][1] and y >= v[1][2] and y <= v[2][2]) and i or nil
-			if TILEZONE[y][x].PVP then 
-				TILEZONE[y][x].NOPVP = false
-				TILEZONE[y][x].SAFE = false
+		for i, v in ipairs(tibia.config.pvpZone) do
+			tibia.tileZone[y][x].PVP = (x >= v[1][1] and x <= v[2][1] and y >= v[1][2] and y <= v[2][2]) and i or nil
+			if tibia.tileZone[y][x].PVP then 
+				tibia.tileZone[y][x].NOPVP = false
+				tibia.tileZone[y][x].SAFE = false
 				break
 			end
 		end
 
-		for i, v in ipairs(HOUSES) do
-			TILEZONE[y][x].HOUSE = (x >= v.pos1[1] and x <= v.pos2[1] and y >= v.pos1[2] and y <= v.pos2[2]) and i or nil
-			TILEZONE[y][x].HOUSEDOOR = (x == v.door[1] and y == v.door[2]) and i or nil
-			TILEZONE[y][x].HOUSEENT = (x == v.ent[1] and y == v.ent[2]) and i or nil
-			if TILEZONE[y][x].HOUSE or TILEZONE[y][x].HOUSEDOOR or TILEZONE[y][x].HOUSEENT then break end
+		for i, v in ipairs(tibia.config.houses) do
+			tibia.tileZone[y][x].HOUSE = (x >= v.pos1[1] and x <= v.pos2[1] and y >= v.pos1[2] and y <= v.pos2[2]) and i or nil
+			tibia.tileZone[y][x].HOUSEDOOR = (x == v.door[1] and y == v.door[2]) and i or nil
+			tibia.tileZone[y][x].HOUSEENT = (x == v.ent[1] and y == v.ent[2]) and i or nil
+			if tibia.tileZone[y][x].HOUSE or tibia.tileZone[y][x].HOUSEDOOR or tibia.tileZone[y][x].HOUSEENT then break end
 		end
 	end
 end
@@ -82,13 +72,13 @@ end
 PLAYERS = {}
 PLAYERCACHE = {}
 
-HUDImage = image('gfx/weiwen/1x1.png', 565, 407+#CONFIG.STATS*CONFIG.PIXELS/2, 2)
-imagescale(HUDImage, 130,CONFIG.PIXELS+#CONFIG.STATS*CONFIG.PIXELS)
-imagealpha(HUDImage, 0.5)
+tibia.hudImage = sea.Image.create('gfx/weiwen/1x1.png', 565, 407 + #tibia.config.stats * tibia.config.pixels / 2, 2)
+tibia.hudImage:scale(130, tibia.config.pixels + #tibia.config.stats * tibia.config.pixels)
+tibia.hudImage.alpha = 0.5
 
-MINUTES = 0
+tibia.minutes = 0
 GLOBAL = {}
-GLOBAL.TIME = 720
+GLOBAL.TIME = 0
 GLOBAL.RAIN = 0
 
 dofile(dir .. 'functions.lua')
@@ -96,7 +86,7 @@ dofile(dir .. 'admin.lua')
 dofile(dir .. 'commands.lua')
 dofile(dir .. 'items.lua')
 dofile(dir .. 'npcs.lua')
-if CONFIG.MAXMONSTERS > 0 then
+if tibia.config.maxMonsters > 0 then
 	dofile(dir .. 'monsters.lua')
 end
 dofile(dir .. 'hooks.lua')
@@ -124,7 +114,7 @@ if file then
 	end
 	for i, v in pairs(TMPHOUSES) do
 		for k, l in pairs(v) do
-			HOUSES[i][k] = l
+			houses[i][k] = l
 		end
 	end
 	TMPGROUNDITEMS = nil

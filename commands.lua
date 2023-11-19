@@ -51,7 +51,7 @@ COMMANDS = {
 		local house
 		if p[1] == 'info' then
 			local tile = gettile(PLAYERS[id].x, PLAYERS[id].y)
-			local house = HOUSES[tile.HOUSEENT or tile.HOUSE]
+			local house = houses[tile.HOUSEENT or tile.HOUSE]
 			if not house then message(id, 'You are not in front of a house.', '255255255') return end
 			if not house.owner then message(id, 'This house does not have an owner. It costs $' .. house.price .. ' per 24 hours.', '255255255') return end
 			local time = house.endtime - os.time()
@@ -62,7 +62,7 @@ COMMANDS = {
 		elseif p[1] == 'buy' then
 			if player(id, 'usgn') == 0 then message(id, 'You are not logged in to U.S.G.N. .', '255255255') return end
 			local tile = gettile(PLAYERS[id].x, PLAYERS[id].y)
-			local house = HOUSES[tile.HOUSEENT or tile.HOUSE]
+			local house = houses[tile.HOUSEENT or tile.HOUSE]
 			if not house then message(id, 'You are not in front of a house.', '255255255') return end
 			if house.owner and house.owner ~= player(id, 'usgn') then message(id, 'This house already has an owner.', '255255255') return end
 			if addmoney(id, -house.price) then
@@ -79,7 +79,7 @@ COMMANDS = {
 			end
 		elseif p[1] == 'extend' then
 			if player(id, 'usgn') == 0 then message(id, 'You are not logged in to U.S.G.N. .', '255255255') return end
-			local house = HOUSES[gettile(PLAYERS[id].x, PLAYERS[id].y).HOUSE]
+			local house = houses[gettile(PLAYERS[id].x, PLAYERS[id].y).HOUSE]
 			if not house then message(id, 'You are not in a house.', '255255255') return end
 			if house.owner ~= player(id, 'usgn') then message(id, 'This house already has an owner.', '255255255') return end
 			if addmoney(id, -house.price) then
@@ -88,14 +88,14 @@ COMMANDS = {
 			end
 		elseif p[1] == 'exit' then
 			local tile = gettile(PLAYERS[id].x, PLAYERS[id].y)
-			local house = HOUSES[tile.HOUSE]
+			local house = houses[tile.HOUSE]
 			if house then
 				setpos(id, house.ent[1]*32+16, house.ent[2]*32+16)
 				return
 			end
 			message(id, 'You are not in or infront of a house.', '255255255')
 		elseif p[1] == 'allow' then
-			local house = HOUSES[gettile(PLAYERS[id].x, PLAYERS[id].y).HOUSE]
+			local house = houses[gettile(PLAYERS[id].x, PLAYERS[id].y).HOUSE]
 			if not house then message(id, 'You are not in a house.', '255255255') return end
 			if player(id, 'usgn') ~= house.owner then message(id, 'You are not the owner of this house.', '255255255') return end
 			p[2] = tonumber(p[2])
@@ -126,7 +126,7 @@ COMMANDS = {
 				local tile = gettile(x, y)
 				local house, door
 				if entity(x, y, "exists") and tile.HOUSE then
-					house = HOUSES[tile.HOUSE]
+					house = houses[tile.HOUSE]
 					local name = entity(x, y, "name")
 					door = tonumber(name:sub(name:find('_')+1))
 				end
@@ -159,7 +159,7 @@ COMMANDS = {
 				local tile = gettile(x, y)
 				local house, door
 				if entity(x, y, "exists") and tile.HOUSE then
-					house = HOUSES[tile.HOUSE]
+					house = houses[tile.HOUSE]
 					local name = entity(x, y, "name")
 					door = tonumber(name:sub(name:find('_')+1))
 				end
@@ -177,7 +177,7 @@ COMMANDS = {
 				message(id, '!house door list - lists the people allowed to open the door you are facing', '255100100')
 			end
 		elseif p[1] == 'list' then
-			local house = HOUSES[gettile(PLAYERS[id].x, PLAYERS[id].y).HOUSE]
+			local house = houses[gettile(PLAYERS[id].x, PLAYERS[id].y).HOUSE]
 			if not house then message(id, 'You are not in a house.', '255255255') return end
 			if player(id, 'usgn') ~= house.owner then message(id, 'You are not the owner of this house.', '255255255') return end
 			local text = 'Allowed players : '
@@ -187,7 +187,7 @@ COMMANDS = {
 			text = #text == 18 and 'No players are allowed.' or text:sub(1, -3)
 			message(id, text, '255255255')
 		elseif p[1] == 'transfer' then
-			local house = HOUSES[gettile(PLAYERS[id].x, PLAYERS[id].y).HOUSE]
+			local house = houses[gettile(PLAYERS[id].x, PLAYERS[id].y).HOUSE]
 			if not house then message(id, 'You are not in a house.', '255255255') return end
 			if player(id, 'usgn') ~= house.owner then message(id, 'You are not the owner of this house.', '255255255') return end
 			p[2] = tonumber(p[2])

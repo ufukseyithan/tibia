@@ -1,12 +1,12 @@
 function sea.Player:isAtZone(zone)
-	return gettile(self.lastPosition.x, self.lastPosition.y)[zone]
+	return sea.tile[self.lastPosition.x][self.lastPosition.y].zone[zone]
 end
 
-function sea.Player:addXP(amount)
+function sea.Player:addExp(amount)
     self.xp = self.xp + amount
 
 	local previousLevel = self.level
-	while self.xp >= EXPTABLE[self.level + 1] do
+	while self.xp >= tibia.config.expTable[self.level + 1] do
 		self.level = self.level + 1
 	end
 

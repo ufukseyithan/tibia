@@ -200,13 +200,13 @@ function saveserver()
 	
 	local tmp = {}
 	for y = 0, map'ysize' do
-		if GROUNDITEMS[y] then
+		if groundItems[y] then
 			for x = 0, map'xsize' do
-				if GROUNDITEMS[y][x] and GROUNDITEMS[y][x][1] then
+				if groundItems[y][x] and groundItems[y][x][1] then
 					tmp[y] = tmp[y] or {}
 					tmp[y][x] = {}
-					for j = 1, #GROUNDITEMS[y][x] do
-						tmp[y][x][j] = GROUNDITEMS[y][x][j][3] and -GROUNDITEMS[y][x][j][3] or GROUNDITEMS[y][x][j][1]
+					for j = 1, #groundItems[y][x] do
+						tmp[y][x][j] = groundItems[y][x][j][3] and -groundItems[y][x][j][3] or groundItems[y][x][j][1]
 					end
 				end
 			end
@@ -219,12 +219,12 @@ function saveserver()
 	end
 	
 	local tmp = {}
-	for i, v in pairs(HOUSES) do
+	for i, v in pairs(houses) do
 		if v.owner then
 			tmp[i] = {owner = v.owner, endtime = v.endtime, allow = v.allow, doors = v.doors}
 		end
 	end
-	file:write("\n\n-- HOUSES --\n\n")
+	file:write("\n\n-- houses --\n\n")
 	for k, v in pairs(tmp) do
 		local text = "TMPHOUSES[" .. table.val_to_str(k) .. "] = " .. table.val_to_str(v) .. "\n"
 		file:write(text)
@@ -292,41 +292,35 @@ function updateTime(t)
 	return GLOBAL.TIME
 end
 
-function gettile(x,y)
-	if not TILEZONE[y] then
-		return nil
-	end
-
-	return TILEZONE[y][x]
-end
-
 function houseexpire(id)
-	local house = HOUSES[id]
+	local house = tibia.houses[id]
 	if not house.owner then
 		return false
 	end
 	local player = PLAYERCACHE[house.owner]
 	for y = house.pos1[2], house.pos2[2] do
 		for x = house.pos1[1], house.pos2[1] do
-			local ground = GROUNDITEMS[y][x]
+			local ground = tibia.groundItems[y][x]
 			local height = #ground
 			while height > 0 do
 				local item = ground[height]
 				if item[1] == 1337 then
 					freeimage(item[2])
 					player.Money = player.Money + item[3]
-					GROUNDITEMS[y][x][height] = nil
+					tibia.groundItems[y][x][height] = nil
 				else
 					table.insert(player.Inventory, item[1])
-					local tile = gettile(x, y)
-					if tile.HEAL and ITEMS[item[1]].heal then
-						tile.HEAL = tile.HEAL - ITEMS[item[1]].heal
-						if tile.HEAL == 0 then
-							tile.HEAL = nil
+
+					local tile = sea.tile[x][y]
+					if tile.zone.HEAL and ITEMS[item[1]].heal then
+						tile.zone.HEAL = tile.HEAL - ITEMS[item[1]].heal
+						if tile.zone.HEAL == 0 then
+							tile.zone.HEAL = nil
 						end
 					end
+
 					freeimage(item[2])
-					GROUNDITEMS[y][x][height] = nil
+					tibia.groundItems[y][x][height] = nil
 				end
 				height = height - 1
 			end
@@ -427,7 +421,7 @@ function additem(player, itemID, amount, tell)
 	if not ITEMS[itemID] or itemID == 0 then return false end
 	amount = amount and math.floor(amount) or 1
 	if amount == 1 then
-		if #player.inventory < CONFIG.MAXITEMS then
+		if #player.inventory < tibia.config.maxItems then
 			table.insert(player.inventory, itemID)
 
 			if tell then
@@ -440,7 +434,7 @@ function additem(player, itemID, amount, tell)
 		return false
 	else
 		local added = 0
-		while #player.inventory < CONFIG.MAXITEMS and added < amount do
+		while #player.inventory < tibia.config.maxItems and added < amount do
 			table.insert(player.inventory, itemID)
 			added = added + 1
 		end
@@ -496,24 +490,27 @@ end
 
 function spawnitem(itemid, x, y, amount)
 	if not ITEMS[itemid] then return false end
-	local ground = GROUNDITEMS[y][x]
-	local tile = gettile(x, y)
+	local ground = tibia.groundItems[y][x]
+
+	local tile = sea.tile[x][y]
 	local item = {itemid}
 	if itemid == 1337 then
 		item[3] = amount
 	else
 		if ITEMS[itemid].heal then
-			tile.HEAL = (tile.HEAL or 0) + ITEMS[itemid].heal
+			tile.zone.HEAL = (tile.zone.HEAL or 0) + ITEMS[itemid].heal
 		end
 	end
+
 	ground[#ground+1] = item
 	updateTileItems(x, y)
+
 	return true
 end
 
-local MAXHEIGHT = CONFIG.MAXHEIGHT
+local MAXHEIGHT = tibia.config.maxHeight
 function updateTileItems(x, y)
-	local tile = GROUNDITEMS[y][x]
+	local tile = groundItems[y][x]
 	if #tile ~= 0 then
 		for i = 1, #tile do
 			local item = tile[i]
@@ -533,18 +530,7 @@ function updateTileItems(x, y)
 		local y = ITEMS[itemid].offsety and y*32+16+ITEMS[itemid].offsety or y*32+16
 		local heightoffset = (height < MAXHEIGHT and height or MAXHEIGHT)*3
 		if itemid == 1337 then
-			--[[ alternate money
-				item[2] = image("gfx/weiwen/money.png", 0, 0, i > 3 and 1 or 0)
-				if amount > 9999 then
-					imagecolor(item[2], 255, 255, 0)
-				elseif amount > 999 then
-					imagecolor(item[2], 255, 85, 0)
-				elseif amount > 99 then
-					imagecolor(item[2], 0, 128, 255)
-				else
-					imagecolor(item[2], 0, 150, 0)
-				end
-			]]
+
 			item[2] = image("gfx/weiwen/rupee.png", 0, 0, height > 3 and 1 or 0)
 			if amount < 5 then
 				imagecolor(item[2], 64, 255, 0)
@@ -588,7 +574,7 @@ function updateTileItems(x, y)
 end
 
 function pickitem(player)
-	local ground = GROUNDITEMS[player.lastPosition.y][player.lastPosition.x]
+	local ground = tibia.groundItems[player.lastPosition.y][player.lastPosition.x]
 	local height = #ground
 	if height > 0 then
 		local item = ground[height]
@@ -596,18 +582,18 @@ function pickitem(player)
 			if item[2] then freeimage(item[2]) end
 			player:addMoney(item[3])
 			player:message("You have picked up $" .. item[3] .. ".")
-			GROUNDITEMS[player.lastPosition.y][player.lastPosition.x][height] = nil
+			tibia.groundItems[player.lastPosition.y][player.lastPosition.x][height] = nil
 		elseif additem(player, item[1]) then
-			local tile = gettile(unpack(player.lastPosition))
-			if tile.HEAL and ITEMS[item[1]].heal then
-				tile.HEAL = tile.HEAL - ITEMS[item[1]].heal
-				if tile.HEAL == 0 then
-					tile.HEAL = nil
+			local tile = sea.tile[player.lastPosition.x][player.lastPosition.y]
+			if tile.zone.HEAL and ITEMS[item[1]].heal then
+				tile.zone.HEAL = tile.zone.HEAL - ITEMS[item[1]].heal
+				if tile.zone.HEAL == 0 then
+					tile.zone.HEAL = nil
 				end
 			end
 			freeimage(item[2])
 			player:message("You have picked up " .. fullname(item[1]) .. ".")
-			GROUNDITEMS[player.lastPosition.y][player.lastPosition.x][height] = nil
+			tibia.groundItems[player.lastPosition.y][player.lastPosition.x][height] = nil
 		end
 		updateTileItems(unpack(player.lastPosition))
 	end
@@ -657,7 +643,7 @@ end
 
 function equipment(player)
 	local text = "Equipment"
-	for i, v in ipairs(CONFIG.SLOTS) do
+	for i, v in ipairs(tibia.config.slots) do
 		text = text..","..(ITEMS[player.equipment[i] or 0].name or ("ITEM ID "..player.equipment[i])).. "|"..v
 	end
 

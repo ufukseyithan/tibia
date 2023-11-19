@@ -1,7 +1,7 @@
 sea.addEvent("onHookJoin", function(player)
 	player.tmp = {hp = 100, atk = 1, def = 1, spd = 0, usgn = player.usgn, equip = {}, exhaust = {}}
 
-	for k, v in ipairs(CONFIG.SLOTS) do
+	for k, v in ipairs(tibia.config.slots) do
 		player.tmp.equip[k] = {}
 	end
 end, -1)
@@ -13,7 +13,7 @@ sea.addEvent("onHookLeave", function(player, reason)
 end, -1)
 
 sea.addEvent("onHookLeave", function(player, oldName, newName)
-	--hudtxt2(id, 0, player.usgn ~= 0 and newName or "NOT LOGGED IN", "255100100", 565, 407-CONFIG.PIXELS, 1)
+	--hudtxt2(id, 0, player.usgn ~= 0 and newName or "NOT LOGGED IN", "255100100", 565, 407-tibia.config.pixels, 1)
 end, -1)
 
 sea.addEvent("onHookWalkover", function()
@@ -30,18 +30,18 @@ sea.addEvent("onHookMovetile", function(player, x, y)
 
 	local playerLastPosition = player.lastPosition
 
-	if inarray(CONFIG.WATERTILES, tile(x, y, 'frame')) or player.tmp.paralyse then
+	if inarray(tibia.config.waterTiles, tile(x, y, 'frame')) or player.tmp.paralyse then
 		if not (player.equipment[7] and ITEMS[player.equipment[7]].water) then
 			parse("setpos", id, playerLastPosition.x*32+16, playerLastPosition.y*32+16)
 			return
 		end
 	end
 
-	local tile = gettile(x, y)
-	if tile.HOUSE then
+	local tile = sea.tile[x][y]
+	if tile.zone.HOUSE then
 		player:showTutorial("House", "This is a house. For more information about houses, type !house")
 
-		house = HOUSES[tile.HOUSE]
+		house = houses[tile.zone.HOUSE]
 		if not house.owner then
 			parse("setpos", id, playerLastPosition.x*32+16, playerLastPosition.y*32+16)
 			player:message("This house has no owner. Type \"!house\" for a list of house commands.")
@@ -54,19 +54,19 @@ sea.addEvent("onHookMovetile", function(player, x, y)
 		end
 	end
 
-	if GROUNDITEMS[y][x][1] then
+	if tibia.groundItems[y][x][1] then
 		player:showTutorial("Pick", "You have stumbled upon something. Press the drop weapon button (default G) to pick it up.")
 	end
 
-	--hudtxt2(id, CONFIG.HUDTXT.SAFE, (tile.SAFE and "SAFE") or (tile.NOMONSTERSPVP and "NO MONSTERS") or (tile.NOPVP and "NO PVP") or (tile.PVP and "DEATHMATCH") or "","255064000", 320, 200, 1)
+	--hudtxt2(id, tibia.config.hudTxt.safe, (tile.zone.SAFE and "SAFE") or (tile.zone.NOMONSTERSPVP and "NO MONSTERS") or (tile.zone.NOPVP and "NO PVP") or (tile.zone.PVP and "DEATHMATCH") or "","255064000", 320, 200, 1)
 	
-	if not tile.SAFE then
+	if not tile.zone.SAFE then
 		player:showTutorial("Safe", "You have left a SAFE zone. From now, you will be able to both damage and be damaged.")
-	elseif tile.NOMONSTERS and not tile.PVP then
+	elseif tile.zone.NOMONSTERS and not tile.zone.PVP then
 		player:showTutorial("No Monsters", "You have entered a NO MONSTERS zone. No monsters will spawn here. However, PVP is still allowed!")
-	elseif tile.NOPVP then
+	elseif tile.zone.NOPVP then
 		player:showTutorial("No PvP", "You have entered a NO PVP zone. PVP is disabled here, but monsters can still spawn.")
-	elseif tile.PVP then
+	elseif tile.zone.PVP then
 		player:showTutorial("PvP", "You have entered a DEATHMATCH zone. In this area, you may fight for money. If you die here, you will drop a maximum of $100.")
 	end
 
@@ -78,7 +78,7 @@ sea.addEvent("onHookSay", function(player, words)
 
 	if player.tmp.exhaust.talk then return 1 end
 	player.tmp.exhaust.talk = true
-	timerEx(CONFIG.EXHAUST.TALK, "rem.talkExhaust", 1, player)
+	timerEx(tibia.config.exhaust.talk, "rem.talkExhaust", 1, player)
 	if words:sub(1,1) == '!' then
 		command = words:sub(2):split(' ')
 		local func = COMMANDS[command[1]]
@@ -118,7 +118,7 @@ sea.addEvent("onHookSay", function(player, words)
 	timer(1000, "freeimage", image(picture, 0, 0, 200+id))
 	local code = words:sub(1,2):lower()
 	if code:sub(1,1) == '^' then
-		colour = CONFIG.COLOURS[tonumber(code:sub(2,2), 36)]
+		colour = tibia.config.colours[tonumber(code:sub(2,2), 36)]
 		words = words:sub(3)
 	end
 	if player.team == 0 then
@@ -160,10 +160,10 @@ sea.addEvent("onHookSpawn", function(player)
 	end
 
 	--updateHUD(id)
-	--hudtxt2(id,0,player.usgn ~= 0 and player.name or "NOT LOGGED IN","255100100", 565, 407-CONFIG.PIXELS, 1)
+	--hudtxt2(id,0,player.usgn ~= 0 and player.name or "NOT LOGGED IN","255100100", 565, 407-tibia.config.pixels, 1)
 
 	local newItems, previousItems = {}, {}
-	for i, v in ipairs(CONFIG.SLOTS) do
+	for i, v in ipairs(tibia.config.slots) do
 		newItems[i] = player.equipment[i]
 		previousItems[i] = 0
 	end
@@ -176,7 +176,7 @@ end, -1)
 
 sea.addEvent("onHookDrop", function(player, item, x, y)
 	if player.tmp.exhaust.pick then
-		if GROUNDITEMS[y][x][1] then
+		if groundItems[y][x][1] then
 			player:showTutorial("Pick Exhaust", "Try not to spam picking up, as there is an exhaust of 1 second per try.")
 		end
 
@@ -185,7 +185,7 @@ sea.addEvent("onHookDrop", function(player, item, x, y)
 
 	player.tmp.exhaust.pick = true
 
-	timerEx(CONFIG.EXHAUST.PICK, "rem.pickExhaust", 1, player)
+	timerEx(tibia.config.exhaust.pick, "rem.pickExhaust", 1, player)
 
 	player:showTutorial("Pick", "You have picked up something. Press F2 to access your inventory!")
 	
@@ -203,9 +203,9 @@ sea.addEvent("onHookSecond", function()
 		end
 
 		if player.lastPosition.x then
-			local tile = gettile(unpack(player.lastPosition))
-			if tile.HEAL and ((tile.HEAL > 0 and tile.HOUSE) or (tile.HEAL < 0 and not tile.SAFE)) and player.tmp.hp > player.hp then
-				player.hp = player.health + math.min(10, tile.HEAL)
+			local tile = sea.tile[player.lastPosition.x][player.lastPosition.y]
+			if tile.zone.HEAL and ((tile.zone.HEAL > 0 and tile.zone.HOUSE) or (tile.zone.HEAL < 0 and not tile.zone.SAFE)) and player.tmp.hp > player.hp then
+				player.hp = player.health + math.min(10, tile.zone.HEAL)
 				player.health = player.hp
 			end
 		end
@@ -213,8 +213,8 @@ sea.addEvent("onHookSecond", function()
 end, -1)
 
 sea.addEvent("onHookMinute", function()
-	MINUTES = MINUTES+1
-	for i, v in ipairs(HOUSES) do
+	tibia.minutes = tibia.minutes + 1
+	for i, v in ipairs(tibia.houses) do
 		if v.owner then
 			local difftime = os.difftime(v.endtime, os.time())
 			if difftime <= 0 then
@@ -245,7 +245,7 @@ sea.addEvent("onHookMinute", function()
 		end
 	end
 
-	if sea.game.password == "" and MINUTES % 5 == 0 then
+	if sea.game.password == "" and tibia.minutes % 5 == 0 then
 		saveserver()
 	end
 end, -1)
@@ -270,7 +270,7 @@ function EXPserveraction(id,action)
 			return
 		end
 		PLAYERS[id].tmp.exhaust.use = true
-		timer(CONFIG.EXHAUST.USE, "rem.useExhaust", tostring(id))
+		timer(tibia.config.exhaust.use, "rem.useExhaust", tostring(id))
 		local itemid = PLAYERS[id].Equipment[9]
 		if itemid then
 			local amount, items = itemcount(id, itemid)
@@ -294,9 +294,9 @@ function EXPmenu(id, title, button)
 	if title:sub(1,9) == "Inventory" then
 		local page = #title-9
 		if button == 9 then
-			inventory(id, (page+1)%(math.ceil(CONFIG.MAXITEMS/5)))
+			inventory(id, (page+1)%(math.ceil(tibia.tibia.config.maxItems/5)))
 		elseif button == 8 then
-			inventory(id, (page-1)%(math.ceil(CONFIG.MAXITEMS/5)))
+			inventory(id, (page-1)%(math.ceil(tibia.tibia.config.maxItems/5)))
 		elseif PLAYERS[id][itemid] ~= 0 then
 			local itemslot = button+page*5
 			local itemid = PLAYERS[id].Inventory[itemslot]
@@ -399,16 +399,16 @@ sea.addEvent("onHookKill", function(killer, victim, weapon, x, y)
 	killer:showTutorial("Kill", "You have killed a player! This is allowed, but it may create conflict between players.")
 
 	local xp = victim.level + 10
-	killer:addXp(math.floor(xp * math.random(50, 150) / 100 * CONFIG.EXPRATE))
+	killer:addExp(math.floor(xp * math.random(50, 150) / 100 * tibia.tibia.config.expRate))
 end, -1)
 
 sea.addEvent("onHookDie", function(victim, killer, weapon, x, y)
-	local PVP = gettile(victim.lastPosition.x, victim.lastPosition.y).PVP
+	local PVP = sea.tile[x][y].zone.PVP
 	
 	if not PVP then
 		victim:showTutorial("Die", "You are dead. Try your best not to die, you'll drop some of your equipment and money if you do.")
 
-		local money = math.min(victim.money, math.floor(victim.level * math.random(50, 150) / 10 * CONFIG.PLAYERMONEYRATE))
+		local money = math.min(victim.money, math.floor(victim.level * math.random(50, 150) / 10 * tibia.config.playerMoneyRate))
 		if money ~= 0 then
 			victim:addMoney(-money)
 
@@ -417,8 +417,8 @@ sea.addEvent("onHookDie", function(victim, killer, weapon, x, y)
 
 		if victim.level >= 5 then
 			local previousItems = {}
-			for i, v in ipairs(CONFIG.SLOTS) do
-				if victim.equipment[i] and math.random(10000) <= CONFIG.PLAYERDROPRATE then
+			for i, v in ipairs(tibia.config.slots) do
+				if victim.equipment[i] and math.random(10000) <= tibia.config.playerDropRate then
 					dropitem(victim, i, true)
 				end
 			end
@@ -426,7 +426,7 @@ sea.addEvent("onHookDie", function(victim, killer, weapon, x, y)
 
 		victim.hp, victim.lastPosition.x, victim.lastPosition.y = 85, nil, nil
 	else
-		victim.hp, victim.lastPosition.x, victim.lastPosition.y = 5, PVPZONE[PVP][3][1], PVPZONE[PVP][3][2]
+		victim.hp, victim.lastPosition.x, victim.lastPosition.y = 5, tibia.pvpZone[PVP][3][1], tibia.pvpZone[PVP][3][2]
 
 		local money = victim.money
 		if money ~= 0 then
@@ -444,7 +444,7 @@ sea.addEvent("onHookDie", function(victim, killer, weapon, x, y)
 	radiussound("weapons/c4_explode.wav", x, y)
 
 	local newItems, previousItems = {}, {}
-	for i, v in ipairs(CONFIG.SLOTS) do
+	for i, v in ipairs(tibia.config.slots) do
 		previousItems[i] = victim.equipment[i]
 		newItems[i] = 0
 	end
@@ -465,9 +465,9 @@ sea.addEvent("onHookUse", function(player, event, data, x, y)
 		x = x - 1
 	end
 
-	local tile = gettile(x, y)
-	if entity(x, y, "exists") and tile.HOUSE then
-		local house = HOUSES[tile.HOUSE]
+	local tile = sea.tile[x][y]
+	if tile and tile.zone.HOUSE then
+		local house = houses[tile.zone.HOUSE]
 		local name = entity(x, y, "name")
 		local door = tonumber(name:sub(name:find('_')+1))
 		player:showTutorial("Door 1", "This door belongs to a house. The house owner can specify who is allowed to open the door.")
