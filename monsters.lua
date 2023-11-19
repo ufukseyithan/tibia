@@ -8,7 +8,7 @@ local SPAWNS = {
 	ONIXCAVE = {{165, 30}, {184, 48}},
 }
 
-CONFIG.MONSTERS = {
+tibia.config.MONSTERS = {
 	{
 		name = 'Bulbasaur', health = 100, image = 'gfx/weiwen/pokemon/1.png', scalex = 2, scaley = 2, r = 136, g = 224, b = 32, 
 		atk = 1.9, def = 2.1, spd = 6, atkspd = 8, x = 0, y = 0, ang = 0, imgang = 0, runat = 10, 
@@ -109,7 +109,7 @@ CONFIG.MONSTERS = {
 				self.spd = 10
 				self.agility = true
 				imagecolor(self.image, 155, 255, 155)
-				timer(5000, "CONFIG.MONSTERSKILLS.endAgility", self.id)
+				timer(5000, "tibia.config.MONSTERSKILLS.endAgility", self.id)
 			elseif dist <= 32 then
 				self:hit(target, 10)
 			end
@@ -237,7 +237,7 @@ CONFIG.MONSTERS = {
 				self.atk = 3.3
 				self.rage = true
 				imagecolor(self.image, 255, 155, 155)
-				timer(5000, "CONFIG.MONSTERSKILLS.endRage", self.id)
+				timer(5000, "tibia.config.MONSTERSKILLS.endRage", self.id)
 			elseif dist <= 96 then
 				radiusmsg("Mankey uses karate chop!", self.x, self.y)
 				self:hit(target, 20)
@@ -298,7 +298,7 @@ CONFIG.MONSTERS = {
 				self.def = 7.5
 				self.harden = true
 				imagecolor(self.image, 155, 155, 255)
-				timer(5000, "CONFIG.MONSTERSKILLS.endHarden", self.id)
+				timer(5000, "tibia.config.MONSTERSKILLS.endHarden", self.id)
 			end
 		end},
 	}, 
@@ -349,7 +349,7 @@ CONFIG.MONSTERS = {
 	}, 
 }
 
-CONFIG.MONSTERSKILLS = {
+tibia.config.MONSTERSKILLS = {
 	endAgility = function(id)
 		self = MONSTERS[tonumber(id)]
 		self.spd = self._spd
@@ -374,22 +374,24 @@ CONFIG.MONSTERSKILLS = {
 }
 
 sea.addEvent("onHookAttack", function(player)
-	local id = player.id
+	local tile = sea.tile[player.lastPosition.x][player.lastPosition.y]
 
-	if gettile(unpack(player.lastPosition)).SAFE or gettile(unpack(player.lastPosition)).NOMONSTERS then
+	if tile.zone.SAFE or tile.zone.NOMONSTERS then
 		return
 	end
+
 	if inarray({400, 401, 402, 403, 404}, player.equipment[7]) then
-		message(id, "You may not attack on a horse.")
+		player:alert("You may not attack on a horse.")
 		return
 	end
+
 	local weapon, closest = player.weapon
 	for _, m in ipairs(MONSTERS) do
 		local x, y = player.x, player.y
 		local dist = math.sqrt((m.x-x)^2+(m.y-y)^2)
-		if dist <= (closest and closest[2] or (CONFIG.WEAPONRANGE[weapon] or CONFIG.WEAPONRANGE[50])) then
+		if dist <= (closest and closest[2] or (tibia.config.WEAPONRANGE[weapon] or tibia.config.WEAPONRANGE[50])) then
 			local rot = player.rotation
-			if math.abs(math.rad(rot) - math.atan2(y-m.y, x-m.x) + math.pi/2)%(2*math.pi) <= (CONFIG.WEAPONWIDTH[weapon] or CONFIG.WEAPONRANGE[50]) then
+			if math.abs(math.rad(rot) - math.atan2(y-m.y, x-m.x) + math.pi/2)%(2*math.pi) <= (tibia.config.WEAPONWIDTH[weapon] or tibia.config.WEAPONRANGE[50]) then
 				closest = {m, dist}
 			end
 		end
@@ -403,28 +405,32 @@ sea.addEvent("onHookMs100", function(player)
 	t = t + 1
 
 	if t % 100 == 0 then
-		while #MONSTERS < CONFIG.MAXMONSTERS do
-			local rand, spawnNo, mapName
+		while #MONSTERS < tibia.config.maxMonsters do
+			local rand, mapName, spawnNo
 			while true do 
-				rand = math.random(#CONFIG.MONSTERS)
-				mapName = CONFIG.MONSTERS[rand].spawn[map'name'] and map'name' or CONFIG.DEFAULTMAP
-				spawnNo = math.random(#CONFIG.MONSTERS[rand].spawn[mapName])
-				if math.random(0, 100) < CONFIG.MONSTERS[rand].spawnchance[mapName][spawnNo] then
+				rand = math.random(#tibia.config.MONSTERS)
+				mapName = tibia.config.MONSTERS[rand].spawn[sea.map.name] and sea.map.name or tibia.config.defaultMap
+				spawnNo = math.random(#tibia.config.MONSTERS[rand].spawn[mapName])
+				if math.random(0, 100) < tibia.config.MONSTERS[rand].spawnchance[mapName][spawnNo] then
 					break
 				end
 			end 
-			local m = deepcopy(CONFIG.MONSTERS[rand])
-			local x, y, tilex, tiley
+
+			local m = deepcopy(tibia.config.MONSTERS[rand])
+			local x, y, tileX, tileY, tile
 			local spawn = m.spawn[mapName][spawnNo]
 			repeat
-				tilex, tiley = math.random(spawn[1][1], spawn[2][1]), math.random(spawn[1][2], spawn[2][2])
+				tileX, tileY = math.random(spawn[1][1], spawn[2][1]), math.random(spawn[1][2], spawn[2][2])
+				tile = sea.tile[tileX] and sea.tile[tileX][tileY]
 			until 
-				gettile(tilex, tiley) and
-				not gettile(tilex, tiley).SAFE and 
-				not gettile(tilex, tiley).NOMONSTERS and 
-				tile(tilex, tiley, "walkable") and 
-				tile(tilex, tiley, "frame") ~= 34
-			m.x, m.y = math.floor(tilex*32+16), math.floor(tiley*32+16)
+				tile and
+				not tile.zone.SAFE and 
+				not tile.zone.NOMONSTERS and 
+				tile.walkable and 
+				tile.frame ~= 34
+
+			m.x, m.y = tileToPixel(tileX), tileToPixel(tileY)
+
 			Monster:new(m)
 		end
 	end
@@ -432,8 +438,9 @@ sea.addEvent("onHookMs100", function(player)
 	for _, m in ipairs(MONSTERS) do
 		if t % m.atkspd == 0 then
 			m.target = nil
+
 			local closest
-			for _, player in ipairs(table.shuffle(sea.Player.get())) do
+			for _, player in ipairs(table.shuffle(sea.Player.getLiving())) do
 				if player.health > 0 and not player:isAtZone("SAFE") and not player:isAtZone("NOMONSTERS") then
 					local dist = getDistance(player.x, player.y, m.x, m.y)
 					if dist < 400 then
@@ -443,6 +450,7 @@ sea.addEvent("onHookMs100", function(player)
 					end
 				end
 			end
+
 			if closest then
 				local dist = closest[2]
 				if dist < 400 then
@@ -478,14 +486,19 @@ sea.addEvent("onHookMs100", function(player)
 end, -1)
 
 function Monster:new(m)
-	if not (m.x or m.y) then return false end
+	if not (m.x or m.y) then 
+		return false 
+	end
+
 	m.image = image(m.image, m.x, m.y, 0)
 	imagescale(m.image, m.scalex, m.scaley)
 	setmetatable(m, self)
 	self.__index = self
+
 	local n = #MONSTERS+1
 	MONSTERS[#MONSTERS+1] = m
 	m.id = n
+
 	return m
 end
 
@@ -496,6 +509,7 @@ function Monster:pos(x, y)
 		self.x, self.y = x or self.x, y or self.y
 		imagepos(self.image, self.x, self.y, self.imgang)
 	end
+
 	return true
 end
 
@@ -504,16 +518,15 @@ function Monster:move(dir, amt)
 	x, y = self.x + x, self.y + y
 	
 	local tileX, tileY = pixelToTile(x), pixelToTile(y)
-	local tile = sea.tile[tileX] and sea.tile[tileX][tileY]
-	--print("tile exists: "..tostring(tile).." | coordinates: "..tileX..","..tileY.." | x: "..tostring(sea.tile[tileX]).." y: "..tostring(sea.tile[tileX][tileY]))
+	local tile = sea.Tile.get(tileX, tileY)
 
-	if (tile and tile.walkable and tile.frame ~= 34) and not gettile(tileX, tileY).SAFE and not gettile(tileX, tileY).NOMONSTERS then
+	if tile and tile.walkable and tile.frame ~= 34 and not tile.zone.SAFE and not tile.zone.NOMONSTERS then
 		self:pos(x, y)
 		return true
-	else
-		self:rot(math.random(-1, 1) * math.pi / 2)
-		return false
 	end
+
+	self:rot(math.random(-1, 1) * math.pi / 2)
+	return false
 end
 
 function Monster:damage(player, damage, weapon)
@@ -524,16 +537,17 @@ function Monster:damage(player, damage, weapon)
 		weaponName = 'rune'
 	elseif weapon == 46 then
 		weaponName = 'firewave'
-		damage = damage/5
+		damage = damage / 5
 	else
 		weaponName = player.equipment[3] and ITEMS[player.equipment[3]].name or 'dagger'
 	end
+
 	self.health = self.health - damage
 
 	if self.health <= 0 then
 		player:showTutorial("Kill Monster", "Congratulation! You have killed your first monster. You can proceed to pick up the loot by using the drop weapon button (default G)")
 
-		player:addXp(math.floor(self.exp * CONFIG.EXPRATE))
+		player:addExp(math.floor(self.exp * tibia.config.expRATE))
 
 		self:die()
 	else
@@ -567,7 +581,7 @@ function Monster:die(id)
 	
 	local tileX, tileY = math.floor(self.x/32), math.floor(self.y/32)
 
-	spawnitem(1337, tileX, tileY, math.floor(self.money * math.random(50, 150) / 100) * CONFIG.MONEYRATE)
+	spawnitem(1337, tileX, tileY, math.floor(self.money * math.random(50, 150) / 100) * tibia.config.MONEYRATE)
 
 	for _, loot in ipairs(self.loot) do
 		local chance = math.random(10000)

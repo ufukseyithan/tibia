@@ -15,56 +15,57 @@ tibia.houses = tibia.config.houses[mapName] or tibia.config.houses[tibia.config.
 tibia.groundItems = {}
 tibia.tileZone = {}
 
-for y = 0, sea.map.xSize do
+for y = 0, sea.map.ySize do
 	tibia.groundItems[y], tibia.tileZone[y] = {}, {}
 
 	for x = 0, sea.map.xSize do
 		tibia.groundItems[y][x], tibia.tileZone[y][x] = {}, {}
 
-		for i, v in ipairs(tibia.config.safeZone) do
-			tibia.tileZone[y][x].SAFE = (x >= v[1][1] and x <= v[2][1] and y >= v[1][2] and y <= v[2][2])
-			if tibia.tileZone[y][x].SAFE then
-				tibia.tileZone[y][x].NOPVP = true
-				tibia.tileZone[y][x].NOMONSTERS = true
-				tibia.tileZone[y][x].PVP = false
+		local tileZone = tibia.tileZone[y][x]
+
+		for i, v in ipairs(tibia.safeZone) do
+			tileZone.SAFE = (x >= v[1][1] and x <= v[2][1] and y >= v[1][2] and y <= v[2][2])
+			if tileZone.SAFE then
+				tileZone.NOPVP = true
+				tileZone.NOMONSTERS = true
+				tileZone.PVP = false
 				break
 			end
 		end
 
-		for i, v in ipairs(tibia.config.noPvpZone) do
-			tibia.tileZone[y][x].NOPVP = (x >= v[1][1] and x <= v[2][1] and y >= v[1][2] and y <= v[2][2])
-			if tibia.tileZone[y][x].NOPVP then
-				tibia.tileZone[y][x].NOMONSTERS = false
-				tibia.tileZone[y][x].SAFE = false
+		for i, v in ipairs(tibia.noPvpZone) do
+			tileZone.NOPVP = (x >= v[1][1] and x <= v[2][1] and y >= v[1][2] and y <= v[2][2])
+			if tileZone.NOPVP then
+				tileZone.NOMONSTERS = false
+				tileZone.SAFE = false
 				break
 			end
 		end
 
-		for i, v in ipairs(tibia.config.noMonstersZone) do
-			tibia.tileZone[y][x].NOMONSTERS = (x >= v[1][1] and x <= v[2][1] and y >= v[1][2] and y <= v[2][2])
-			if tibia.tileZone[y][x].NOMONSTERS then
-				if tibia.tileZone[y][x].NOPVP then
-					tibia.tileZone[y][x].SAFE = true
-				else
-					tibia.tileZone[y][x].SAFE = false
-				end
+		for i, v in ipairs(tibia.noMonstersZone) do
+			tileZone.NOMONSTERS = (x >= v[1][1] and x <= v[2][1] and y >= v[1][2] and y <= v[2][2])
+			if tileZone.NOMONSTERS then
+				tileZone.SAFE = tileZone.NOPVP
 			end
 		end
 
-		for i, v in ipairs(tibia.config.pvpZone) do
-			tibia.tileZone[y][x].PVP = (x >= v[1][1] and x <= v[2][1] and y >= v[1][2] and y <= v[2][2]) and i or nil
-			if tibia.tileZone[y][x].PVP then 
-				tibia.tileZone[y][x].NOPVP = false
-				tibia.tileZone[y][x].SAFE = false
+		for i, v in ipairs(tibia.pvpZone) do
+			tileZone.PVP = (x >= v[1][1] and x <= v[2][1] and y >= v[1][2] and y <= v[2][2]) and i or nil
+			if tileZone.PVP then 
+				tileZone.NOPVP = false
+				tileZone.SAFE = false
 				break
 			end
 		end
 
-		for i, v in ipairs(tibia.config.houses) do
-			tibia.tileZone[y][x].HOUSE = (x >= v.pos1[1] and x <= v.pos2[1] and y >= v.pos1[2] and y <= v.pos2[2]) and i or nil
-			tibia.tileZone[y][x].HOUSEDOOR = (x == v.door[1] and y == v.door[2]) and i or nil
-			tibia.tileZone[y][x].HOUSEENT = (x == v.ent[1] and y == v.ent[2]) and i or nil
-			if tibia.tileZone[y][x].HOUSE or tibia.tileZone[y][x].HOUSEDOOR or tibia.tileZone[y][x].HOUSEENT then break end
+		for i, v in ipairs(tibia.houses) do
+			tileZone.HOUSE = (x >= v.pos1[1] and x <= v.pos2[1] and y >= v.pos1[2] and y <= v.pos2[2]) and i or nil
+			tileZone.HOUSEDOOR = (x == v.door[1] and y == v.door[2]) and i or nil
+			tileZone.HOUSEENT = (x == v.ent[1] and y == v.ent[2]) and i or nil
+
+			if tileZone.HOUSE or tileZone.HOUSEDOOR or tileZone.HOUSEENT then 
+				break 
+			end
 		end
 	end
 end
