@@ -500,13 +500,14 @@ function Monster:pos(x, y)
 end
 
 function Monster:move(dir, amt)
-	local x, y = -math.sin(dir) * amt * self.spd, math.cos(dir) * amt *self.spd
+	local x, y = -math.sin(dir) * amt * self.spd, math.cos(dir) * amt * self.spd
 	x, y = self.x + x, self.y + y
 	
-	local tileX, tileY = math.floor(x / 32), math.floor(y / 32)
-	local tile = sea.tile[tileX][tileY]
-	print("hey "..tostring(tile and true or false))
-	if tile.walkable and tile.frame ~= 34 and not gettile(tileX, tileY).SAFE and not gettile(tileX, tileY).NOMONSTERS then
+	local tileX, tileY = pixelToTile(x), pixelToTile(y)
+	local tile = sea.tile[tileX] and sea.tile[tileX][tileY]
+	--print("tile exists: "..tostring(tile).." | coordinates: "..tileX..","..tileY.." | x: "..tostring(sea.tile[tileX]).." y: "..tostring(sea.tile[tileX][tileY]))
+
+	if (tile and tile.walkable and tile.frame ~= 34) and not gettile(tileX, tileY).SAFE and not gettile(tileX, tileY).NOMONSTERS then
 		self:pos(x, y)
 		return true
 	else
@@ -515,7 +516,7 @@ function Monster:move(dir, amt)
 	end
 end
 
-function Monster:damage(player, damage, wpntype)
+function Monster:damage(player, damage, weapon)
 	player:showTutorial("Damage Monster", "You have attacked a monster! Good job! Keep on attacking it until it dies.")
 
 	local weaponName

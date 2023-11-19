@@ -94,7 +94,6 @@ GLOBAL.RAIN = 0
 dofile(dir .. 'functions.lua')
 dofile(dir .. 'admin.lua')
 dofile(dir .. 'commands.lua')
-dofile(dir .. 'player.lua')
 dofile(dir .. 'items.lua')
 dofile(dir .. 'npcs.lua')
 if CONFIG.MAXMONSTERS > 0 then

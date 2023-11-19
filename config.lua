@@ -229,18 +229,18 @@ HOUSES = {
 
 return {
 	player = {
-		variable = {
-			xp = {0, true},
-			level = {1, true},
-			money = {50, true},
-			hp = {100, true},
-			mp = {100, true},
-			inventory = {{}, true},
-			equipment = {{}, true},
-			respawnPosition = {{784, 240}, true},
-			tutorial = {{}, true},
-			info = {{}, true},
-			lastPosition = {{0, 0}, true}
+		data = {
+			xp = 0,
+			level = 1,
+			money = 50,
+			hp = 100,
+			mp = 100,
+			inventory = {},
+			equipment = {},
+			respawnPosition = {784, 240},
+			tutorial = {},
+			info = {},
+			lastPosition = {0, 0}
 		}
 	},
 
