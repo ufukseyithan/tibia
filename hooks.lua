@@ -154,9 +154,9 @@ sea.addEvent("onHookSpawn", function(player)
 
 	local playerLastPosition = player.lastPosition
 	if playerLastPosition.x then
-		parse("setpos", id, playerLastPosition.x * 32 + 16, playerLastPosition.y * 32 + 16)
+		player:setPosition(tileToPixel(playerLastPosition.x), tileToPixel(playerLastPosition.y))
 	else
-		parse("setpos", id, player.respawnPosition[1], player.respawnPosition[2])
+		player:setPosition(player.respawnPosition[1], player.respawnPosition[2])
 	end
 
 	--updateHUD(id)
@@ -169,14 +169,14 @@ sea.addEvent("onHookSpawn", function(player)
 	end
 
 	updateEQ(player, newItems, previousItems)
-	parse("sethealth", id, player.hp <= 0 and 250 or player.hp)
+	player.health = player.hp <= 0 and 250 or player.hp
 
 	return 'x'
 end, -1)
 
 sea.addEvent("onHookDrop", function(player, item, x, y)
 	if player.tmp.exhaust.pick then
-		if groundItems[y][x][1] then
+		if tibia.groundItems[y][x][1] then
 			player:showTutorial("Pick Exhaust", "Try not to spam picking up, as there is an exhaust of 1 second per try.")
 		end
 
@@ -203,7 +203,7 @@ sea.addEvent("onHookSecond", function()
 		end
 
 		if player.lastPosition.x then
-			local tile = sea.tile[player.lastPosition.x][player.lastPosition.y]
+			local tile = sea.Tile.get(unpack(player.lastPosition))
 			if tile.zone.HEAL and ((tile.zone.HEAL > 0 and tile.zone.HOUSE) or (tile.zone.HEAL < 0 and not tile.zone.SAFE)) and player.tmp.hp > player.hp then
 				player.hp = player.health + math.min(10, tile.zone.HEAL)
 				player.health = player.hp
