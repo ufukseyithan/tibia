@@ -22,6 +22,16 @@ function tibia.radiusSound(sound, x, y)
 	return 1
 end
 
+function tibia.explosion(x, y, size, damage, player)
+	for _, m in ipairs(MONSTERS) do
+		if math.sqrt((m.x - player.x) ^ 2 + (m.y - player.y) ^ 2) <= size then
+			m:damage(id, math.floor(damage*math.random(60,140)/100), 251)
+		end
+	end
+
+	sea.explosion(x, y, size, damage, player)
+end
+
 -- BASIC FUNCTIONS --
 
 rem = {}
@@ -91,11 +101,11 @@ function tibia.saveServer()
 	file:close()
 end
 
-function shutdown(delay)
+function tibia.shutdown(delay)
 	if type(delay) ~= 'string' then
 		sea.message('\169255100100Server is shutting down in ' .. math.floor(delay/1000,0.1) .. ' seconds.@C')
 
-		timer(delay, 'shutdown', '', 1)
+		timer(delay, 'tibia.shutdown', '', 1)
 
 		local password = math.random(0,9) .. math.random(0,9) .. math.random(0,9) .. math.random(0,9)
 		print("PASSWORD = "..password)
@@ -222,7 +232,7 @@ end
 
 -- ITEMS --
 
-function spawnitem(itemid, x, y, amount)
+function tibia.spawnItem(itemid, x, y, amount)
 	if not ITEMS[itemid] then return false end
 	local ground = tibia.groundItems[y][x]
 
@@ -313,121 +323,4 @@ function fullname(itemID, amount)
 	else
 		return amount .. " " .. ITEMS[itemID].plural
 	end
-end
-
-function inventory(player, page)
-	page = page or 0
-	local text = "Inventory" .. string.rep(" ", page) .. ","
-	for i = page*5+1, (page+1)*5 do
-		local name
-		if ITEMS[player.inventory[i]] then
-			name = ITEMS[player.inventory[i]].name
-		else
-			name = player.inventory[i] or ""
-		end
-		text = text..name.."|"..i..","
-	end
-	text = text..',,Prev Page,Next Page|Page'..page+1
-	menu(id, text)
-end
-
-function equipment(player)
-	local text = "Equipment"
-	for i, v in ipairs(tibia.config.slots) do
-		text = text..","..(ITEMS[player.equipment[i] or 0].name or ("ITEM ID "..player.equipment[i])).. "|"..v
-	end
-
-	menu(id, text)
-end
-
-function itemactions(player, itemSlot, equip)
-	local itemID
-	local text = (equip and "Equip" or "Item") .. " Actions" .. string.rep(" ", itemSlot-1) .. ","
-	if equip then
-		itemID = player.equipment[itemSlot] or 0
-	else
-		itemID = player.inventory[itemSlot] or 0
-	end
-	for i, v in ipairs(ITEMS[itemID].action) do
-		text = text .. v .. ","
-	end
-	text = text .. string.rep(",", 7-#ITEMS[itemID].action) .. "Examine,Drop"
-	menu(id, text)
-end
-
--- END OF ITEMS --
-
-
-
--- EQUIP --
-
-function eat(player, itemslot, itemID, equip)
-	radiusmsg(player.name.." eats "..ITEMS[itemID].article.." ".. ITEMS[itemID].name .. ".", player.x, player.y, 384)
-	player.health = player.health + ITEMS[itemID].food()
-
-	player.hp = health
-
-	destroyitem(player, itemslot)
-end
-
-function explosion(x, y, size, damage, player)
-	for _, m in ipairs(MONSTERS) do
-		if math.sqrt((m.x-player.x)^2+(m.y-player.y)^2) <= size then
-			m:damage(id, math.floor(damage*math.random(60,140)/100), 251)
-		end
-	end
-
-	parse("explosion", x, y, size, damage, player.id)
-end
-
-function equip(player, itemSlot, itemID, equip)
-	local index = equip and "Equipment" or "Inventory"
-	local previousItems, newItems = {}, {}
-
-	if equip then
-		if not player:addItem(itemID) then 
-			return 
-		end
-		previousItems[itemSlot] = player.equipment[itemSlot] or 0
-		player.equipment[itemSlot] = nil
-		newItems[itemSlot] = 0
-	else
-		if ITEMS[itemID].level and player.level < ITEMS[itemID].level then
-			player:message("You need to be level " .. ITEMS[itemID].level .. " or above to equip it.")
-			return
-		end
-
-		newItems[ITEMS[itemID].slot] = itemID
-		if ITEMS[itemID].slot == 4 then
-			if player.equipment[3] then
-				if ITEMS[player.equipment[3]].twohand then
-						if not additem(id, player.equipment[3]) then return end
-						previousItems[3] = player.equipment[3] or 0
-						player.equipment[3] = nil
-						newItems[3] = 0
-				end
-			end
-		elseif ITEMS[itemID].slot == 3 then
-			if ITEMS[itemID].twohand then
-				if player.equipment[4] then
-					if not additem(player, player.equipment[4]) then return end
-					previousItems[4] = player.equipment[4] or 0
-					player.equipment[4] = nil
-					newItems[4] = 0
-				end
-			end
-		end
-		
-		player:destroyItem(itemSlot)
-		if player.equipment[ITEMS[itemID].slot] then
-			previousItems[ITEMS[itemID].slot] = player.equipment[ITEMS[itemID].slot]
-			additem(player, player.equipment[ITEMS[itemID].slot])
-		else
-			previousItems[ITEMS[itemID].slot] = 0
-		end
-
-		player.equipment[ITEMS[itemID].slot] = itemID
-	end
-
-	player:updateEQ(newItems, previousItems)
 end

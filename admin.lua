@@ -9,6 +9,7 @@ function isAdmin(player)
 
 	return false
 end
+
 --[[
 Admin Commands
 !a - teleport forward
@@ -32,17 +33,21 @@ Admin Commands
 sea.addEvent("onHookSay", function(player, words)
 	if isAdmin(player) and words:sub(1,1) =='!' then
 		local command = words:lower():sub(2,2)
-		if words:sub(3,3) ~= ' ' and #words ~= 2 then return end
+		if words:sub(3,3) ~= ' ' and #words ~= 2 then 
+			return 
+		end
 		print(player.name..' used a command:'..words)
+
 		if command =='a' then
 			local distance = tonumber(words:sub(4))
 			if distance then
-				local rot = math.rad(player.rotation-180)
+				local rot = math.rad(player.rotation - 180)
 				local x, y = -math.sin(rot)*distance*32, math.cos(rot)*distance*32
 				player:setPosition(player.x + x, player.y + y)
 			else
 				player:message("Teleport forward: \"!a <distance>\"")
 			end
+
 			return 1
 		elseif command =='b' then
 			sea.message(0, player.name.." : "..words:sub(4).."@C", "255100100")
@@ -74,7 +79,7 @@ sea.addEvent("onHookSay", function(player, words)
 			local dmg = tonumber(words:sub(4))
 
 			if dmg then
-				parse("explosion", player.x, player.y, dmg, dmg, player.id)
+				sea.explosion(player.x, player.y, dmg, dmg, player)
 
 				return 1
 			end
@@ -86,7 +91,7 @@ sea.addEvent("onHookSay", function(player, words)
 			local itemID = tonumber(words:sub(4))
 
 			if itemID then
-				additem(player, itemID)
+				player:addItem(itemID)
 
 				return 1
 			end
@@ -165,7 +170,7 @@ sea.addEvent("onHookSay", function(player, words)
 			local length = tonumber(words:sub(3))
 
 			if length then
-				length = math.min(length*50,250)
+				length = math.min(length * 50, 250)
 				for _, player in ipairs(sea.Player.get()) do
 					player:shake(length)
 				end
@@ -202,7 +207,6 @@ sea.addEvent("onHookSay", function(player, words)
 			
 			return 1
 		elseif command =='t' then
-
 			local targetID = tonumber(words:sub(3))
 
 			if targetID then
@@ -224,7 +228,7 @@ sea.addEvent("onHookSay", function(player, words)
 		elseif command =='u' then
 			local delay = tonumber(words:sub(3)) or 0
 
-			shutdown(delay*1000)
+			tibia.shutdown(delay*1000)
 
 			return 1
 		elseif command =='v' then

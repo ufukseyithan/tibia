@@ -284,3 +284,111 @@ function sea.Player:updateEQ(newItems, previousItems)
 
 	self.speed = self.tmp.spd
 end
+
+function sea.Player:eat(itemSlot, itemID)
+	tibia.radiusMessage(self.name.." eats "..ITEMS[itemID].article.." ".. ITEMS[itemID].name .. ".", self.x, self.y, 384)
+
+	self.health = self.health + ITEMS[itemID].food()
+
+	self.hp = health
+
+	self:destroyItem(itemSlot)
+end
+
+function sea.Player:equip(itemSlot, itemID, equip)
+	local index = equip and "Equipment" or "Inventory"
+	local previousItems, newItems = {}, {}
+
+	if equip then
+		if not self:addItem(itemID) then 
+			return
+		end
+
+		previousItems[itemSlot] = self.equipment[itemSlot] or 0
+		self.equipment[itemSlot] = nil
+		newItems[itemSlot] = 0
+	else
+		if ITEMS[itemID].level and self.level < ITEMS[itemID].level then
+			self:message("You need to be level " .. ITEMS[itemID].level .. " or above to equip it.")
+			return
+		end
+
+		newItems[ITEMS[itemID].slot] = itemID
+		if ITEMS[itemID].slot == 4 then
+			if self.equipment[3] then
+				if ITEMS[self.equipment[3]].twohand then
+						if not self:addItem(self.equipment[3]) then return end
+						previousItems[3] = self.equipment[3] or 0
+						self.equipment[3] = nil
+						newItems[3] = 0
+				end
+			end
+		elseif ITEMS[itemID].slot == 3 then
+			if ITEMS[itemID].twohand then
+				if self.equipment[4] then
+					if not self:addItem(self.equipment[4]) then return end
+					previousItems[4] = self.equipment[4] or 0
+					self.equipment[4] = nil
+					newItems[4] = 0
+				end
+			end
+		end
+		
+		self:destroyItem(itemSlot)
+		if self.equipment[ITEMS[itemID].slot] then
+			previousItems[ITEMS[itemID].slot] = self.equipment[ITEMS[itemID].slot]
+			self:addItem(player.equipment[ITEMS[itemID].slot])
+		else
+			previousItems[ITEMS[itemID].slot] = 0
+		end
+
+		self.equipment[ITEMS[itemID].slot] = itemID
+	end
+
+	self:updateEQ(newItems, previousItems)
+end
+
+function sea.Player:itemActions(itemSlot, equip)
+	local itemID
+	local text = (equip and "Equip" or "Item") .. " Actions" .. string.rep(" ", itemSlot - 1) .. ","
+
+	if equip then
+		itemID = self.equipment[itemSlot] or 0
+	else
+		itemID = self.inventory[itemSlot] or 0
+	end
+
+	for i, v in ipairs(ITEMS[itemID].action) do
+		text = text .. v .. ","
+	end
+
+	text = text .. string.rep(",", 7-#ITEMS[itemID].action) .. "Examine,Drop"
+	menu(self.id, text)
+end
+
+function sea.Player:inventory(page)
+	page = page or 0
+	local text = "Inventory" .. string.rep(" ", page) .. ","
+	for i = page * 5 + 1, (page + 1) * 5 do
+		local name
+
+		if ITEMS[self.inventory[i]] then
+			name = ITEMS[self.inventory[i]].name
+		else
+			name = self.inventory[i] or ""
+		end
+
+		text = text..name.."|"..i..","
+	end
+	text = text..',,Prev Page,Next Page|Page'..page+1
+	menu(self.id, text)
+end
+
+function sea.Player:equipment()
+	local text = "Equipment"
+	for i, v in ipairs(tibia.config.slots) do
+		text = text..","..(ITEMS[self.equipment[i] or 0].name or ("ITEM ID "..self.equipment[i])).. "|"..v
+	end
+
+	menu(self.id, text)
+end
