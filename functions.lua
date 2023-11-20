@@ -233,17 +233,20 @@ end
 
 -- ITEMS --
 
-function tibia.spawnItem(itemid, x, y, amount)
-	if not ITEMS[itemid] then return false end
+function tibia.spawnItem(itemID, x, y, amount)
+	if not ITEMS[itemID] then 
+		return false 
+	end
+
 	local ground = tibia.groundItems[y][x]
 
 	local tile = sea.tile[x][y]
-	local item = {itemid}
-	if itemid == 1337 then
+	local item = {itemID}
+	if itemID == 1337 then
 		item[3] = amount
 	else
-		if ITEMS[itemid].heal then
-			tile.zone.HEAL = (tile.zone.HEAL or 0) + ITEMS[itemid].heal
+		if ITEMS[itemID].heal then
+			tile.zone.HEAL = (tile.zone.HEAL or 0) + ITEMS[itemID].heal
 		end
 	end
 
@@ -272,8 +275,8 @@ function tibia.updateTileItems(x, y)
 		local item = tile[i]
 		local itemid = item[1]
 		local amount = item[3]
-		local x = ITEMS[itemid].offsetx and x*32+16+ITEMS[itemid].offsetx or x*32+16
-		local y = ITEMS[itemid].offsety and y*32+16+ITEMS[itemid].offsety or y*32+16
+		local x = ITEMS[itemid].offsetx and tileToPixel(x) + ITEMS[itemid].offsetx or tileToPixel(x)
+		local y = ITEMS[itemid].offsety and tileToPixel(y) + ITEMS[itemid].offsety or tileToPixel(y)
 		local heightoffset = (height < maxHeight and height or maxHeight) * 3
 		if itemid == 1337 then
 			item[2] = image("gfx/weiwen/rupee.png", 0, 0, height > 3 and 1 or 0)

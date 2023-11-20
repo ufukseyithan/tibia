@@ -173,7 +173,7 @@ sea.addEvent("onHookSpawn", function(player)
 	return 'x'
 end, -1)
 
-sea.addEvent("onHookDrop", function(player, item, x, y)
+sea.addEvent("onHookDrop", function(player, item, itemType, ammoIn, ammo, mode, x, y)
 	if player.tmp.exhaust.pick then
 		if tibia.groundItems[y][x][1] then
 			player:showTutorial("Pick Exhaust", "Try not to spam picking up, as there is an exhaust of 1 second per try.")
@@ -183,10 +183,11 @@ sea.addEvent("onHookDrop", function(player, item, x, y)
 	end
 
 	player.tmp.exhaust.pick = true
-
 	timerEx(tibia.config.exhaust.pick, "rem.pickExhaust", 1, player)
 
-	player:showTutorial("Pick", "You have picked up something. Press F3 to access your inventory!")
+	if tibia.groundItems[y][x][1] then
+		player:showTutorial("Pick", "You have picked up something. Press F3 to access your inventory!")
+	end
 	
 	player:pickItem()
 

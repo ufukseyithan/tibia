@@ -122,7 +122,7 @@ function sea.Player:pickItem()
 			self:message("You have picked up $" .. item[3] .. ".")
 
 			tibia.groundItems[self.lastPosition.y][self.lastPosition.x][height] = nil
-		elseif additem(self, item[1]) then
+		elseif self:addItem(item[1]) then
 			local tile = sea.Tile.get(self.lastPosition.x, self.lastPosition.y)
 			if tile.zone.HEAL and ITEMS[item[1]].heal then
 				tile.zone.HEAL = tile.zone.HEAL - ITEMS[item[1]].heal
@@ -133,20 +133,21 @@ function sea.Player:pickItem()
 
 			freeimage(item[2])
 
-			self:message("You have picked up " .. fullname(item[1]) .. ".")
+			self:message("You have picked up "..fullname(item[1])..".")
 
 			tibia.groundItems[self.lastPosition.y][self.lastPosition.x][height] = nil
 		end
 
 		tibia.updateTileItems(unpack(self.lastPosition))
 	end
+
 	return true
 end
 
 function sea.Player:dropItem(itemSlot, equip)
 	local inv = (equip and self.equipment or self.inventory)
 
-	if tibia.spawnItem(inv[itemSlot], unpack(self.lastPosition)) then
+	if tibia.spawnItem(inv[itemSlot], self.lastPosition.x, self.lastPosition.y) then
 		self:message("You have dropped " .. fullname(inv[itemSlot]) .. ".")
 
 		if equip then
