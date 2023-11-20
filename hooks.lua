@@ -274,7 +274,7 @@ sea.addEvent("onHookServeraction", function(player, action)
 		local itemid = player.equipment[9]
 		if itemid then
 			local amount, items = player:itemCount(itemid)
-			player:alert("Using " .. (amount == 0 and ("the last " .. ITEMS[itemid].name) or ("one of " .. fullname(itemid, amount + 1))) .. "...")
+			player:alert("Using " .. (amount == 0 and ("the last " .. ITEMS[itemid].name) or ("one of " .. tibia.itemFullName(itemid, amount + 1))) .. "...")
 
 			ITEMS[itemid].func[1](id, 9, itemid, true)
 			if amount > 0 then
@@ -315,7 +315,7 @@ function EXPmenu(id, title, button)
 			itemid = PLAYERS[id].Inventory[itemslot]
 		end
 		if button == 8 then
-			message(id, "You see " .. fullname(itemid) .. ". " .. (ITEMS[itemid].desc or "") .. (ITEMS[itemid].level and "You need to be level " .. ITEMS[itemid].level .. " or above to equip it." or ""))
+			message(id, "You see " .. tibia.itemFullName(itemid) .. ". " .. (ITEMS[itemid].desc or "") .. (ITEMS[itemid].level and "You need to be level " .. ITEMS[itemid].level .. " or above to equip it." or ""))
 		elseif button == 9 then
 			dropitem(id,itemslot,equip)
 		else

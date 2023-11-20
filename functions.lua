@@ -321,7 +321,7 @@ function tibia.updateTileItems(x, y)
 	end
 end
 
-function fullname(itemID, amount)
+function tibia.itemFullName(itemID, amount)
 	if not amount or amount == 1 then
 		return ITEMS[itemID].article .. " " .. ITEMS[itemID].name
 	else

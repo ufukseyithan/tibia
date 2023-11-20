@@ -74,7 +74,7 @@ function sea.Player:addItem(itemID, amount, tell)
 			table.insert(self.inventory, itemID)
 
 			if tell then
-				self:message("You have received "..fullname(itemID)..".")
+				self:message("You have received "..tibia.itemFullName(itemID)..".")
 			end
 
 			return true
@@ -97,9 +97,9 @@ function sea.Player:addItem(itemID, amount, tell)
 
 		if tell then
 			if remaining == 0 then
-				player:message("You have received "..fullname(itemID, added)..".")
+				player:message("You have received "..tibia.itemFullName(itemID, added)..".")
 			else
-				player:message("You have received "..fullname(itemID, added)..". ".. remaining.." are dropped due to lack of space.")
+				player:message("You have received "..tibia.itemFullName(itemID, added)..". ".. remaining.." are dropped due to lack of space.")
 			end
 		end
 
@@ -133,7 +133,7 @@ function sea.Player:pickItem()
 
 			freeimage(item[2])
 
-			self:message("You have picked up "..fullname(item[1])..".")
+			self:message("You have picked up "..tibia.itemFullName(item[1])..".")
 
 			tibia.groundItems[self.lastPosition.y][self.lastPosition.x][height] = nil
 		end
@@ -148,7 +148,7 @@ function sea.Player:dropItem(itemSlot, equip)
 	local inv = (equip and self.equipment or self.inventory)
 
 	if tibia.spawnItem(inv[itemSlot], self.lastPosition.x, self.lastPosition.y) then
-		self:message("You have dropped " .. fullname(inv[itemSlot]) .. ".")
+		self:message("You have dropped " .. tibia.itemFullName(inv[itemSlot]) .. ".")
 
 		if equip then
 			self:updateEQ({[itemSlot] = 0}, {[itemSlot] = inv[itemSlot]})
@@ -178,7 +178,7 @@ function sea.Player:removeItem(itemID, amount, tell)
 			end
 			if removed == amount then
 				if tell then
-					self:message("You have lost " .. fullname(itemID, amount) .. ".")
+					self:message("You have lost " .. tibia.itemFullName(itemID, amount) .. ".")
 				end
 				return true
 			end
@@ -371,7 +371,7 @@ function sea.Player:itemActions(itemSlot, equip)
 	end
 
 	menu:setStaticButton(8, "Examine", function(player)
-		player:message("You see "..fullname(itemID)..". "..(ITEMS[itemID].desc or "")..(ITEMS[itemID].level and "You need to be level "..ITEMS[itemID].level.." or above to equip it." or ""))
+		player:message("You see "..tibia.itemFullName(itemID)..". "..(ITEMS[itemID].desc or "")..(ITEMS[itemID].level and "You need to be level "..ITEMS[itemID].level.." or above to equip it." or ""))
 	end)
 
 	menu:setStaticButton(9, "Drop", function(player)
