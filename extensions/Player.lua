@@ -213,7 +213,7 @@ function sea.Player:updateEQ(newItems, previousItems)
 				self.tmp.equip[i].image = nil
 			end
 			if self.tmp.equip[i].equip then
-				parse("strip " .. id .. " " .. self.tmp.equip[i].equip)
+				self:strip(self.tmp.equip[i].equip)
 				table.insert(strip, self.tmp.equip[i].equip)
 				self.tmp.equip[i].equip = nil
 			end
@@ -230,6 +230,7 @@ function sea.Player:updateEQ(newItems, previousItems)
 				def=def-ITEMS[previousItems[i]].def
 			end
 		end
+
 		if newItems[i] ~= 0 then
 			if ITEMS[newItems[i]].hp then
 				hp=hp+ITEMS[newItems[i]].hp
@@ -245,7 +246,7 @@ function sea.Player:updateEQ(newItems, previousItems)
 			end
 			if ITEMS[newItems[i]].equip then
 				self.tmp.equip[i].equip = ITEMS[newItems[i]].equip
-				parse("equip", id, ITEMS[newItems[i]].equip)
+				self:equip(ITEMS[newItems[1]].equip)
 				table.insert(equip, ITEMS[newItems[i]].equip)
 			end
 			if ITEMS[newItems[i]].eimage then 
