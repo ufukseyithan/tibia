@@ -78,9 +78,9 @@ tibia.hudImage:scale(130, tibia.config.pixels + #tibia.config.stats * tibia.conf
 tibia.hudImage.alpha = 0.5
 
 tibia.minutes = 0
-GLOBAL = {}
-GLOBAL.TIME = 0
-GLOBAL.RAIN = 0
+tibia.global = {}
+tibia.global.time = 0
+tibia.global.rain = 0
 
 dofile(dir .. 'functions.lua')
 dofile(dir .. 'admin.lua')

@@ -30,25 +30,25 @@ sea.addEvent("onHookMovetile", function(player, x, y)
 
 	local playerLastPosition = player.lastPosition
 
-	if inarray(tibia.config.waterTiles, tile(x, y, 'frame')) or player.tmp.paralyse then
+	local tile = sea.Tile.get(x, y)
+
+	if tile.isWaterTile or player.tmp.paralyse then
 		if not (player.equipment[7] and ITEMS[player.equipment[7]].water) then
-			parse("setpos", id, playerLastPosition.x*32+16, playerLastPosition.y*32+16)
+			player:setPosition(tileToPixel(playerLastPosition.x), tileToPixel(playerLastPosition.y))
 			return
 		end
 	end
 
-	local tile = sea.tile[x][y]
 	if tile.zone.HOUSE then
 		player:showTutorial("House", "This is a house. For more information about houses, type !house")
 
-		house = houses[tile.zone.HOUSE]
+		house = tibia.houses[tile.zone.HOUSE]
 		if not house.owner then
-			parse("setpos", id, playerLastPosition.x*32+16, playerLastPosition.y*32+16)
+			player:setPosition(tileToPixel(playerLastPosition.x), tileToPixel(playerLastPosition.y))
 			player:message("This house has no owner. Type \"!house\" for a list of house commands.")
 			return
-		elseif not (player.usgn == house.owner or inarray(house.allow, player.usgn)) then
-			parse("setpos", id, house.ent[1]*32+16, house.ent[2]*32+16)
-			
+		elseif not (player.usgn == house.owner or table.contains(house.allow, player.usgn)) then
+			player:setPosition(tileToPixel(house.ent[1]), tileToPixel(house.ent[2]))
 			player:message("You are not invited into " .. PLAYERCACHE[house.owner].name .. "'s house. Type \"!house\" for a list of house commands.", "255255255")
 			return
 		end
@@ -76,9 +76,13 @@ end, -1)
 sea.addEvent("onHookSay", function(player, words)
 	local id = player.id
 
-	if player.tmp.exhaust.talk then return 1 end
+	if player.tmp.exhaust.talk then 
+		return 1 
+	end
+
 	player.tmp.exhaust.talk = true
 	timerEx(tibia.config.exhaust.talk, "rem.talkExhaust", 1, player)
+
 	if words:sub(1,1) == '!' then
 		command = words:sub(2):split(' ')
 		local func = COMMANDS[command[1]]
@@ -93,18 +97,18 @@ sea.addEvent("onHookSay", function(player, words)
 
 	local picture = 'gfx/weiwen/talk.png'
 	words = words:gsub('%s+', ' ')
-	local radiusx, radiusy, colour, action
+	local radiusX, radiusY, colour, action
 	if words:sub(-1) == '!' then
 		words = words:upper()
 		action = "yells"
-		radiusx, radiusy = 1280, 960
+		radiusX, radiusY = 1280, 960
 	elseif words:sub(-1) == '?' then
 		action = "asks"
 		picture = 'gfx/weiwen/ask.png'
 	elseif words:sub(1,2) == '::' then
 		words = words:sub(3)
 		action = "whispers"
-		radiusx, radiusy = 48, 48
+		radiusX, radiusY = 48, 48
 	end
 
 	if words:find':D' or words:find'=D' or words:find':)' or words:find'=)' or words:find'%(:' or words:find'%(=' or words:find'xD' or words:find'lol' then
@@ -115,37 +119,32 @@ sea.addEvent("onHookSay", function(player, words)
 		picture = 'gfx/weiwen/sad.png'
 	end
 
-	timer(1000, "freeimage", image(picture, 0, 0, 200+id))
+	local image = sea.Image.create(picture, 0, 0, 200 + player.id)
+	image:destroyIn(1000)
+
 	local code = words:sub(1,2):lower()
 	if code:sub(1,1) == '^' then
 		colour = tibia.config.colours[tonumber(code:sub(2,2), 36)]
 		words = words:sub(3)
 	end
+
 	if player.team == 0 then
-		radiusx, radiusy = 0, 0
+		radiusX, radiusY = 0, 0
 	end
 
 	local text = string.format("%s %s %s : %s", os.date'%X', player.name, action or "says", words)
-	--text = os.date'%X' .. " " .. player(id, "name") .. " " .. (action or "says") .. " : " .. words
-	radiusmsg(text, player.x, player.y, radiusx, radiusy, colour or 255255100)
+	tibia.radiusMessage(text, player.x, player.y, radiusX, radiusY, colour or 255255100)
 	
 	return 1
 end, -1)
 
---[[addhook("say","_EXPsay",100)
-function _EXPsay(id,words)
-	return 1
-end]]
-
 sea.addEvent("onHookSpawn", function(player)
-	local id = player.id
-
 	if player.usgn == 0 then
 		player:message("Please register a U.S.G.N. account at \"http://www.usgn.de/\" and make sure that you are logged in!", sea.Color.red)
 	else
 		if player.info[1] then
 			for i, v in ipairs(player.info) do
-				message(id, v, "255100100")
+				player:message(v, "255100100")
 			end
 
 			player.info = {}
@@ -194,7 +193,7 @@ sea.addEvent("onHookDrop", function(player, item, x, y)
 end, -1)
 
 sea.addEvent("onHookSecond", function()
-	updateTime()
+	tibia.updateTime()
 
 	for _, player in ipairs(sea.Player.get()) do
 		if player.health > 0 then
@@ -214,6 +213,7 @@ end, -1)
 
 sea.addEvent("onHookMinute", function()
 	tibia.minutes = tibia.minutes + 1
+	
 	for i, v in ipairs(tibia.houses) do
 		if v.owner then
 			local difftime = os.difftime(v.endtime, os.time())
@@ -246,7 +246,7 @@ sea.addEvent("onHookMinute", function()
 	end
 
 	if sea.game.password == "" and tibia.minutes % 5 == 0 then
-		saveserver()
+		tibia.saveServer()
 	end
 end, -1)
 
@@ -338,7 +338,7 @@ EXPhit = function(victim, source, weapon, hpdmg, apdmg)
 			return 1 
 		end
 
-		if inarray({400, 401, 402, 403, 404}, source.equipment[7]) then 
+		if table.contains({400, 401, 402, 403, 404}, source.equipment[7]) then 
 			source:message("You may not attack on a horse.") 
 			return 1 
 		end
@@ -473,7 +473,7 @@ sea.addEvent("onHookUse", function(player, event, data, x, y)
 		player:showTutorial("Door 1", "This door belongs to a house. The house owner can specify who is allowed to open the door.")
 
 		if door then
-			if (player.usgn == house.owner or inarray(house.doors[door], player.usgn)) then
+			if (player.usgn == house.owner or table.contains(house.doors[door], player.usgn)) then
 				if player.usgn == house.owner then
 					player:showTutorial("Door 2", "To choose who is allowed to open this door, use the command !house door")
 				end

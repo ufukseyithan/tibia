@@ -313,8 +313,8 @@ NPCs[12].func = function(npc, id, words, state)
 	end
 end
 
-if not GLOBAL.NPC13 then
-	GLOBAL.NPC13 = 0
+if not tibia.global.NPC13 then
+	tibia.global.NPC13 = 0
 end
 NPCs[13].func = function(npc, id, words, state)
 	if words == "hi" then
@@ -330,7 +330,7 @@ NPCs[13].func = function(npc, id, words, state)
 			if random == number then
 				local earning = PLAYERS[id].tmp.dice*6
 				addmoney(id, earning)
-				GLOBAL.NPC13 = GLOBAL.NPC13 - earning
+				tibia.global.NPC13 = tibia.global.NPC13 - earning
 				message(id, "You have recieved $" .. earning .. ".", "255255255")
 				NPCspeak(npc, "You rolled a " .. random .. ". You won! Here's $" .. earning .. " as the prize.")
 			else
@@ -348,14 +348,14 @@ NPCs[13].func = function(npc, id, words, state)
 		elseif contains(words, "no") then
 			NPCspeak(npc, "Oh, you don't want to win?")
 		elseif contains(words, "earning") or contains(words, "money") then
-			NPCspeak(npc, "I have $" .. GLOBAL.NPC13 .. " currently.")
+			NPCspeak(npc, "I have $" .. tibia.global.NPC13 .. " currently.")
 		end
 	elseif state == 2 then
 		local bet = tonumber(words)
 		if bet and bet >= 1 then
 			bet = math.floor(bet)
 			if addmoney(id, -bet) then
-				GLOBAL.NPC13 = GLOBAL.NPC13 + bet
+				tibia.global.NPC13 = tibia.global.NPC13 + bet
 				message(id, "You have lost $" .. bet .. ".", "255255255")
 				PLAYERS[id].tmp.dice = bet
 				NPCspeak(npc, "You'll win $" .. bet*6 .. " if you pick the correct number! Pick a number from 1-6!")
@@ -444,7 +444,7 @@ function NPCsay(id, words)
 	words = words:lower()
 	if PLAYERS[id].tmp.npcstate then
 		local v = NPCs[PLAYERS[id].tmp.npcstate[1]]
-		--if inarea(player(id, "x"), player(id, "y"), v.pos[1]-96, v.pos[2]-96, v.pos[1]+96, v.pos[2]+96) then
+		--if inArea(player(id, "x"), player(id, "y"), v.pos[1]-96, v.pos[2]-96, v.pos[1]+96, v.pos[2]+96) then
 			--NPCs[PLAYERS[id].tmp.npcstate[1]].func(PLAYERS[id].tmp.npcstate[1], id, words, PLAYERS[id].tmp.npcstate[2])
 			--[[return
 		else
@@ -453,7 +453,7 @@ function NPCsay(id, words)
 	end
 	if contains(words, "hi") or contains(words, "hello") or contains(words, "yo") or contains(words, "hey") then
 		for k, v in ipairs(NPCs) do
-			if inarea(player(id, "x"), player(id, "y"), v.pos[1]-96, v.pos[2]-96, v.pos[1]+96, v.pos[2]+96) then
+			if inArea(player(id, "x"), player(id, "y"), v.pos[1]-96, v.pos[2]-96, v.pos[1]+96, v.pos[2]+96) then
 				if v.func then
 					v.func(k, id, "hi")
 				elseif v.menu then

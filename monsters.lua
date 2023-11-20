@@ -380,7 +380,7 @@ sea.addEvent("onHookAttack", function(player)
 		return
 	end
 
-	if inarray({400, 401, 402, 403, 404}, player.equipment[7]) then
+	if table.contains({400, 401, 402, 403, 404}, player.equipment[7]) then
 		player:alert("You may not attack on a horse.")
 		return
 	end

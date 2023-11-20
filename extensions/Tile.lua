@@ -1,3 +1,7 @@
+function sea.Tile:isWaterTile()
+    return table.contains(tibia.config.waterTiles, self.frame)
+end
+
 -------------------------
 --     PROPERTIES      --
 -------------------------
