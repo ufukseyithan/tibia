@@ -233,7 +233,7 @@ sea.addEvent("onHookMinute", function()
 					--updateHUD(online)
 				end
 
-				houseexpire(i)
+				tibia.houseExpire(i)
 			elseif difftime < 300 then
 				for _, id in ipairs(sea.Player.get()) do
 					if player.usgn == v.owner then

@@ -56,7 +56,7 @@ function sea.Player:itemCount(itemID)
 			table.insert(items, k)
 		end
 	end
-	
+
 	return amount, items
 end
 
@@ -136,7 +136,7 @@ function sea.Player:pickItem()
 			tibia.groundItems[self.lastPosition.y][self.lastPosition.x][height] = nil
 		end
 
-		updateTileItems(unpack(self.lastPosition))
+		tibia.updateTileItems(unpack(self.lastPosition))
 	end
 	return true
 end
@@ -180,6 +180,7 @@ function sea.Player:removeItem(itemID, amount, tell)
 			end
 		end
 	end
+
 	return false
 end
 
@@ -191,4 +192,94 @@ function sea.Player:destroyItem(itemSlot, equip)
 	end
 
 	return true
+end
+
+function sea.Player:updateEQ(newItems, previousItems)
+	previousItems = previousItems or {}
+
+	if not newItems then 
+		return 
+	end
+
+	self:equipAndSet(50)
+
+	local hp, spd, atk, def = 0, 0, 0, 0
+	local equip, strip = self:getItems(), {50, 41}
+
+	for i, v in pairs(newItems) do
+		if previousItems[i] then
+			if self.tmp.equip[i].image then
+				freeimage(self.tmp.equip[i].image)
+				self.tmp.equip[i].image = nil
+			end
+			if self.tmp.equip[i].equip then
+				parse("strip " .. id .. " " .. self.tmp.equip[i].equip)
+				table.insert(strip, self.tmp.equip[i].equip)
+				self.tmp.equip[i].equip = nil
+			end
+			if ITEMS[previousItems[i]].hp then
+				hp=hp-ITEMS[previousItems[i]].hp
+			end
+			if ITEMS[previousItems[i]].speed then
+				spd=spd-ITEMS[previousItems[i]].speed
+			end
+			if ITEMS[previousItems[i]].atk then
+				atk=atk-ITEMS[previousItems[i]].atk
+			end
+			if ITEMS[previousItems[i]].def then
+				def=def-ITEMS[previousItems[i]].def
+			end
+		end
+		if newItems[i] ~= 0 then
+			if ITEMS[newItems[i]].hp then
+				hp=hp+ITEMS[newItems[i]].hp
+			end
+			if ITEMS[newItems[i]].speed then
+				spd=spd+ITEMS[newItems[i]].speed
+			end
+			if ITEMS[newItems[i]].atk then
+				atk=atk+ITEMS[newItems[i]].atk
+			end
+			if ITEMS[newItems[i]].def then
+				def=def+ITEMS[newItems[i]].def
+			end
+			if ITEMS[newItems[i]].equip then
+				self.tmp.equip[i].equip = ITEMS[newItems[i]].equip
+				parse("equip", id, ITEMS[newItems[i]].equip)
+				table.insert(equip, ITEMS[newItems[i]].equip)
+			end
+			if ITEMS[newItems[i]].eimage then 
+				if not self.tmp.equip[i].image then
+					self.tmp.equip[i].image = image(ITEMS[newItems[i]].eimage, ITEMS[newItems[i]].static and 0 or 1, 0, (ITEMS[newItems[i]].ground and 100 or 200)+id)
+					if ITEMS[newItems[i]].r then
+						imagecolor(self.tmp.equip[i].image, ITEMS[newItems[i]].r, ITEMS[newItems[i]].g, ITEMS[newItems[i]].b)
+					end
+					local scalex, scaley = ITEMS[newItems[i]].escalex or 1, ITEMS[newItems[i]].escaley or 1
+					scalex = scalex * -1
+					imagescale(self.tmp.equip[i].image, scalex, scaley)
+					if ITEMS[newItems[i]].blend then
+						imageblend(self.tmp.equip[i].image, ITEMS[newItems[i]].blend)
+					end
+				end
+			end
+		end
+	end
+
+	for i, v in ipairs(equip) do
+		if not table.contains(strip, v.id) then
+			self.weapon = v.id
+			self:strip(50)
+		end
+	end
+
+	self.tmp.atk = self.tmp.atk + atk
+	self.tmp.def = self.tmp.def + def
+	self.tmp.spd = self.tmp.spd + spd
+	self.tmp.hp = self.tmp.hp + hp
+
+	local temphp = self.health
+	self.maxHealth = self.tmp.hp
+	self.health = temphp
+
+	self.speed = self.tmp.spd
 end

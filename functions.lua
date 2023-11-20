@@ -113,7 +113,7 @@ function shutdown(delay)
 	end
 end
 
-function updateTime(t)
+function tibia.updateTime(t)
 	tibia.global.time = t or (tibia.global.time + 1) % 1440
 
 	if tibia.global.rain == 0 then
@@ -148,7 +148,7 @@ function updateTime(t)
 	return tibia.global.time
 end
 
-function houseexpire(id)
+function tibia.houseExpire(id)
 	local house = tibia.houses[id]
 	if not house.owner then
 		return false
@@ -237,13 +237,13 @@ function spawnitem(itemid, x, y, amount)
 	end
 
 	ground[#ground+1] = item
-	updateTileItems(x, y)
+	tibia.updateTileItems(x, y)
 
 	return true
 end
 
-local MAXHEIGHT = tibia.config.maxHeight
-function updateTileItems(x, y)
+local maxHeight = tibia.config.maxHeight
+function tibia.updateTileItems(x, y)
 	local tile = groundItems[y][x]
 	if #tile ~= 0 then
 		for i = 1, #tile do
@@ -254,17 +254,17 @@ function updateTileItems(x, y)
 			end
 		end
 	end
+
 	local height = 0
-	for i = #tile-MAXHEIGHT+1 > 0 and #tile-MAXHEIGHT+1 or 1, #tile do
+	for i = #tile - maxHeight + 1 > 0 and #tile - maxHeight + 1 or 1, #tile do
 		height = height + 1
 		local item = tile[i]
 		local itemid = item[1]
 		local amount = item[3]
 		local x = ITEMS[itemid].offsetx and x*32+16+ITEMS[itemid].offsetx or x*32+16
 		local y = ITEMS[itemid].offsety and y*32+16+ITEMS[itemid].offsety or y*32+16
-		local heightoffset = (height < MAXHEIGHT and height or MAXHEIGHT)*3
+		local heightoffset = (height < maxHeight and height or maxHeight) * 3
 		if itemid == 1337 then
-
 			item[2] = image("gfx/weiwen/rupee.png", 0, 0, height > 3 and 1 or 0)
 			if amount < 5 then
 				imagecolor(item[2], 64, 255, 0)
@@ -383,8 +383,11 @@ end
 function equip(player, itemSlot, itemID, equip)
 	local index = equip and "Equipment" or "Inventory"
 	local previousItems, newItems = {}, {}
+
 	if equip then
-		if not additem(player, itemID) then return end
+		if not player:addItem(itemID) then 
+			return 
+		end
 		previousItems[itemSlot] = player.equipment[itemSlot] or 0
 		player.equipment[itemSlot] = nil
 		newItems[itemSlot] = 0
@@ -393,6 +396,7 @@ function equip(player, itemSlot, itemID, equip)
 			player:message("You need to be level " .. ITEMS[itemID].level .. " or above to equip it.")
 			return
 		end
+
 		newItems[ITEMS[itemID].slot] = itemID
 		if ITEMS[itemID].slot == 4 then
 			if player.equipment[3] then
@@ -413,106 +417,17 @@ function equip(player, itemSlot, itemID, equip)
 				end
 			end
 		end
-		destroyitem(id, itemSlot)
+		
+		player:destroyItem(itemSlot)
 		if player.equipment[ITEMS[itemID].slot] then
 			previousItems[ITEMS[itemID].slot] = player.equipment[ITEMS[itemID].slot]
 			additem(player, player.equipment[ITEMS[itemID].slot])
 		else
 			previousItems[ITEMS[itemID].slot] = 0
 		end
+
 		player.equipment[ITEMS[itemID].slot] = itemID
 	end
-	updateEQ(player, newItems, previousItems)
+
+	player:updateEQ(newItems, previousItems)
 end
-
-function updateEQ(player, newItems, previousItems)
-	previousItems = previousItems or {}
-
-	if not newItems then 
-		return 
-	end
-
-	player:equipAndSet(50)
-
-	local hp, spd, atk, def = 0, 0, 0, 0
-	local equip, strip = player:getItems(), {50, 41}
-
-	for i, v in pairs(newItems) do
-		if previousItems[i] then
-			if player.tmp.equip[i].image then
-				freeimage(player.tmp.equip[i].image)
-				player.tmp.equip[i].image = nil
-			end
-			if player.tmp.equip[i].equip then
-				parse("strip " .. id .. " " .. player.tmp.equip[i].equip)
-				table.insert(strip, player.tmp.equip[i].equip)
-				player.tmp.equip[i].equip = nil
-			end
-			if ITEMS[previousItems[i]].hp then
-				hp=hp-ITEMS[previousItems[i]].hp
-			end
-			if ITEMS[previousItems[i]].speed then
-				spd=spd-ITEMS[previousItems[i]].speed
-			end
-			if ITEMS[previousItems[i]].atk then
-				atk=atk-ITEMS[previousItems[i]].atk
-			end
-			if ITEMS[previousItems[i]].def then
-				def=def-ITEMS[previousItems[i]].def
-			end
-		end
-		if newItems[i] ~= 0 then
-			if ITEMS[newItems[i]].hp then
-				hp=hp+ITEMS[newItems[i]].hp
-			end
-			if ITEMS[newItems[i]].speed then
-				spd=spd+ITEMS[newItems[i]].speed
-			end
-			if ITEMS[newItems[i]].atk then
-				atk=atk+ITEMS[newItems[i]].atk
-			end
-			if ITEMS[newItems[i]].def then
-				def=def+ITEMS[newItems[i]].def
-			end
-			if ITEMS[newItems[i]].equip then
-				player.tmp.equip[i].equip = ITEMS[newItems[i]].equip
-				parse("equip", id, ITEMS[newItems[i]].equip)
-				table.insert(equip, ITEMS[newItems[i]].equip)
-			end
-			if ITEMS[newItems[i]].eimage then 
-				if not player.tmp.equip[i].image then
-					player.tmp.equip[i].image = image(ITEMS[newItems[i]].eimage, ITEMS[newItems[i]].static and 0 or 1, 0, (ITEMS[newItems[i]].ground and 100 or 200)+id)
-					if ITEMS[newItems[i]].r then
-						imagecolor(player.tmp.equip[i].image, ITEMS[newItems[i]].r, ITEMS[newItems[i]].g, ITEMS[newItems[i]].b)
-					end
-					local scalex, scaley = ITEMS[newItems[i]].escalex or 1, ITEMS[newItems[i]].escaley or 1
-					scalex = scalex * -1
-					imagescale(player.tmp.equip[i].image, scalex, scaley)
-					if ITEMS[newItems[i]].blend then
-						imageblend(player.tmp.equip[i].image, ITEMS[newItems[i]].blend)
-					end
-				end
-			end
-		end
-	end
-
-	for i, v in ipairs(equip) do
-		if not table.contains(strip, v.id) then
-			player.weapon = v.id
-			player:strip(50)
-		end
-	end
-
-	player.tmp.atk = player.tmp.atk + atk
-	player.tmp.def = player.tmp.def + def
-	player.tmp.spd = player.tmp.spd + spd
-	player.tmp.hp = player.tmp.hp + hp
-
-	local temphp = player.health
-	player.maxHealth = player.tmp.hp
-	player.health = temphp
-
-	player.speed = player.tmp.spd
-end
-
--- END OF EQUIP --
