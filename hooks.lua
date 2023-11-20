@@ -32,7 +32,7 @@ sea.addEvent("onHookMovetile", function(player, x, y)
 
 	local tile = sea.Tile.get(x, y)
 
-	if tile.isWaterTile() or player.tmp.paralyse then
+	if tile:isWaterTile() or player.tmp.paralyse then
 		if not (player.equipment[7] and ITEMS[player.equipment[7]].water) then
 			player:setPosition(tileToPixel(playerLastPosition.x), tileToPixel(playerLastPosition.y))
 			return
@@ -186,9 +186,10 @@ sea.addEvent("onHookDrop", function(player, item, x, y)
 
 	timerEx(tibia.config.exhaust.pick, "rem.pickExhaust", 1, player)
 
-	player:showTutorial("Pick", "You have picked up something. Press F2 to access your inventory!")
+	player:showTutorial("Pick", "You have picked up something. Press F3 to access your inventory!")
 	
-	pickitem(player)
+	player:pickItem()
+
 	return 1
 end, -1)
 
@@ -250,41 +251,40 @@ sea.addEvent("onHookMinute", function()
 	end
 end, -1)
 
---[[addhook("serveraction","EXPserveraction")
-function EXPserveraction(id,action)
-	if player(id, 'health') < 0 then return end
-	if action == 1 then
-		if not PLAYERS[id].Tutorial.inventory then
-			message(id, "This is your inventory. You can equip or use items by clicking on them. You can press F3 to access your equipment.", "255128000")
-			PLAYERS[id].Tutorial.inventory = true
-		end
-		inventory(id)
-	elseif action == 2 then
-		if not PLAYERS[id].Tutorial.inventory then
-			message(id, "This is your equipment. You can unequip or use items by clicking on them.", "255128000")
-			PLAYERS[id].Tutorial.inventory = true
-		end
-		equipment(id)
+sea.addEvent("onHookServeraction", function(player, action)
+	if not player.alive then 
+		return 
+	end
+
+	if action == 2 then
+		player:showTutorial("Inventory", "This is your inventory. You can equip or use items by clicking on them. You can press F4 to access your equipment.")
+		player:viewInventory()
 	elseif action == 3 then
-		if PLAYERS[id].tmp.exhaust.use then
+		player:showTutorial("Equipment", "This is your equipment. You can unequip or use items by clicking on them.")
+		player:viewEquipment()
+	elseif action == 4 then
+		if player.tmp.exhaust.use then
 			return
 		end
-		PLAYERS[id].tmp.exhaust.use = true
+
+		player.tmp.exhaust.use = true
 		timer(tibia.config.exhaust.use, "rem.useExhaust", tostring(id))
-		local itemid = PLAYERS[id].Equipment[9]
+
+		local itemid = player.equipment[9]
 		if itemid then
-			local amount, items = itemcount(id, itemid)
-			message(id, "Using " .. (amount == 0 and ("the last " .. ITEMS[itemid].name) or ("one of " .. fullname(itemid, amount+1))) .. "...@C", "000255000")
+			local amount, items = player:itemCount(itemid)
+			player:alert("Using " .. (amount == 0 and ("the last " .. ITEMS[itemid].name) or ("one of " .. fullname(itemid, amount + 1))) .. "...")
+
 			ITEMS[itemid].func[1](id, 9, itemid, true)
 			if amount > 0 then
-				table.remove(PLAYERS[id].Inventory, items[1])
-				PLAYERS[id].Equipment[9] = itemid
+				table.remove(player.inventory, items[1])
+				player.equipment[9] = itemid
 			end
 		else
-			message(id, "You can hold a rune and use F4 to cast it easily.", "255255255")
+			player:message("You can hold a rune and use F4 to cast it easily.")
 		end
 	end
-end]]
+end)
 
 --[[addhook("menu","EXPmenu")
 function EXPmenu(id, title, button)

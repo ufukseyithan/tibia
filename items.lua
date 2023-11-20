@@ -1,4 +1,5 @@
-local equip = sea.Player.equip
+local equip = sea.Player.equipItem
+local eat = sea.Player.eat
 
 ITEMS = {
 	[0] = {
@@ -39,7 +40,7 @@ ITEMS = {
 		r = 180, g = 180, b = 180, 
 		action = {"wear","check time"}, 
 		slot = 8, 
-		func = {equip, function(id) msg2(id,ITEMS[3].desc) end},
+		func = {equip, function(player) player:message(ITEMS[3].desc) end},
 	},
 	
 	[4] = {

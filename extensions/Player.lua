@@ -91,7 +91,7 @@ function sea.Player:addItem(itemID, amount, tell)
 		local remaining = amount - added
 		local dropped = 0
 		while dropped < remaining do
-			spawnitem(itemID, self.lastPosition.x, self.lastPosition.y)
+			tibia.spawnItem(itemID, self.lastPosition.x, self.lastPosition.y)
 			dropped = dropped + 1
 		end
 
@@ -145,11 +145,12 @@ end
 
 function sea.Player:dropItem(itemSlot, equip)
 	local inv = (equip and self.equipment or self.inventory)
-	if spawnitem(inv[itemSlot], unpack(self.lastPosition)) then
+
+	if tibia.spawnItem(inv[itemSlot], unpack(self.lastPosition)) then
 		self:message("You have dropped " .. fullname(inv[itemSlot]) .. ".")
 
 		if equip then
-			updateEQ(self, {[itemSlot] = 0}, {[itemSlot] = inv[itemSlot]})
+			self:updateEQ({[itemSlot] = 0}, {[itemSlot] = inv[itemSlot]})
 			inv[itemSlot] = nil
 		else
 			table.remove(inv, itemSlot)
@@ -351,9 +352,11 @@ function sea.Player:equipItem(itemSlot, itemID, equip)
 end
 
 function sea.Player:itemActions(itemSlot, equip)
-	local itemID
-	local text = (equip and "Equip" or "Item") .. " Actions" .. string.rep(" ", itemSlot - 1) .. ","
+	local text = (equip and "Equip" or "Item").." Actions"
 
+	local menu = sea.Menu.new(text)
+
+	local itemID
 	if equip then
 		itemID = self.equipment[itemSlot] or 0
 	else
@@ -361,36 +364,52 @@ function sea.Player:itemActions(itemSlot, equip)
 	end
 
 	for i, v in ipairs(ITEMS[itemID].action) do
-		text = text .. v .. ","
+		menu:addButton(v, function(player)
+			ITEMS[itemID].func[i](player, itemSlot, itemID, equip)
+		end)
 	end
 
-	text = text .. string.rep(",", 7-#ITEMS[itemID].action) .. "Examine,Drop"
-	menu(self.id, text)
+	menu:setStaticButton(8, "Examine", function(player)
+		player:message("You see "..fullname(itemID)..". "..(ITEMS[itemID].desc or "")..(ITEMS[itemID].level and "You need to be level "..ITEMS[itemID].level.." or above to equip it." or ""))
+	end)
+
+	menu:setStaticButton(9, "Drop", function(player)
+		player:dropItem(itemSlot, equip)
+	end)
+
+	return menu
 end
 
 function sea.Player:viewInventory(page)
-	page = page or 0
-	local text = "Inventory" .. string.rep(" ", page) .. ","
-	for i = page * 5 + 1, (page + 1) * 5 do
+	local menu = sea.Menu.new("Inventory")
+
+	for k, v in pairs(self.inventory) do
 		local name
 
-		if ITEMS[self.inventory[i]] then
-			name = ITEMS[self.inventory[i]].name
+		if ITEMS[v] then
+			name = ITEMS[v].name
 		else
-			name = self.inventory[i] or ""
+			name = k or ""
 		end
 
-		text = text..name.."|"..i..","
+		menu:addButton(name, function(player)
+			return player:itemActions(k)
+		end, k)
 	end
-	text = text..',,Prev Page,Next Page|Page'..page+1
-	menu(self.id, text)
+
+	self:displayMenu(menu, page)
 end
 
 function sea.Player:viewEquipment()
-	local text = "Equipment"
-	for i, v in ipairs(tibia.config.slots) do
-		text = text..","..(ITEMS[self.equipment[i] or 0].name or ("ITEM ID "..self.equipment[i])).. "|"..v
+	local menu = sea.Menu.new("Equipment")
+
+	for k, v in ipairs(tibia.config.slots) do
+		local name = ITEMS[self.equipment[k] or 0].name or ("ITEM ID "..self.equipment[k])
+
+		menu:addButton(name, function(player)
+			return player:itemActions(k, true)
+		end, v)
 	end
 
-	menu(self.id, text)
+	self:displayMenu(menu, page)
 end

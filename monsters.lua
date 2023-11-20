@@ -102,9 +102,9 @@ tibia.config.MONSTERS = {
 		exp = 13, money =60, loot = {}, 
 		spc = {2500, function(self, target, dist) 
 			if not self.agility then
-				radiusmsg("Spearow uses agility!", self.x, self.y)
-				parse("effect \"colorsmoke\" " .. self.x .. " " .. self.y .. " 5 5 155 255 155")
-				radiussound("weapons/g_flash.wav", self.x, self.y)
+				tibia.radiusMessage("Spearow uses agility!", self.x, self.y)
+				sea.effect("colorsmoke", self.x, self.y, 5, 5, 155, 255, 155)
+				tibia.radiusSound("weapons/g_flash.wav", self.x, self.y)
 				self._spd = self.spd
 				self.spd = 10
 				self.agility = true

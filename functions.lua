@@ -254,7 +254,7 @@ end
 
 local maxHeight = tibia.config.maxHeight
 function tibia.updateTileItems(x, y)
-	local tile = groundItems[y][x]
+	local tile = tibia.groundItems[y][x]
 	if #tile ~= 0 then
 		for i = 1, #tile do
 			local item = tile[i]
