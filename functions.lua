@@ -58,6 +58,7 @@ end
 -- SERVER FUNCTIONS --
 
 function tibia.saveServer()
+	local dir = 'sys/lua/sea-framework/app/tibia/'
 	local file = io.open(dir .. "saves/" .. map'name' .. ".lua", 'w+') or io.tmpfile()
 	
 	local tmp = {}

@@ -1,10 +1,6 @@
 print('initialising...')
-local _map = map
-dofile('sys/lua/wrapper.lua')
-map = _map
-math.randomseed(os.time())
 
-dir = 'sys/lua/sea-framework/app/tibia/'
+local dir = 'sys/lua/sea-framework/app/tibia/'
 
 local mapName = sea.map.name
 tibia.pvpZone = tibia.config.pvpZone[mapName] or tibia.config.pvpZone[tibia.config.defaultMap]
