@@ -1,3 +1,5 @@
+local equip = sea.Player.equip
+
 ITEMS = {
 	[0] = {
 		name = ""

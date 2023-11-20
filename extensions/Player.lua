@@ -1,5 +1,7 @@
 function sea.Player:isAtZone(zone)
-	return sea.tile[self.lastPosition.x][self.lastPosition.y].zone[zone]
+	local tile = sea.Tile.get(self.lastPosition.x, self.lastPosition.y)
+
+	return tile and tile.zone[zone] or false
 end
 
 function sea.Player:addExp(amount)
@@ -295,7 +297,7 @@ function sea.Player:eat(itemSlot, itemID)
 	self:destroyItem(itemSlot)
 end
 
-function sea.Player:equip(itemSlot, itemID, equip)
+function sea.Player:equipItem(itemSlot, itemID, equip)
 	local index = equip and "Equipment" or "Inventory"
 	local previousItems, newItems = {}, {}
 

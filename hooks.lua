@@ -32,7 +32,7 @@ sea.addEvent("onHookMovetile", function(player, x, y)
 
 	local tile = sea.Tile.get(x, y)
 
-	if tile.isWaterTile or player.tmp.paralyse then
+	if tile.isWaterTile() or player.tmp.paralyse then
 		if not (player.equipment[7] and ITEMS[player.equipment[7]].water) then
 			player:setPosition(tileToPixel(playerLastPosition.x), tileToPixel(playerLastPosition.y))
 			return
