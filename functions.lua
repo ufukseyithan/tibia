@@ -150,10 +150,10 @@ function tibia.updateTime(t)
 		end
 	end
 
-	local text = string.format("%02d:%02d", math.floor(tibia.global.TIME / 60), tostring(tibia.global.TIME % 60))
+	local text = string.format("%02d:%02d", math.floor(tibia.global.time / 60), tostring(tibia.global.time % 60))
 	ITEMS[3].desc = "The time is "..text.."."
 
-	sea.game.daylightTime = tibia.global.TIME / 4
+	sea.game.daylightTime = tibia.global.time / 4
 					
 	return tibia.global.time
 end

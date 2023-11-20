@@ -167,7 +167,7 @@ sea.addEvent("onHookSpawn", function(player)
 		previousItems[i] = 0
 	end
 
-	updateEQ(player, newItems, previousItems)
+	player:updateEQ(newItems, previousItems)
 	player.health = player.hp <= 0 and 250 or player.hp
 
 	return 'x'

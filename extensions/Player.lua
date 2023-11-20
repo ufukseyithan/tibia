@@ -50,7 +50,7 @@ end
 function sea.Player:itemCount(itemID)
 	local amount, items = 0, {}
 
-	for k, v in ipairs(seşf.inventory) do
+	for k, v in ipairs(self.inventory) do
 		if v == itemID then
 			amount = amount + 1
 			table.insert(items, k)
@@ -300,7 +300,7 @@ function sea.Player:equip(itemSlot, itemID, equip)
 	local previousItems, newItems = {}, {}
 
 	if equip then
-		if not self:addItem(itemID) then 
+		if not self:addItem(itemID) then
 			return
 		end
 
@@ -366,7 +366,7 @@ function sea.Player:itemActions(itemSlot, equip)
 	menu(self.id, text)
 end
 
-function sea.Player:inventory(page)
+function sea.Player:viewInventory(page)
 	page = page or 0
 	local text = "Inventory" .. string.rep(" ", page) .. ","
 	for i = page * 5 + 1, (page + 1) * 5 do
@@ -384,7 +384,7 @@ function sea.Player:inventory(page)
 	menu(self.id, text)
 end
 
-function sea.Player:equipment()
+function sea.Player:viewEquipment()
 	local text = "Equipment"
 	for i, v in ipairs(tibia.config.slots) do
 		text = text..","..(ITEMS[self.equipment[i] or 0].name or ("ITEM ID "..self.equipment[i])).. "|"..v
