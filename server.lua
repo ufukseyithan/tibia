@@ -1,5 +1,3 @@
-print('initialising...')
-
 local dir = 'sys/lua/sea-framework/app/tibia/'
 
 local mapName = sea.map.name
@@ -78,50 +76,52 @@ tibia.global = {}
 tibia.global.time = 0
 tibia.global.rain = 0
 
-dofile(dir .. 'functions.lua')
-dofile(dir .. 'admin.lua')
-dofile(dir .. 'commands.lua')
-dofile(dir .. 'items.lua')
-dofile(dir .. 'npcs.lua')
+dofile(dir..'functions.lua')
+dofile(dir..'admin.lua')
+dofile(dir..'commands.lua')
+dofile(dir..'items.lua')
+dofile(dir..'npcs.lua')
 if tibia.config.maxMonsters > 0 then
-	dofile(dir .. 'monsters.lua')
+	dofile(dir..'monsters.lua')
 end
-dofile(dir .. 'hooks.lua')
+dofile(dir..'hooks.lua')
 
 TMPGROUNDITEMS = {}
 TMPHOUSES = {}
-local file = io.open(dir .. "saves/" .. map'name' .. ".lua")
+local file = io.open(dir.."saves/"..sea.map.name..".lua")
 if file then
 	io.close(file)
-	dofile(dir .. "saves/" .. map'name' .. ".lua")
-	for y = 0, map'ysize' do
+	dofile(dir.."saves/"..sea.map.name..".lua")
+
+	for y = 0, map.ySize do
 		if TMPGROUNDITEMS[y] then
 			for x = 0, map'xsize' do
 				if TMPGROUNDITEMS[y][x] then
 					for _, j in ipairs(TMPGROUNDITEMS[y][x]) do
 						if j < 0 then
-							spawnitem(1337, x, y, -j)
+							tibia.spawnItem(1337, x, y, -j)
 						else
-							spawnitem(j, x, y)
+							tibia.spawnItem(j, x, y)
 						end
 					end
 				end
 			end
 		end
 	end
+
 	for i, v in pairs(TMPHOUSES) do
 		for k, l in pairs(v) do
 			houses[i][k] = l
 		end
 	end
+
 	TMPGROUNDITEMS = nil
 	TMPHOUSES = nil
 end
-local file = io.open(dir .. "saves/players.lua")
+
+local file = io.open(dir.."saves/players.lua")
 if file then
 	io.close(file)
-	dofile(dir .. "saves/players.lua")
+	dofile(dir.."saves/players.lua")
 end
 file = nil
-
-print('initialisation completed!')
