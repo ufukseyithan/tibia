@@ -32,8 +32,6 @@ function tibia.explosion(x, y, size, damage, player)
 	sea.explosion(x, y, size, damage, player)
 end
 
--- BASIC FUNCTIONS --
-
 rem = {}
 function rem.talkExhaust(player)
 	player.tmp.exhaust.talk = false
@@ -51,18 +49,13 @@ function rem.paralyse(player)
 	player.tmp.paralyse = false
 end
 
--- END OF BASIC FUNCTIONS --
-
-
-
--- SERVER FUNCTIONS --
-
 function tibia.saveServer()
 	local dir = 'sys/lua/sea-framework/app/tibia/'
 	local file = io.open(dir .. "saves/" .. map'name' .. ".lua", 'w+') or io.tmpfile()
 	
 	local tmp = {}
-	for y = 0, map'ysize' do
+	local groundItems = tibia.groundItems
+	for y = 0, sea.map.ySize do
 		if groundItems[y] then
 			for x = 0, map'xsize' do
 				if groundItems[y][x] and groundItems[y][x][1] then
@@ -75,6 +68,7 @@ function tibia.saveServer()
 			end
 		end
 	end
+
 	file:write("-- GROUND ITEMS --\n\n")
 	for k, v in pairs(tmp) do
 		local text = "TMPGROUNDITEMS[" .. table.valToString(k) .. "] = " .. table.valToString(v) .. "\n"
@@ -82,7 +76,7 @@ function tibia.saveServer()
 	end
 	
 	local tmp = {}
-	for i, v in pairs(houses) do
+	for i, v in pairs(tibia.houses) do
 		if v.owner then
 			tmp[i] = {owner = v.owner, endtime = v.endtime, allow = v.allow, doors = v.doors}
 		end
@@ -95,7 +89,7 @@ function tibia.saveServer()
 	file:close()
 	
 	file:write("\n\n-- GLOBAL STORAGES --\n\n")
-	for k, v in pairs(GLOBAL) do
+	for k, v in pairs(tibia.global) do
 		local text = "GLOBAL[" .. table.valToString(k) .. "] = " .. table.valToString(v) .. "\n"
 		file:write(text)
 	end
@@ -104,7 +98,7 @@ end
 
 function tibia.shutdown(delay)
 	if type(delay) ~= 'string' then
-		sea.message('\169255100100Server is shutting down in ' .. math.floor(delay/1000,0.1) .. ' seconds.@C')
+		sea.message(0, 'Server is shutting down in ' .. math.floor(delay/1000,0.1) .. ' seconds.@C', '255100100')
 
 		timer(delay, 'tibia.shutdown', '', 1)
 
@@ -200,38 +194,6 @@ function tibia.houseExpire(id)
 		house.doors[i] = {}
 	end
 end
-
--- END OF SERVER FUNCTIONS --
-
-
-
--- PLAYERS --
-
-function message(id, text, colour)
-	if text:sub(-2) == "@C" then
-		msg2(id, (colour and "\169" .. tostring(colour) or "") .. text)
-	else
-		text = text:gsub("\n", "\169")
-
-		local tbl = {}
-		repeat
-			table.insert(tbl, text:sub(#tbl+1, math.min(#text, (#tbl+1)*90)))
-			text = text:sub(#tbl*90)
-		until #text == 0
-
-		for k, v in ipairs(tbl) do
-			msg2(id, (colour and "\169" .. tostring(colour) or "") .. v)
-		end
-	end
-end
-
-function hudtxt2(id, txtid, text, colour, x, y, align)
-	parse("hudtxt2 " .. id .. " " .. txtid .. " \"\169" .. tostring(colour) .. text .. "\" " .. x .. " " .. y .. " " .. align)
-end
-
--- END OF PLAYERS --
-
--- ITEMS --
 
 function tibia.spawnItem(itemID, x, y, amount)
 	if not ITEMS[itemID] then 

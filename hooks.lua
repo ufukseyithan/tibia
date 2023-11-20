@@ -287,46 +287,6 @@ sea.addEvent("onHookServeraction", function(player, action)
 	end
 end)
 
---[[addhook("menu","EXPmenu")
-function EXPmenu(id, title, button)
-	if player(id, 'health') < 0 then return end
-	if player(id, 'team') == 0 then return end
-	if button == 0 then return end
-	if title:sub(1,9) == "Inventory" then
-		local page = #title-9
-		if button == 9 then
-			inventory(id, (page+1)%(math.ceil(tibia.tibia.config.maxItems/5)))
-		elseif button == 8 then
-			inventory(id, (page-1)%(math.ceil(tibia.tibia.config.maxItems/5)))
-		elseif PLAYERS[id][itemid] ~= 0 then
-			local itemslot = button+page*5
-			local itemid = PLAYERS[id].Inventory[itemslot]
-			itemactions(id, itemslot)
-			return
-		end
-	elseif title:find "Actions" then
-		local itemslot, itemid
-		local equip = title:sub(1,5) == 'Equip'
-		if equip then
-			itemslot = #title-12
-			itemid = PLAYERS[id].Equipment[itemslot]
-		else
-			itemslot = #title-11
-			itemid = PLAYERS[id].Inventory[itemslot]
-		end
-		if button == 8 then
-			message(id, "You see " .. tibia.itemFullName(itemid) .. ". " .. (ITEMS[itemid].desc or "") .. (ITEMS[itemid].level and "You need to be level " .. ITEMS[itemid].level .. " or above to equip it." or ""))
-		elseif button == 9 then
-			dropitem(id,itemslot,equip)
-		else
-			ITEMS[itemid].func[button](id,itemslot,itemid,equip)
-		end
-	elseif title == "Equipment" then
-		itemactions(id,button,true)
-	end
-	return 
-end]]
-
 EXPhit = function(victim, source, weapon, hpdmg, apdmg)
 	local hp, damage, weaponName, name = victim.health
 	if hpdmg <= 0 or source == 0 then
