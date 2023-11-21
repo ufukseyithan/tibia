@@ -304,7 +304,7 @@ sea.addEvent("onHookKill", function(killer, victim, weapon, x, y)
 	killer:showTutorial("Kill", "You have killed a player! This is allowed, but it may create conflict between players.")
 
 	local xp = victim.level + 10
-	killer:addExp(math.floor(xp * math.random(50, 150) / 100 * tibia.tibia.config.expRate))
+	killer:addExp(math.floor(xp * math.random(50, 150) / 100 * tibia.config.expRate))
 end, -1)
 
 sea.addEvent("onHookDie", function(victim, killer, weapon, x, y)
