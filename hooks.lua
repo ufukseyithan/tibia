@@ -1,14 +1,17 @@
 sea.addEvent("onHookJoin", function(player)
-	player.tmp = {hp = 100, atk = 1, def = 1, spd = 0, usgn = player.usgn, equip = {}, exhaust = {}}
+	player.tmp = {hp = 100, attack = 1, defence = 1, speed = 0, equip = {}, exhaust = {}}
 
 	for k, v in ipairs(tibia.config.slots) do
 		player.tmp.equip[k] = {}
 	end
 end, -1)
 
+-- @TODO no need this
 sea.addEvent("onHookLeave", function(player, reason)
 	for k, v in ipairs(player.tmp.equip) do
-		if v.image then freeimage(v.image) end
+		if v.image then
+			freeimage(v.image) 
+		end
 	end
 end, -1)
 
@@ -58,12 +61,12 @@ sea.addEvent("onHookMovetile", function(player, x, y)
 		player:showTutorial("Pick", "You have stumbled upon something. Press the drop weapon button (default G) to pick it up.")
 	end
 
-	--hudtxt2(id, tibia.config.hudTxt.safe, (tile.zone.SAFE and "SAFE") or (tile.zone.NOMONSTERSPVP and "NO MONSTERS") or (tile.zone.NOPVP and "NO PVP") or (tile.zone.PVP and "DEATHMATCH") or "","255064000", 320, 200, 1)
+	--hudtxt2(id, tibia.config.hudTxt.safe, (tile.zone.SAFE and "SAFE") or (tile.zone.NOMONSTERSPVP and "NO tibia.monster") or (tile.zone.NOPVP and "NO PVP") or (tile.zone.PVP and "DEATHMATCH") or "","255064000", 320, 200, 1)
 	
 	if not tile.zone.SAFE then
 		player:showTutorial("Safe", "You have left a SAFE zone. From now, you will be able to both damage and be damaged.")
 	elseif tile.zone.NOMONSTERS and not tile.zone.PVP then
-		player:showTutorial("No Monsters", "You have entered a NO MONSTERS zone. No monsters will spawn here. However, PVP is still allowed!")
+		player:showTutorial("No Monsters", "You have entered a NO tibia.monster zone. No monsters will spawn here. However, PVP is still allowed!")
 	elseif tile.zone.NOPVP then
 		player:showTutorial("No PvP", "You have entered a NO PVP zone. PVP is disabled here, but monsters can still spawn.")
 	elseif tile.zone.PVP then
@@ -287,66 +290,7 @@ sea.addEvent("onHookServeraction", function(player, action)
 	end
 end)
 
-EXPhit = function(victim, source, weapon, hpdmg, apdmg)
-	local hp, damage, weaponName, name = victim.health
-	if hpdmg <= 0 or source == 0 then
-		victim.hp = hp - hpdmg
-		return
-	end
-
-	if source.exists then
-		if victim == source then 
-			return 1 
-		end
-
-		if table.contains({400, 401, 402, 403, 404}, source.equipment[7]) then 
-			source:message("You may not attack on a horse.") 
-			return 1 
-		end
-		
-		if player:isAtZone("SAFE") or source:isAtZone("SAFE") or player:isAtZone("NOPVP") or source:isAtZone("NOPVP") then 
-			source:message("You may not attack someone in a SAFE or PVP disabled area.") 
-			return 1 
-		end
-
-		victim:showTutorial("Hit", "A player is attacking you! You can fight back by swinging your weapon at him.")
-
-		local atk = source.tmp.atk
-		local def = victim.tmp.def
-		if weapon == 251 then
-			damage = math.ceil(2500/math.random(80,120))
-			weaponName = 'Rune'
-		elseif weapon == 46 then
-			damage = math.ceil(500/math.random(80,120))
-			weaponName = 'Firewave'
-		else
-			local dmgMul = ((victim.level+50)*atk/def)/math.random(60,140)
-			damage = math.ceil(20*dmgMul)
-			weaponName = source.equipment[3] and ITEMS[source.equipment[3]].name or 'Dagger'
-		end
-	elseif type(source) == "table" then
-		if victim:isAtZone("SAFE") or victim:isAtZone("NOMONSTERS") then 
-			return 1 
-		end
-		
-		damage = math.ceil(math.random(10,20)*hpdmg*source.atk/victim.tmp.def/15)
-		source, weaponName = 0, source.name
-	end
-
-	local resultHP = hp - damage
-	if resultHP > 0 then
-		victim.health = resultHP
-
-		parse("effect", "colorsmoke", victim.x, victim.y, 5, 16, 192, 0, 0)
-	else
-		victim:killBy(source, weaponName)
-	end
-
-	victim.hp = resultHP
-
-	return 1
-end
-sea.addEvent("onHookHit", EXPhit, -1)
+sea.addEvent("onHookHit", sea.Player.hit, -1)
 
 sea.addEvent("onHookKill", function(killer, victim, weapon, x, y)
 	if victim:isAtZone("PVP") then

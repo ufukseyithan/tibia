@@ -22,6 +22,67 @@ function sea.Player:addExp(amount)
 	return true
 end
 
+function sea.Player:hit(source, weapon, hpdmg, apdmg)
+	local hp, damage, weaponName, name = self.health
+	if hpdmg <= 0 or source == 0 then
+		self.hp = hp - hpdmg
+		return
+	end
+
+	local defence = self.tmp.defence
+
+	if source.exists then
+		if self == source then 
+			return 1 
+		end
+
+		if table.contains({400, 401, 402, 403, 404}, source.equipment[7]) then 
+			source:message("You may not attack on a horse.") 
+			return 1 
+		end
+		
+		if self:isAtZone("SAFE") or source:isAtZone("SAFE") or self:isAtZone("NOPVP") or source:isAtZone("NOPVP") then 
+			source:message("You may not attack someone in a SAFE or PVP disabled area.") 
+			return 1 
+		end
+
+		self:showTutorial("Hit", "A player is attacking you! You can fight back by swinging your weapon at him.")
+
+		local attack = source.tmp.attack
+		if weapon == 251 then
+			damage = math.ceil(2500 / math.random(80, 120))
+			weaponName = 'Rune'
+		elseif weapon == 46 then
+			damage = math.ceil(500 / math.random(80, 120))
+			weaponName = 'Firewave'
+		else
+			local dmgMul = ((self.level + 50) * attack / defence) / math.random(60, 140)
+			damage = math.ceil(20 * dmgMul)
+			weaponName = source.equipment[3] and ITEMS[source.equipment[3]].name or 'Dagger'
+		end
+	elseif type(source) == "table" then
+		if self:isAtZone("SAFE") or self:isAtZone("NOMONSTERS") then 
+			return 1 
+		end
+		
+		damage = math.ceil(math.random(10, 20) * hpdmg * source.config.attack / defence / 15)
+		source, weaponName = 0, source.config.name
+	end
+
+	local resultHP = hp - damage
+	if resultHP > 0 then
+		self.health = resultHP
+
+		parse("effect", "colorsmoke", self.x, self.y, 5, 16, 192, 0, 0)
+	else
+		self:killBy(source, weaponName)
+	end
+
+	self.hp = resultHP
+
+	return 1
+end
+
 function sea.Player:addMoney(amount)
 	if amount < 0 and self.money + amount < 0 then
 		return false
@@ -202,7 +263,7 @@ function sea.Player:updateEQ(newItems, previousItems)
 	previousItems = previousItems or {}
 
 	if not newItems then 
-		return 
+		return
 	end
 
 	self:equipAndSet(50)
@@ -277,16 +338,16 @@ function sea.Player:updateEQ(newItems, previousItems)
 		end
 	end
 
-	self.tmp.atk = self.tmp.atk + atk
-	self.tmp.def = self.tmp.def + def
-	self.tmp.spd = self.tmp.spd + spd
+	self.tmp.attack = self.tmp.attack + atk
+	self.tmp.defence = self.tmp.defence + def
+	self.tmp.speed = self.tmp.speed + spd
 	self.tmp.hp = self.tmp.hp + hp
 
 	local temphp = self.health
 	self.maxHealth = self.tmp.hp
 	self.health = temphp
 
-	self.speed = self.tmp.spd
+	self.speed = self.tmp.speed
 end
 
 function sea.Player:eat(itemSlot, itemID)

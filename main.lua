@@ -6,6 +6,10 @@ return {
 
     namespace = "tibia",
 
+    path = {
+        gfx = "gfx/weiwen/"
+    },
+
     scripts = {
         "server"
     }

@@ -23,13 +23,13 @@ function tibia.radiusSound(sound, x, y)
 end
 
 function tibia.explosion(x, y, size, damage, player)
-	for _, m in ipairs(MONSTERS) do
+	for _, m in ipairs(tibia.monster) do
 		if math.sqrt((m.x - player.x) ^ 2 + (m.y - player.y) ^ 2) <= size then
 			m:damage(id, math.floor(damage*math.random(60,140)/100), 251)
 		end
 	end
 
-	sea.explosion(x, y, size, damage, player)
+	sea.explosion(x, y, size, damage, player.id)
 end
 
 rem = {}
@@ -51,13 +51,13 @@ end
 
 function tibia.saveServer()
 	local dir = 'sys/lua/sea-framework/app/tibia/'
-	local file = io.open(dir .. "saves/" .. map'name' .. ".lua", 'w+') or io.tmpfile()
+	local file = io.open(dir.."saves/"..sea.map.name.. ".lua", 'w+') or io.tmpfile()
 	
 	local tmp = {}
 	local groundItems = tibia.groundItems
 	for y = 0, sea.map.ySize do
 		if groundItems[y] then
-			for x = 0, map'xsize' do
+			for x = 0, sea.map.xSize do
 				if groundItems[y][x] and groundItems[y][x][1] then
 					tmp[y] = tmp[y] or {}
 					tmp[y][x] = {}

@@ -103,21 +103,6 @@ tibia.config = {
 		-- ms after each use attempt, any faster, the use will be aborted
 		use = 2000, 
 	},
-	
-	WEAPONRANGE = { -- range of cs2d weapons. e.g. [50] = 27 means wpnid 50 has range of 27 pixels. i should get around to change this to ingame ids some time
-		[34] = 350, 
-		[46] = 128, 
-		[50] = 27, 
-		[69] = 32, 
-		[78] = 32, 
-	}, 
-	WEAPONWIDTH = { -- angular range of cs2d weapons. e.g. [50] = math.pi*2/3 means 120 degrees or 2pi/3 range of attack.
-		[34] = math.pi/12, 
-		[46] = math.pi/8,  
-		[50] = math.pi*2/3, 
-		[69] = math.pi*2/3, 
-		[78] = math.pi*2/3, 
-	}
 }
 
 tibia.config.safeZone = { -- safezones e.g. {{x1, y1},{x2, y2}} means a rectangular area from (x1, y1) to (x2, y2)

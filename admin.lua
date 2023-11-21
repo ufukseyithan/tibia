@@ -79,7 +79,7 @@ sea.addEvent("onHookSay", function(player, words)
 			local dmg = tonumber(words:sub(4))
 
 			if dmg then
-				sea.explosion(player.x, player.y, dmg, dmg, player)
+				sea.explosion(player.x, player.y, dmg, dmg, player.id)
 
 				return 1
 			end
@@ -139,7 +139,7 @@ sea.addEvent("onHookSay", function(player, words)
 			local name = words:sub(4)
 
 			if name then
-				for i, v in pairs(CONFIG.MONSTERS) do
+				for i, v in pairs(CONFIG.tibia.monster) do
 					if v.name:lower() == name:lower() then
 						local m = deepcopy(v)
 						m.x, m.y = player(id, 'x'), player(id, 'y')

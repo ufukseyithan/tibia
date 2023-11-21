@@ -81,9 +81,6 @@ dofile(dir..'admin.lua')
 dofile(dir..'commands.lua')
 dofile(dir..'items.lua')
 dofile(dir..'npcs.lua')
-if tibia.config.maxMonsters > 0 then
-	dofile(dir..'monsters.lua')
-end
 dofile(dir..'hooks.lua')
 
 TMPGROUNDITEMS = {}
@@ -93,7 +90,7 @@ if file then
 	io.close(file)
 	dofile(dir.."saves/"..sea.map.name..".lua")
 
-	for y = 0, map.ySize do
+	for y = 0, sea.map.ySize do
 		if TMPGROUNDITEMS[y] then
 			for x = 0, map'xsize' do
 				if TMPGROUNDITEMS[y][x] then
