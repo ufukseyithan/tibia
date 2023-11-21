@@ -308,7 +308,8 @@ sea.addEvent("onHookKill", function(killer, victim, weapon, x, y)
 end, -1)
 
 sea.addEvent("onHookDie", function(victim, killer, weapon, x, y)
-	local PVP = sea.tile[x][y].zone.PVP
+	local tileX, tileY = pixelToTile(x), pixelToTile(y)
+	local PVP = sea.Tile.get(tileX, tileY).zone.PVP
 	
 	if not PVP then
 		victim:showTutorial("Die", "You are dead. Try your best not to die, you'll drop some of your equipment and money if you do.")
@@ -317,14 +318,14 @@ sea.addEvent("onHookDie", function(victim, killer, weapon, x, y)
 		if money ~= 0 then
 			victim:addMoney(-money)
 
-			spawnitem(1337, victim.tileX, victim.tileY, money)
+			tibia.spawnItem(1337, tileX, tileY, money)
 		end
 
 		if victim.level >= 5 then
 			local previousItems = {}
 			for i, v in ipairs(tibia.config.slots) do
 				if victim.equipment[i] and math.random(10000) <= tibia.config.playerDropRate then
-					dropitem(victim, i, true)
+					victim:dropItem(i, true)
 				end
 			end
 		end
@@ -335,15 +336,11 @@ sea.addEvent("onHookDie", function(victim, killer, weapon, x, y)
 
 		local money = victim.money
 		if money ~= 0 then
-			money = money >= 100 and 100 or money
-
 			if victim:addMoney(money) then
-				spawnitem(1337, victim.tileX, victim.tileY, money)
+				tibia.spawnItem(1337, tileX, tileY, math.max(100, money))
 			end
 		end
 	end
-
-	local x, y = victim.x, victim.y
 	
 	parse("effect", "colorsmoke", x, y, 64, 64, 192, 0, 0)
 	radiussound("weapons/c4_explode.wav", x, y)
@@ -354,12 +351,11 @@ sea.addEvent("onHookDie", function(victim, killer, weapon, x, y)
 		newItems[i] = 0
 	end
 
-	updateEQ(victim, newItems, previousItems)
+	victim:updateEQ(newItems, previousItems)
 end, 1)
 
 sea.addEvent("onHookUse", function(player, event, data, x, y)
-	local dir = math.floor((player.rotation+45)/90)%4
-	local x, y = player.lastPosition.x, player.lastPosition.y
+	local dir = math.floor((player.rotation + 45) / 90) % 4
 	if dir == 0 then
 		y = y - 1
 	elseif dir == 1 then
@@ -370,20 +366,21 @@ sea.addEvent("onHookUse", function(player, event, data, x, y)
 		x = x - 1
 	end
 
-	local tile = sea.tile[x][y]
+	local tile = sea.Tile.get(x, y)
 	if tile and tile.zone.HOUSE then
-		local house = houses[tile.zone.HOUSE]
-		local name = entity(x, y, "name")
+		local house = tibia.houses[tile.zone.HOUSE]
+		local entity = sea.Entity.get(x, y)
+		local name = entity.name
 		local door = tonumber(name:sub(name:find('_')+1))
-		player:showTutorial("Door 1", "This door belongs to a house. The house owner can specify who is allowed to open the door.")
+		player:showTutorial("Door #1", "This door belongs to a house. The house owner can specify who is allowed to open the door.")
 
 		if door then
 			if (player.usgn == house.owner or table.contains(house.doors[door], player.usgn)) then
 				if player.usgn == house.owner then
-					player:showTutorial("Door 2", "To choose who is allowed to open this door, use the command !house door")
+					player:showTutorial("Door #2", "To choose who is allowed to open this door, use the command !house door")
 				end
 
-				parse("trigger", name)
+				entity:trigger()
 			else
 				player:message("It is locked.")
 			end

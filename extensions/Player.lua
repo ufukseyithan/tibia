@@ -22,7 +22,7 @@ function sea.Player:addExp(amount)
 	return true
 end
 
-function sea.Player:hit(source, weapon, hpdmg, apdmg)
+function sea.Player:hit(source, weapon, hpdmg)
 	local hp, damage, weaponName, name = self.health
 	if hpdmg <= 0 or source == 0 then
 		self.hp = hp - hpdmg
