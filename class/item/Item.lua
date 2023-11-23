@@ -13,6 +13,10 @@ function Item:constructor(config, attributes)
 	end
 end
 
+function Item:count()
+	return self.amount or 1
+end
+
 function Item:destroy()
 	local x, y, height = self:isOnGround()
 	local container, slot = self:isInContainer()

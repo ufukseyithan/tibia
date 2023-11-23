@@ -110,19 +110,6 @@ function sea.Player:clearInventory(slot)
 	return true
 end
 
-function sea.Player:itemCount(itemID)
-	local amount, items = 0, {}
-
-	for _, item in ipairs(self.inventory) do
-		if item.id == itemID then
-			amount = amount + 1
-			table.insert(items, item)
-		end
-	end
-
-	return amount, items
-end
-
 function sea.Player:addItem(item, amount, tell)
 	amount = amount and math.floor(amount) or 1
 
@@ -177,8 +164,6 @@ function sea.Player:pickItem()
 			item:destroy()
 		elseif self:addItem(item) then
 			self:message("You have picked up "..item.fullName..".")
-
-			item:destroy()
 		end
 	end
 
@@ -204,39 +189,11 @@ function sea.Player:dropItem(itemSlot, equip)
 	end
 end
 
-function sea.Player:removeItem(itemID, amount, tell)
-	if not ITEMS[itemID] or itemID == 0 then 
-		return false 
-	end
-
-	amount = amount and math.floor(amount) or 1
-
-	local removed = 0
-	local has, toRemove = self:itemCount(itemID)
-	if has >= amount then
-		for slot, item in ipairs(toRemove) do
-			if removed < amount then
-				table.remove(self.inventory, slot)
-				removed = removed + 1
-			end
-
-			if removed == amount then
-				if tell then
-					self:message("You have lost "..item.fullName..".")
-				end
-				return true
-			end
-		end
-	end
-
-	return false
-end
-
 function sea.Player:destroyItem(slot, equip)
 	if equip then
-		self.equipment[slot] = nil
+		self.equipment[slot]:destroy()
 	else
-		table.remove(self.inventory, slot)
+		self.inventory[slot]:destroy()
 	end
 
 	return true
