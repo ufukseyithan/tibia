@@ -14,8 +14,11 @@ function Item:constructor(config, attributes)
 end
 
 function Item:destroy()
-	if self.x then
-		local tile = sea.Tile.get(self.x, self.y)
+	local x, y, height = self:isOnGround()
+	local container, slot = self:isInContainer()
+
+	if x then
+		local tile = sea.Tile.get(x, y)
 		if tile.zone.HEAL and self.config.heal then
 			tile.zone.HEAL = tile.zone.HEAL - self.config.heal
 			if tile.zone.HEAL == 0 then
@@ -23,14 +26,21 @@ function Item:destroy()
 			end
 		end
 
-		Item.getGroundItems(self.x, self.y)[self.height] = nil
-
-		tibia.updateTileItems(self.x, self.y)
+		Item.getGroundItems(x, y)[height] = nil
+		tibia.updateTileItems(x, y)
+	elseif container then
+		container[slot] = nil
 	end
 end
 
-function Item:put(x, y)
-	local tempX, tempY = self.x, self.y
+function Item:occupy(container, slot)
+	self:destroy()
+
+	container[slot] = self
+end
+
+function Item:reposition(x, y)
+	self:destroy()
 
 	local ground = Item.getGroundItems(x, y)
 	local tile = sea.Tile.get(x, y)
@@ -38,17 +48,20 @@ function Item:put(x, y)
 
 	self.x, self.y, self.height = x, y, height
 
-    if item.config.heal then
+    if self.config.heal then
         tile.zone.HEAL = (tile.zone.HEAL or 0) + config.heal
     end
 
-	ground[height] = item
-
+	ground[height] = self
     tibia.updateTileItems(x, y)
+end
 
-	if tempX then
-		tibia.updateTileItems(tempX, tempY)
-	end
+function Item:isOnGround()
+	return self.x, self.y, self.height
+end
+
+function Item:isInContainer()
+	return self.container, self.slot
 end
 
 -------------------------
@@ -94,7 +107,7 @@ end
 function Item.spawn(itemID, x, y, attributes)
 	local item = Item.create(itemID, attributes)
 
-	item:put(x, y)
+	item:reposition(x, y)
 
 	return item
 end

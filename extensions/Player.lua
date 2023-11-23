@@ -113,10 +113,10 @@ end
 function sea.Player:itemCount(itemID)
 	local amount, items = 0, {}
 
-	for k, item in ipairs(self.inventory) do
+	for _, item in ipairs(self.inventory) do
 		if item.id == itemID then
 			amount = amount + 1
-			table.insert(items, k)
+			table.insert(items, item)
 		end
 	end
 
@@ -188,8 +188,10 @@ end
 function sea.Player:dropItem(itemSlot, equip)
 	local inv = (equip and self.equipment or self.inventory)
 
-	if tibia.Item.spawn(inv[itemSlot], self.lastPosition.x, self.lastPosition.y) then
-		self:message("You have dropped " .. tibia.itemFullName(inv[itemSlot]) .. ".")
+	local item = inv[itemSlot]
+
+	if item:reposition(self.lastPosition.x, self.lastPosition.y) then
+		self:message("You have dropped "..item.fullName..".")
 
 		if equip then
 			self:updateEQ({[itemSlot] = 0}, {[itemSlot] = inv[itemSlot]})
@@ -210,16 +212,17 @@ function sea.Player:removeItem(itemID, amount, tell)
 	amount = amount and math.floor(amount) or 1
 
 	local removed = 0
-	local has, toremove = itemcount(self, itemID)
+	local has, toRemove = self:itemCount(itemID)
 	if has >= amount then
-		for k, v in ipairs(toremove) do
+		for slot, item in ipairs(toRemove) do
 			if removed < amount then
-				table.remove(self.inventory, v+1-k)
+				table.remove(self.inventory, slot)
 				removed = removed + 1
 			end
+
 			if removed == amount then
 				if tell then
-					self:message("You have lost " .. tibia.itemFullName(itemID, amount) .. ".")
+					self:message("You have lost "..item.fullName..".")
 				end
 				return true
 			end
@@ -229,11 +232,11 @@ function sea.Player:removeItem(itemID, amount, tell)
 	return false
 end
 
-function sea.Player:destroyItem(itemSlot, equip)
+function sea.Player:destroyItem(slot, equip)
 	if equip then
-		self.equipment[itemSlot] = nil
+		self.equipment[slot] = nil
 	else
-		table.remove(self.inventory, itemSlot)
+		table.remove(self.inventory, slot)
 	end
 
 	return true
@@ -330,7 +333,7 @@ function sea.Player:updateEQ(newItems, previousItems)
 	self.speed = self.tmp.speed
 end
 
-function sea.Player:eat(itemSlot, itemID)
+function sea.Player:eat(slot, itemID)
 	tibia.radiusMessage(self.name.." eats "..ITEMS[itemID].article.." ".. ITEMS[itemID].name .. ".", self.x, self.y, 384)
 
 	self.health = self.health + ITEMS[itemID].food()
