@@ -33,6 +33,36 @@ function Item:destroy()
 	end
 end
 
+function Item:pick(container, slot)
+	if self.x then
+
+	end
+	
+	container[slot] = self
+
+	self.container, self.slot = container, slot
+end
+
+function Item:put(x, y)
+	if self.container then
+		self.container[self.slot] = nil
+	end
+
+	local ground = Item.getGroundItems(x, y)
+	local tile = sea.Tile.get(x, y)
+	local height = #ground + 1
+
+	self.x, self.y, self.height = x, y, height
+
+    if item.config.heal then
+        tile.zone.HEAL = (tile.zone.HEAL or 0) + config.heal
+    end
+
+	ground[height] = item
+
+    tibia.updateTileItems(x, y)
+end
+
 -------------------------
 --      PROPERTIES     --
 -------------------------
@@ -74,21 +104,11 @@ function Item.getGroundItems(x, y)
 end
 
 function Item.spawn(itemID, x, y, attributes)
-    local ground = Item.getGroundItems(x, y)
-	local tile = sea.Tile.get(x, y)
-	local height = #ground + 1
+   
 
 	local item = Item.create(itemID)
 
-	item.x, item.y, item.height = x, y, height
-
-    if item.config.heal then
-        tile.zone.HEAL = (tile.zone.HEAL or 0) + config.heal
-    end
-
-	ground[height] = item
-
-    tibia.updateTileItems(x, y)
+	
 
 	return item
 end
