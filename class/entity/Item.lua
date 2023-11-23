@@ -14,10 +14,6 @@ function Item:constructor(config, attributes)
 end
 
 function Item:destroy()
-	if self.image then
-		self.image:destroy()
-	end
-
 	if self.x then
 		local tile = sea.Tile.get(self.x, self.y)
 		if tile.zone.HEAL and self.config.heal then
@@ -33,20 +29,8 @@ function Item:destroy()
 	end
 end
 
-function Item:pick(container, slot)
-	if self.x then
-
-	end
-	
-	container[slot] = self
-
-	self.container, self.slot = container, slot
-end
-
 function Item:put(x, y)
-	if self.container then
-		self.container[self.slot] = nil
-	end
+	local tempX, tempY = self.x, self.y
 
 	local ground = Item.getGroundItems(x, y)
 	local tile = sea.Tile.get(x, y)
@@ -61,6 +45,10 @@ function Item:put(x, y)
 	ground[height] = item
 
     tibia.updateTileItems(x, y)
+
+	if tempX then
+		tibia.updateTileItems(tempX, tempY)
+	end
 end
 
 -------------------------
@@ -83,13 +71,13 @@ end
 --        CONST        --
 -------------------------
 
-function Item.create(itemID)
+function Item.create(itemID, attributes)
 	local config = tibia.config.items[itemID]
     if not config then
         return
     end
 
-	local item = Item.new(config)
+	local item = Item.new(config, attributes)
 
 	item.id = itemID
 
@@ -104,11 +92,9 @@ function Item.getGroundItems(x, y)
 end
 
 function Item.spawn(itemID, x, y, attributes)
-   
+	local item = Item.create(itemID, attributes)
 
-	local item = Item.create(itemID)
-
-	
+	item:put(x, y)
 
 	return item
 end
