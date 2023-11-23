@@ -1,7 +1,7 @@
 local equip = sea.Player.equipItem
 local eat = sea.Player.eat
 
-ITEMS = {
+tibia.config.items = {
 	[0] = {
 		name = ""
 	}, 
@@ -194,7 +194,7 @@ ITEMS = {
 		name = "white bed",
 		desc = "Used to furnish your house.",
 		fimage = "gfx/weiwen/bed.png", 
-		offsety = 16,
+		offsetY = 16,
 		heal = 5, 
 		r = 255, g = 255, b = 255,
 	},
@@ -203,7 +203,7 @@ ITEMS = {
 		name = "pink bed",
 		desc = "Used to furnish your house.",
 		fimage = "gfx/weiwen/bed.png", 
-		offsety = 16,
+		offsetY = 16,
 		heal = 5, 
 		r = 255, g = 128, b = 255,
 	},
@@ -212,7 +212,7 @@ ITEMS = {
 		name = "green bed",
 		desc = "Used to furnish your house.",
 		fimage = "gfx/weiwen/bed.png", 
-		offsety = 16,
+		offsetY = 16,
 		heal = 5, 
 		r = 128, g = 192, b = 0,
 	},
@@ -221,7 +221,7 @@ ITEMS = {
 		name = "blue bed",
 		desc = "Used to furnish your house.",
 		fimage = "gfx/weiwen/bed.png", 
-		offsety = 16,
+		offsetY = 16,
 		heal = 5, 
 		r = 0, g = 128, b = 192,
 	},
@@ -230,7 +230,7 @@ ITEMS = {
 		name = "dark red bed",
 		desc = "Used to furnish your house.",
 		fimage = "gfx/weiwen/bed.png", 
-		offsety = 16,
+		offsetY = 16,
 		heal = 5, 
 		r = 128, g = 0, b = 0,
 	},
@@ -239,7 +239,7 @@ ITEMS = {
 		name = "light green bed",
 		desc = "Used to furnish your house.",
 		fimage = "gfx/weiwen/bed.png", 
-		offsety = 16,
+		offsetY = 16,
 		heal = 5, 
 		r = 128, g = 255, b = 128,
 	},
@@ -248,7 +248,7 @@ ITEMS = {
 		name = "light blue bed",
 		desc = "Used to furnish your house.",
 		fimage = "gfx/weiwen/bed.png", 
-		offsety = 16,
+		offsetY = 16,
 		heal = 5, 
 		r = 128, g = 128, b = 255,
 	},
@@ -257,7 +257,7 @@ ITEMS = {
 		name = "yellow bed",
 		desc = "Used to furnish your house.",
 		fimage = "gfx/weiwen/bed.png", 
-		offsety = 16,
+		offsetY = 16,
 		heal = 5, 
 		r = 255, g = 255, b = 0,
 	},
@@ -267,7 +267,7 @@ ITEMS = {
 		article = "an",
 		desc = "Used to furnish your house.",
 		fimage = "gfx/weiwen/bed.png", 
-		offsety = 16,
+		offsetY = 16,
 		heal = 5, 
 		r = 255, g = 128, b = 0,
 	},
@@ -276,7 +276,7 @@ ITEMS = {
 		name = "brown bed",
 		desc = "Used to furnish your house.",
 		fimage = "gfx/weiwen/bed.png", 
-		offsety = 16,
+		offsetY = 16,
 		heal = 5, 
 		r = 128, g = 64, b = 0,
 	},
@@ -502,8 +502,8 @@ ITEMS = {
 		slot = 3, 
 		eimage = "gfx/weiwen/sword.png", 
 		fimage = "gfx/weiwen/sword.png", 
-		offsetx = 6,
-		offsety = 17,
+		offsetX = 6,
+		offsetY = 17,
 		equip = 69,
 		atk = 0.25, 
 		speed = -1, 
@@ -532,7 +532,7 @@ ITEMS = {
 		slot = 3, 
 		eimage = "gfx/weiwen/club.png", 
 		fimage = "gfx/weiwen/club.png", 
-		offsety = 14,
+		offsetY = 14,
 		equip = 78,
 		atk = 0.35, 
 		speed = -2, 
@@ -548,7 +548,7 @@ ITEMS = {
 		twohand = true, 
 		eimage = "gfx/weiwen/bow.png", 
 		fimage = "gfx/weiwen/bow.png", 
-		offsety = 9,
+		offsetY = 9,
 		equip = 34,
 		atk = 0.1, 
 		speed = -2.5, 
@@ -616,8 +616,8 @@ ITEMS = {
 		slot = 3, 
 		eimage = "gfx/weiwen/sword.png", 
 		fimage = "gfx/weiwen/sword.png", 
-		offsetx = 6,
-		offsety = 17,
+		offsetX = 6,
+		offsetY = 17,
 		equip = 69,
 		atk = 0.5, 
 		speed = -2, 
@@ -646,8 +646,8 @@ ITEMS = {
 		slot = 3, 
 		eimage = "gfx/weiwen/mace.png", 
 		fimage = "gfx/weiwen/mace.png", 
-		offsetx = 4, 
-		offsety = 20,
+		offsetX = 4, 
+		offsetY = 20,
 		equip = 78,
 		atk = 0.7, 
 		speed = -3, 
@@ -716,8 +716,8 @@ ITEMS = {
 		slot = 3, 
 		eimage = "gfx/weiwen/sword.png", 
 		fimage = "gfx/weiwen/sword.png", 
-		offsetx = 6,
-		offsety = 17,
+		offsetX = 6,
+		offsetY = 17,
 		equip = 69,
 		atk = 0.7, 
 		speed = -1.5, 
@@ -746,8 +746,8 @@ ITEMS = {
 		slot = 3, 
 		eimage = "gfx/weiwen/mace.png", 
 		fimage = "gfx/weiwen/mace.png", 
-		offsetx = 4, 
-		offsety = 20,
+		offsetX = 4, 
+		offsetY = 20,
 		equip = 78,
 		atk = 0.9, 
 		speed = -3, 
@@ -829,7 +829,7 @@ ITEMS = {
 		fscaley = 0.8, 
 		escalex = 1.2, 
 		escaley = 0.8, 
-		offsety = 20, 
+		offsetY = 20, 
 		speed = 25, 
 		def = -0.5, 
 		level = 10, 
@@ -843,10 +843,10 @@ ITEMS = {
 		fimage = 'gfx/weiwen/money.png', 
 	}
 }
-ITEMFUNCTIONS = {}
-ITEMFUNCTIONS.teleport = ITEMS[105].teleport
+tibia.config.itemFunctions = {}
+tibia.config.teleport = tibia.config.items[105].teleport
 
-for k, v in pairs(ITEMS) do
+for k, v in pairs(tibia.config.items) do
 	v.article = v.article or "a"
 	v.plural = v.plural or v.name .. "s"
 	v.action = type(v.action) == "table" and v.action or {v.action}

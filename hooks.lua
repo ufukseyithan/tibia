@@ -274,15 +274,15 @@ sea.addEvent("onHookServeraction", function(player, action)
 		player.tmp.exhaust.use = true
 		timer(tibia.config.exhaust.use, "rem.useExhaust", tostring(id))
 
-		local itemid = player.equipment[9]
-		if itemid then
-			local amount, items = player:itemCount(itemid)
-			player:alert("Using " .. (amount == 0 and ("the last " .. ITEMS[itemid].name) or ("one of " .. tibia.itemFullName(itemid, amount + 1))) .. "...")
+		local item = player.equipment[9]
+		if item then
+			local amount, items = player:itemCount(item.id)
+			player:alert("Using " .. (amount == 0 and ("the last " .. .name) or ("one of " .. item.fullName)) .. "...")
 
-			ITEMS[itemid].func[1](id, 9, itemid, true)
+			item.config.func[1](id, 9, item.id, true)
 			if amount > 0 then
 				table.remove(player.inventory, items[1])
-				player.equipment[9] = itemid
+				player.equipment[9] = item
 			end
 		else
 			player:message("You can hold a rune and use F4 to cast it easily.")
@@ -318,7 +318,7 @@ sea.addEvent("onHookDie", function(victim, killer, weapon, x, y)
 		if money ~= 0 then
 			victim:addMoney(-money)
 
-			tibia.spawnItem(1337, tileX, tileY, money)
+			tibia.Item.spawn(1337, tileX, tileY, money)
 		end
 
 		if victim.level >= 5 then
@@ -337,7 +337,7 @@ sea.addEvent("onHookDie", function(victim, killer, weapon, x, y)
 		local money = victim.money
 		if money ~= 0 then
 			if victim:addMoney(money) then
-				tibia.spawnItem(1337, tileX, tileY, math.max(100, money))
+				tibia.Item.spawn(1337, tileX, tileY, math.max(100, money))
 			end
 		end
 	end

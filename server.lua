@@ -6,14 +6,13 @@ tibia.noPvpZone = tibia.config.noPvpZone[mapName] or tibia.config.noPvpZone[tibi
 tibia.noMonstersZone = tibia.config.noMonstersZone[mapName] or tibia.config.noMonstersZone[tibia.config.defaultMap]
 tibia.safeZone = tibia.config.safeZone[mapName] or tibia.config.safeZone[tibia.config.defaultMap]
 tibia.houses = tibia.config.houses[mapName] or tibia.config.houses[tibia.config.defaultMap]
-tibia.groundItems = {}
 tibia.tileZone = {}
 
 for y = 0, sea.map.ySize do
-	tibia.groundItems[y], tibia.tileZone[y] = {}, {}
+	tibia.tileZone[y] = {}
 
 	for x = 0, sea.map.xSize do
-		tibia.groundItems[y][x], tibia.tileZone[y][x] = {}, {}
+		tibia.tileZone[y][x] = {}
 
 		local tileZone = tibia.tileZone[y][x]
 
@@ -96,9 +95,9 @@ if file then
 				if TMPGROUNDITEMS[y][x] then
 					for _, j in ipairs(TMPGROUNDITEMS[y][x]) do
 						if j < 0 then
-							tibia.spawnItem(1337, x, y, -j)
+							tibia.Item.spawn(1337, x, y, -j)
 						else
-							tibia.spawnItem(j, x, y)
+							tibia.Item.spawn(j, x, y)
 						end
 					end
 				end

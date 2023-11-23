@@ -113,8 +113,8 @@ end
 function sea.Player:itemCount(itemID)
 	local amount, items = 0, {}
 
-	for k, v in ipairs(self.inventory) do
-		if v == itemID then
+	for k, item in ipairs(self.inventory) do
+		if item.id == itemID then
 			amount = amount + 1
 			table.insert(items, k)
 		end
@@ -123,19 +123,15 @@ function sea.Player:itemCount(itemID)
 	return amount, items
 end
 
-function sea.Player:addItem(itemID, amount, tell)
-	if not ITEMS[itemID] or itemID == 0 then 
-		return false 
-	end
-
+function sea.Player:addItem(item, amount, tell)
 	amount = amount and math.floor(amount) or 1
 
 	if amount == 1 then
 		if #self.inventory < tibia.config.maxItems then
-			table.insert(self.inventory, itemID)
+			table.insert(self.inventory, item)
 
 			if tell then
-				self:message("You have received "..tibia.itemFullName(itemID)..".")
+				self:message("You have received "..item.fullName..".")
 			end
 
 			return true
@@ -145,22 +141,22 @@ function sea.Player:addItem(itemID, amount, tell)
 	else
 		local added = 0
 		while #self.inventory < tibia.config.maxItems and added < amount do
-			table.insert(self.inventory, itemID)
+			table.insert(self.inventory, item)
 			added = added + 1
 		end
 
 		local remaining = amount - added
 		local dropped = 0
 		while dropped < remaining do
-			tibia.spawnItem(itemID, self.lastPosition.x, self.lastPosition.y)
+			tibia.Item.spawn(item.id, self.lastPosition.x, self.lastPosition.y)
 			dropped = dropped + 1
 		end
 
 		if tell then
 			if remaining == 0 then
-				player:message("You have received "..tibia.itemFullName(itemID, added)..".")
+				player:message("You have received "..item.fullName..".")
 			else
-				player:message("You have received "..tibia.itemFullName(itemID, added)..". ".. remaining.." are dropped due to lack of space.")
+				player:message("You have received "..item.fullName..". "..remaining.." are dropped due to lack of space.")
 			end
 		end
 
@@ -169,37 +165,21 @@ function sea.Player:addItem(itemID, amount, tell)
 end
 
 function sea.Player:pickItem()
-	local ground = tibia.groundItems[self.lastPosition.y][self.lastPosition.x]
+	local ground = tibia.Item.getGroundItems(self.lastPosition.x, self.lastPosition.y)
 	local height = #ground
 
 	if height > 0 then
 		local item = ground[height]
-		if item[1] == 1337 then
-			if item[2] then 
-				freeimage(item[2]) 
-			end
+		if item.config.currency then
+			self:addMoney(item.amount)
+			self:message("You have picked up "..item.amount.." rupees.")
 
-			self:addMoney(item[3])
-			self:message("You have picked up $" .. item[3] .. ".")
+			item:destroy()
+		elseif self:addItem(item) then
+			self:message("You have picked up "..item.fullName..".")
 
-			tibia.groundItems[self.lastPosition.y][self.lastPosition.x][height] = nil
-		elseif self:addItem(item[1]) then
-			local tile = sea.Tile.get(self.lastPosition.x, self.lastPosition.y)
-			if tile.zone.HEAL and ITEMS[item[1]].heal then
-				tile.zone.HEAL = tile.zone.HEAL - ITEMS[item[1]].heal
-				if tile.zone.HEAL == 0 then
-					tile.zone.HEAL = nil
-				end
-			end
-
-			freeimage(item[2])
-
-			self:message("You have picked up "..tibia.itemFullName(item[1])..".")
-
-			tibia.groundItems[self.lastPosition.y][self.lastPosition.x][height] = nil
+			item:destroy()
 		end
-
-		tibia.updateTileItems(unpack(self.lastPosition))
 	end
 
 	return true
@@ -208,7 +188,7 @@ end
 function sea.Player:dropItem(itemSlot, equip)
 	local inv = (equip and self.equipment or self.inventory)
 
-	if tibia.spawnItem(inv[itemSlot], self.lastPosition.x, self.lastPosition.y) then
+	if tibia.Item.spawn(inv[itemSlot], self.lastPosition.x, self.lastPosition.y) then
 		self:message("You have dropped " .. tibia.itemFullName(inv[itemSlot]) .. ".")
 
 		if equip then
