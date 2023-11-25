@@ -1,25 +1,38 @@
-COMMANDS = {
-	['me'] = function(id, p)
+tibia.command = {
+	['me'] = function(player, p)
 		if p[1] then
-			radiusmsg(string.format("* %s %s", player(id, 'name'), table.concat(p)), player(id, 'x'), player(id, 'y'))
+			tibia.radiusMessage(string.format("* %s %s",player.name, table.concat(p)), player.x, player.y)
 		else
-			radiusmsg(string.format("* %s does nothing.", player(id, 'name')), player(id, 'x'), player(id, 'y'))
+			tibia.radiusMessage(string.format("* %s does nothing.", player.name), player.x, player.y)
 		end
 	end, 
 
-	['drop'] = function(id, p)
+	['drop'] = function(player, p)
 		p[1] = math.floor(tonumber(p[1]))
 
 		if not p[1] then 
-			message(id,'Usage: !drop <amount>','255255255') 
+			player:message('Usage: !drop <amount>') 
 			return 
 		end
 
-		if gettile(PLAYERS[id].x, PLAYERS[id].y).PVP then message(id,'You may not drop money here.','255255255') return end
-		if p[1] <= 0 then message(id,'You may only drop positive amounts.','255255255') return end
-		if not addmoney(id,-p[1]) then message(id,'You do not have enough money to drop.','255255255') return end
-		message(id,'You have dropped $'..p[1]..'.','255255255')
-		spawnitem(1337,PLAYERS[id]['x'],PLAYERS[id]['y'],p[1])
+		if player:isAtZone('PVP') then 
+			player:message('You may not drop money here.') 
+			return 
+		end
+
+		if p[1] <= 0 then 
+			player:message('You may only drop positive amounts.') 
+			return 
+		end
+
+		if not player:addMoney(-p[1]) then
+			player:message('You do not have enough money to drop.') 
+			return 
+		end
+
+		player:message('You have dropped '..p[1]..' rupees.')
+
+		tibia.Item.spawn(1337, player.tileX, player.tileY, {amount = p[1]})
 	end,
 
 	['w'] = function(id, p)
@@ -57,7 +70,7 @@ COMMANDS = {
 		-- if you remove this, please at least leave some credits to me, thank you.
 		message(id, 'This script is made by weiwen.')
 	end,
-	
+
 	['house'] = function(id, p)
 		local house
 		if p[1] == 'info' then
@@ -183,7 +196,7 @@ COMMANDS = {
 				text = #text == 18 and 'No players are allowed.' or text:sub(1, -3)
 				message(id, text, '255255255')
 			else
-				message(id, 'HOUSE DOOR COMMANDS:', '255100100')
+				message(id, 'HOUSE DOOR tibia.command:', '255100100')
 				message(id, '!house door allow <usgnid> - allows the person to open the door you are facing', '255100100')
 				message(id, '!house door list - lists the people allowed to open the door you are facing', '255100100')
 			end
@@ -215,7 +228,7 @@ COMMANDS = {
 			message(id, 'You have transfered the ownership of this house to ' .. PLAYERCACHE[p[2]].name .. '.', '255255255')
 			message(target, PLAYERCACHE[p[2]].name .. ' has transfered the ownership of this house to you.', '255255255')
 		else
-			message(id, 'HOUSE COMMANDS:', '255100100')
+			message(id, 'HOUSE tibia.command:', '255100100')
 			message(id, '!house - gives information about all house commands', '255100100')
 			message(id, '!house info - use infront of a house to give you information about it.', '255100100')
 			message(id, '!house buy - buys the house you are infront of', '255100100')
@@ -229,15 +242,15 @@ COMMANDS = {
 		end
 	end, 
 }
-COMMANDS['drop$'] = COMMANDS.drop
+tibia.command['drop$'] = tibia.command.drop
 
 local cmds = "The commands are : "
-for i, v in pairs(COMMANDS) do
+for i, v in pairs(tibia.command) do
 	cmds = cmds .. i .. ", "
 end
 cmds = cmds:sub(-3)
-COMMANDS.help = function(id)
+tibia.command.help = function(id)
 	message(id, cmds)
 end
-COMMANDS.cmds = COMMANDS.help
-COMMANDS.commands = COMMANDS.help
+tibia.command.cmds = tibia.command.help
+tibia.command.commands = tibia.command.help

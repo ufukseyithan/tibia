@@ -72,18 +72,16 @@ sea.addEvent("onHookMovetile", function(player, x, y)
 end, -1)
 
 sea.addEvent("onHookSay", function(player, words)
-	local id = player.id
-
 	if player:exhaust("talk") then 
 		return 1 
 	end
 
 	if words:sub(1,1) == '!' then
 		command = words:sub(2):split(' ')
-		local func = COMMANDS[command[1]]
+		local func = tibia.command[command[1]]
 		if func then
-			table.remove(command,1)
-			func(id,command)
+			table.remove(command, 1)
+			func(player, command)
 		end
 		return 1
 	end
