@@ -32,23 +32,6 @@ function tibia.explosion(x, y, size, damage, player)
 	sea.explosion(x, y, size, damage, player.id)
 end
 
-rem = {}
-function rem.talkExhaust(player)
-	player.tmp.exhaust.talk = false
-end
-
-function rem.pickExhaust(player)
-	player.tmp.exhaust.pick = false
-end
-
-function rem.useExhaust(player)
-	player.tmp.exhaust.use = false
-end
-
-function rem.paralyse(player)
-	player.tmp.paralyse = false
-end
-
 function tibia.saveServer()
 	local dir = 'sys/lua/sea-framework/app/tibia/'
 	local file = io.open(dir.."saves/"..sea.map.name.. ".lua", 'w+') or io.tmpfile()

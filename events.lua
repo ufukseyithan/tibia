@@ -74,12 +74,9 @@ end, -1)
 sea.addEvent("onHookSay", function(player, words)
 	local id = player.id
 
-	if player.tmp.exhaust.talk then 
+	if player:exhaust("talk") then 
 		return 1 
 	end
-
-	player.tmp.exhaust.talk = true
-	timerEx(tibia.config.exhaust.talk, "rem.talkExhaust", 1, player)
 
 	if words:sub(1,1) == '!' then
 		command = words:sub(2):split(' ')
@@ -167,16 +164,13 @@ sea.addEvent("onHookSpawn", function(player)
 end, -1)
 
 sea.addEvent("onHookDrop", function(player, item, itemType, ammoIn, ammo, mode, x, y)
-	if player.tmp.exhaust.pick then
+	if player:exhaust("pick") then
 		if tibia.groundItems[y][x][1] then
 			player:showTutorial("Pick Exhaust", "Try not to spam picking up, as there is an exhaust of 1 second per try.")
 		end
 
 		return 1
 	end
-
-	player.tmp.exhaust.pick = true
-	timerEx(tibia.config.exhaust.pick, "rem.pickExhaust", 1, player)
 	
 	player:pickItem()
 end, -1)
@@ -251,12 +245,9 @@ sea.addEvent("onHookServeraction", function(player, action)
 		player:showTutorial("Equipment", "This is your equipment. You can unequip or use items by clicking on them.")
 		player:viewEquipment()
 	elseif action == 4 then
-		if player.tmp.exhaust.use then
+		if player:exhaust("use") then
 			return
 		end
-
-		player.tmp.exhaust.use = true
-		timer(tibia.config.exhaust.use, "rem.useExhaust", tostring(id))
 
 		local item = player.equipment[9]
 		if item then

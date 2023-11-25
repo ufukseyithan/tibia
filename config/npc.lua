@@ -1,4 +1,4 @@
-NPCs = {
+tibia.config.npc = {
 	[1] = {"Robbie", pos={160, 144}, rot=180, 
 	trade={{2, 15}, {3, 15}}, 
 	greet="Need stuff, %s?", bye="Come again next time!", image="npc1"}, 
@@ -46,7 +46,7 @@ NPCs = {
 	trade={{100,100}, {101,100}, {103,100}, {104,100}, {106,100}, {102,30}, {105,100}, }, image="npc3"}, 
 }
 
-NPCs[3].func = function(npc, id, words, state)
+tibia.config.npc[3].func = function(npc, id, words, state)
 	if words == "hi" then
 		NPCspeak(npc, "Greetings! Say 'rest' if you need to take a break.")
 		PLAYERS[id].tmp.npcstate = {npc, 1}
@@ -100,7 +100,7 @@ NPCs[3].func = function(npc, id, words, state)
 		end
 	end
 end
-NPCs[4].func = function(npc, id, words, state)
+tibia.config.npc[4].func = function(npc, id, words, state)
 	if contains(words, "hi") then
 		NPCspeak(npc, "...")
 		PLAYERS[id].tmp.npcstate = {npc, 1}
@@ -152,7 +152,7 @@ NPCs[4].func = function(npc, id, words, state)
 		PLAYERS[id].tmp.npcstate = {4, 1}
 	end
 end
-NPCs[7].func = function(npc, id, words, state)
+tibia.config.npc[7].func = function(npc, id, words, state)
 	if contains(words, "hi") then
 		if PLAYERS[id]["CheeseQuest"] then
 			if PLAYERS[id]["CheeseQuest"] == 0 then
@@ -204,7 +204,7 @@ NPCs[7].func = function(npc, id, words, state)
 		end
 	end
 end
-NPCs[9].func = function(npc, id, words, state)
+tibia.config.npc[9].func = function(npc, id, words, state)
 	if words == "hi" then
 		NPCspeak(npc, "Welcome! Say 'rest' if you need to take a break.")
 		PLAYERS[id].tmp.npcstate = {npc, 1}
@@ -234,7 +234,7 @@ NPCs[9].func = function(npc, id, words, state)
 		end
 	end
 end
-NPCs[10].func = function(npc, id, words, state)
+tibia.config.npc[10].func = function(npc, id, words, state)
 	if words == "hi" then
 		NPCspeak(npc, "Hello! Would you like to go to the new island for $10?")
 		PLAYERS[id].tmp.npcstate = {npc, 1}
@@ -258,7 +258,7 @@ NPCs[10].func = function(npc, id, words, state)
 		end
 	end
 end
-NPCs[11].func = function(npc, id, words, state)
+tibia.config.npc[11].func = function(npc, id, words, state)
 	if words == "hi" then
 		NPCspeak(npc, "Hello! Would you like to go to the old island for $10?")
 		PLAYERS[id].tmp.npcstate = {npc, 1}
@@ -282,7 +282,7 @@ NPCs[11].func = function(npc, id, words, state)
 		end
 	end
 end
-NPCs[12].func = function(npc, id, words, state)
+tibia.config.npc[12].func = function(npc, id, words, state)
 	if words == "hi" then
 		NPCspeak(npc, "Welcome! Say 'rest' if you need to take a break.")
 		PLAYERS[id].tmp.npcstate = {npc, 1}
@@ -313,10 +313,11 @@ NPCs[12].func = function(npc, id, words, state)
 	end
 end
 
-if not tibia.global.NPC13 then
+--[[if not tibia.global.NPC13 then
 	tibia.global.NPC13 = 0
 end
-NPCs[13].func = function(npc, id, words, state)
+
+tibia.config.npc[13].func = function(npc, id, words, state)
 	if words == "hi" then
 		NPCspeak(npc, "Care for a gamble? I'll roll a dice and if you get what you chose, you'll win 6 fold.")
 		PLAYERS[id].tmp.npcstate = {npc, 1}
@@ -369,8 +370,8 @@ NPCs[13].func = function(npc, id, words, state)
 			PLAYERS[id].tmp.npcstate = {npc, 1}
 		end
 	end
-end
-NPCs[14].func = function(npc, id, words, state)
+end]]
+tibia.config.npc[14].func = function(npc, id, words, state)
 	if words == "hi" then
 		NPCspeak(npc, "The toll is $10. Do you want to cross this bridge?")
 		PLAYERS[id].tmp.npcstate = {npc, 1}
@@ -391,7 +392,7 @@ NPCs[14].func = function(npc, id, words, state)
 		PLAYERS[id].tmp.npcstate = nil
 	end
 end
-NPCs[17].func = function(npc, id, words, state)
+tibia.config.npc[17].func = function(npc, id, words, state)
 	if words == "hi" then
 		NPCspeak(npc, "Hey! Do you want to enter the PVP zone? You need to have at least $100 so you can drop them when you die!")
 		PLAYERS[id].tmp.npcstate = {npc, 1}
@@ -411,7 +412,7 @@ NPCs[17].func = function(npc, id, words, state)
 		PLAYERS[id].tmp.npcstate = nil
 	end
 end
-for i, j in ipairs(NPCs) do
+for i, j in ipairs(tibia.config.npc) do
 	j.image = image("gfx/weiwen/" .. (j.image or "npc1") .. ".png", 0, 0, 0)
 	imagepos(j.image, j.pos[1], j.pos[2], j.rot)
 	if j.trade then
@@ -431,11 +432,11 @@ for i, j in ipairs(NPCs) do
 	end
 end
 function contains(words, text) words = words:lower(); return words == text or words:find(text .. " ") or words:find(" " .. text) end
-function NPCspeak(npcid, words) return radiusmsg(string.format("�255255100%s %s says : %s", os.date'%X', NPCs[npcid][1], words), NPCs[npcid].pos[1], NPCs[npcid].pos[2]) end
+function NPCspeak(npcid, words) return radiusmsg(string.format("�255255100%s %s says : %s", os.date'%X', tibia.config.npc[npcid][1], words), tibia.config.npc[npcid].pos[1], tibia.config.npc[npcid].pos[2]) end
 function setNPCpos(npcid, x, y, rot)
-	NPCs[npcid].rot = rot or NPCs[npcid].rot
-	NPCs[npcid].pos = (x and y) and {x*32+16, y*32+16} or NPCs[npcid].pos
-	imagepos(NPCs[npcid].image, NPCs[npcid].pos[1], NPCs[npcid].pos[2], NPCs[npcid].rot)
+	tibia.config.npc[npcid].rot = rot or tibia.config.npc[npcid].rot
+	tibia.config.npc[npcid].pos = (x and y) and {x*32+16, y*32+16} or tibia.config.npc[npcid].pos
+	imagepos(tibia.config.npc[npcid].image, tibia.config.npc[npcid].pos[1], tibia.config.npc[npcid].pos[2], tibia.config.npc[npcid].rot)
 end
 
 --[[
@@ -443,16 +444,16 @@ addhook("say", "NPCsay")
 function NPCsay(id, words)
 	words = words:lower()
 	if PLAYERS[id].tmp.npcstate then
-		local v = NPCs[PLAYERS[id].tmp.npcstate[1]]
+		local v = tibia.config.npc[PLAYERS[id].tmp.npcstate[1]]
 		--if inArea(player(id, "x"), player(id, "y"), v.pos[1]-96, v.pos[2]-96, v.pos[1]+96, v.pos[2]+96) then
-			--NPCs[PLAYERS[id].tmp.npcstate[1]].func(PLAYERS[id].tmp.npcstate[1], id, words, PLAYERS[id].tmp.npcstate[2])
+			--tibia.config.npc[PLAYERS[id].tmp.npcstate[1]].func(PLAYERS[id].tmp.npcstate[1], id, words, PLAYERS[id].tmp.npcstate[2])
 			--[[return
 		else
 			PLAYERS[id].tmp.npcstate = nil
 		end
 	end
 	if contains(words, "hi") or contains(words, "hello") or contains(words, "yo") or contains(words, "hey") then
-		for k, v in ipairs(NPCs) do
+		for k, v in ipairs(tibia.config.npc) do
 			if inArea(player(id, "x"), player(id, "y"), v.pos[1]-96, v.pos[2]-96, v.pos[1]+96, v.pos[2]+96) then
 				if v.func then
 					v.func(k, id, "hi")
@@ -472,7 +473,7 @@ function NPCsay(id, words)
 end
 addhook("menu", "NPCmenu")
 function NPCmenu(id, title, button)
-	for i, v in ipairs(NPCs) do
+	for i, v in ipairs(tibia.config.npc) do
 		if title == v[1] then
 			if button == 0 then
 				if v.bye then
@@ -490,7 +491,7 @@ function NPCmenu(id, title, button)
 						addmoney(id, price)
 						message(id, "You have recieved $" .. price .. ".", "255255255")
 						msg2(id, "You have sold " .. tibia.config.item[itemid].article .. " " .. tibia.config.item[itemid].name .. " for $" .. price .. ".")
-						return menu(id, NPCs[i].menu)
+						return menu(id, tibia.config.npc[i].menu)
 					end
 					msg2(id, "You do not have " .. tibia.config.item[itemid].article .. " " .. tibia.config.item[itemid].name .. " to sell.")
 					return
@@ -498,7 +499,7 @@ function NPCmenu(id, title, button)
 					if additem(id, itemid, 1, true) then
 						message(id, "You have lost $" .. price .. ".", "255255255")
 						msg2(id, "You have bought " .. tibia.config.item[itemid].article .. " " .. tibia.config.item[itemid].name .. " for $" .. price .. ".")
-						return menu(id, NPCs[i].menu)
+						return menu(id, tibia.config.npc[i].menu)
 					end
 					msg2(id, "You do not have enough capacity.")
 					return

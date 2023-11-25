@@ -1,3 +1,18 @@
+function sea.Player:exhaust(action, delay)
+	local exhaust = self.tmp.exhaust
+	local temp = exhaust[action]
+
+	exhaust[action] = true
+
+	local function cooldown()
+		exhaust[action] = false
+	end
+
+	timerEx(delay or tibia.config.exhaust[action], cooldown)
+
+	return temp
+end
+
 function sea.Player:isAtZone(zone)
 	local tile = sea.Tile.get(self.lastPosition.x, self.lastPosition.y)
 
@@ -13,7 +28,7 @@ function sea.Player:addExp(amount)
 	end
 
 	if previousLevel ~= self.level then
-        player:message("You have leveled up to level "..player.level.."!")
+        self:message("You have leveled up to level "..self.level.."!")
 
         parse("sv_sound2", id, 'fun/Victory_Fanfare.ogg')
 	end
@@ -24,8 +39,8 @@ end
 
 function sea.Player:hit(source, itemType, damage)
 	local hp, weaponName, name = self.health
-	if hpdmg <= 0 or source == 0 then
-		self.hp = hp - hpdmg
+	if damage <= 0 or source == 0 then
+		self.hp = hp - damage
 		return
 	end
 
@@ -144,7 +159,7 @@ function sea.Player:pickItem()
 			item:destroy()
 		elseif self:addItem(item) then
 			self:message("You have picked up "..item.fullName..".")
-			player:showTutorial("Pick", "You have picked up something. Press F3 to access your inventory!")
+			self:showTutorial("Pick", "You have picked up something. Press F3 to access your inventory!")
 		end
 	end
 

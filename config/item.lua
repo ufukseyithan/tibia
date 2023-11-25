@@ -419,6 +419,7 @@ tibia.config.item = {
 			end
 			PLAYERS[id].tmp.exhaust.use = true
 			timer(CONFIG.EXHAUST.USE, rem.useExhaust, id)
+			
 			radiusmsg(player(id,"name") .. " flips a coin. " .. ((math.random(2) == 1) and "Heads!" or "Tails!"), player(id,"x"), player(id,"y"))
 		end,
 	}, 

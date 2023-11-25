@@ -67,7 +67,7 @@ function Item:destroy()
 		end
 
 		Item.getGroundItems(x, y)[height] = nil
-		tibia.updateTileItems(x, y)
+		Item.updateTile(x, y)
 
 		self.x, self.y, self.height = nil, nil, nil
 	elseif slot then
@@ -111,7 +111,7 @@ function Item:reposition(x, y)
     end
 
 	ground[height] = self
-    tibia.updateTileItems(x, y)
+    Item.updateTile(x, y)
 end
 
 function Item:isOnGround()
@@ -251,7 +251,7 @@ function Item.updateTile(x, y)
 		else
 			item.image = sea.Image.create(config.fimage or "gfx/weiwen/circle.png", 0, 0, i > 3 and 1 or 0)
 			if config.r then
-				item.image.color(config.r, config.g, config.b)
+				item.image.color = sea.Color.new(config.r, config.g, config.b)
 			end
 		end
 
@@ -259,7 +259,7 @@ function Item.updateTile(x, y)
 
 		local scaleX, scaleY = config.fscalex or 1, config.fscaley or 1
 		local magnification = math.min(height, 10) / 20 + 0.95
-		item.image:setScale(scaleY * magnification, scaleY * magnification)
+		item.image:scale(scaleY * magnification, scaleY * magnification)
 	end
 end
 
