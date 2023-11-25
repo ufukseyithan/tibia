@@ -7,7 +7,7 @@ function Monster:constructor(id, config, x, y)
 
     local image = sea.Image.create(config.image, x, y, 0)
     image:scale(config.scaleX, config.scaleY)
-    image:hitZone(3)
+    image:hitZone(1)
     self.image = image
 
     self.x, self.y = x, y
