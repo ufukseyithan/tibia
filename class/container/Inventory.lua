@@ -26,6 +26,8 @@ function Inventory:getMenu()
 			menu:addButton("Empty")
 		end
 	end
+
+    return menu
 end
 
 -------------------------

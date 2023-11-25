@@ -155,8 +155,8 @@ tibia.config.item = {
 		fimage = "gfx/weiwen/rune.png", 
 		func = {function(id, itemslot, itemid, equip)
 			radiusmsg(player(id,"name") .. " is casting a teleport rune.", player(id,"x"), player(id,"y"))
-			timer(1500, "ITEMFUNCTIONS.teleport", id .. ';' .. player(id, 'health') .. ';' .. (equip and -itemslot or itemslot))
-		end,equip}, 
+			timer(1500, "tibia.config.itemFunctions.teleport", id .. ';' .. player(id, 'health') .. ';' .. (equip and -itemslot or itemslot))
+		end, equip}, 
 		teleport = function(p)
 			local id, health, itemslot = unpack(p:split(';'))
 			id, health, itemslot = tonumber(id), tonumber(health), tonumber(itemslot)
@@ -843,12 +843,14 @@ tibia.config.item = {
 		fimage = 'gfx/weiwen/money.png', 
 	}
 }
-tibia.config.itemFunctions = {}
-tibia.config.teleport = tibia.config.item[105].teleport
+
+tibia.config.itemFunctions = {
+	teleport = tibia.config.item[105].teleport
+}
 
 for k, v in pairs(tibia.config.item) do
 	v.article = v.article or "a"
-	v.plural = v.plural or v.name .. "s"
+	v.plural = v.plural or v.name.."s"
 	v.action = type(v.action) == "table" and v.action or {v.action}
 	v.func = type(v.func) == "table" and v.func or {v.func}
 end

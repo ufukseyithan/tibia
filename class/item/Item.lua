@@ -129,8 +129,12 @@ function Item:getActionMenu(equip)
 
 	local config = self.config
 
+	print(dump(config))
+
 	for i, v in ipairs(config.action) do
 		menu:addButton(v, function(player)
+			print(dump(config.func))
+
 			config.func[i](player, self, equip)
 		end)
 	end

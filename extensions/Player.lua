@@ -243,18 +243,18 @@ function sea.Player:equipItem(item, equip)
 		end
 
 		local slot = config.slot
-		local equipment = self.equipment
-		local leftHandSlot, rightHandSlot = equipment.slots["Left Hand"], equipment.slots["Right Hand"]
+		local equipmentSlots = self.equipment.slots
+		local leftHandSlot, rightHandSlot = equipmentSlots["Left Hand"], equipmentSlots["Right Hand"]
 
 		if slot == "Left Hand" then
 			if rightHandSlot:isOccupied() then
-				if rightHandSlot.item.twohand then
+				if rightHandSlot.item.config.twohand then
 					if not self:addItem(rightHandSlot.item) then 
 						return 
 					end
 				end
 			end
-		elseif config.slot == "Right Hand" then
+		elseif slot == "Right Hand" then
 			if config.twohand then
 				if leftHandSlot:isOccupied() then
 					if not self:addItem(leftHandSlot.item) then 
@@ -264,7 +264,7 @@ function sea.Player:equipItem(item, equip)
 			end
 		end
 
-		item:occupy(equipment.slots[slot])
+		item:occupy(equipmentSlots[slot])
 	end
 
 	self:updateStats()

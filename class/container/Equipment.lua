@@ -27,6 +27,8 @@ function Equipment:getMenu()
 			menu:addButton("Empty", nil, slotName)
 		end
 	end
+
+	return menu
 end
 
 -------------------------
