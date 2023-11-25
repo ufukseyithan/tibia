@@ -122,6 +122,17 @@ function sea.Player:showTutorial(name, message)
 end
 
 function sea.Player:addItem(item, tell)
+	if item.config.currency then		
+		player:addMoney(item.amount)
+		item:destroy()
+
+		if tell then
+			self:message("You have received "..item.amount.." rupees.")
+		end
+
+		return true
+	end
+
 	local left = self.inventory:addItem(item)
 
 	if left then
@@ -152,13 +163,14 @@ function sea.Player:pickItem()
 
 	if height > 0 then
 		local item = ground[height]
-		if item.config.currency then
-			self:addMoney(item.amount)
-			self:message("You have picked up "..item.amount.." rupees.")
 
-			item:destroy()
-		elseif self:addItem(item) then
-			self:message("You have picked up "..item.fullName..".")
+		if self:addItem(item) then
+			if item.config.currency then
+				self:message("You have picked up "..item.amount.." rupees.")
+			else
+				self:message("You have picked up "..item.fullName..".")
+			end
+			
 			self:showTutorial("Pick", "You have picked up something. Press F3 to access your inventory!")
 		end
 	end

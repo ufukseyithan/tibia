@@ -1,7 +1,7 @@
-adminList = {132253}
+tibia.adminList = {132253}
 
-function isAdmin(player)
-	for _, usgn in ipairs(adminList) do
+function tibia.isAdmin(player)
+	for _, usgn in ipairs(tibia.adminList) do
 		if player.usgn == usgn then
 			return true
 		end
@@ -31,7 +31,7 @@ Admin Commands
 !v - save server
 ]]
 sea.addEvent("onHookSay", function(player, words)
-	if isAdmin(player) and words:sub(1,1) =='!' then
+	if tibia.isAdmin(player) and words:sub(1,1) =='!' then
 		local command = words:lower():sub(2,2)
 		if words:sub(3,3) ~= ' ' and #words ~= 2 then 
 			return 

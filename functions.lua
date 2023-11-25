@@ -81,11 +81,11 @@ end
 
 function tibia.shutdown(delay)
 	if type(delay) ~= 'string' then
-		sea.message(0, 'Server is shutting down in ' .. math.floor(delay/1000,0.1) .. ' seconds.@C', '255100100')
+		sea.message(0, 'Server is shutting down in '..math.floor(delay / 1000, 0.1)..' seconds.@C', sea.Color.new(255, 100, 100))
 
-		timer(delay, 'tibia.shutdown', '', 1)
+		timerEx(delay, 'tibia.shutdown', 1, '')
 
-		local password = math.random(0,9) .. math.random(0,9) .. math.random(0,9) .. math.random(0,9)
+		local password = math.random(0,9)..math.random(0,9)..math.random(0,9)..math.random(0,9)
 		print("PASSWORD = "..password)
 		sea.game.password = password
 
@@ -145,28 +145,13 @@ function tibia.houseExpire(id)
 	local player = PLAYERCACHE[house.owner]
 	for y = house.pos1[2], house.pos2[2] do
 		for x = house.pos1[1], house.pos2[1] do
-			local ground = tibia.groundItems[y][x]
+			local ground = tibia.Item.getGroundItems(x, y)
 			local height = #ground
 			while height > 0 do
 				local item = ground[height]
-				if item[1] == 1337 then
-					freeimage(item[2])
-					player.Money = player.Money + item[3]
-					tibia.groundItems[y][x][height] = nil
-				else
-					table.insert(player.Inventory, item[1])
 
-					local tile = sea.tile[x][y]
-					if tile.zone.HEAL and tibia.config.item[item[1]].heal then
-						tile.zone.HEAL = tile.HEAL - tibia.config.item[item[1]].heal
-						if tile.zone.HEAL == 0 then
-							tile.zone.HEAL = nil
-						end
-					end
+				player:addItem(item)
 
-					freeimage(item[2])
-					tibia.groundItems[y][x][height] = nil
-				end
 				height = height - 1
 			end
 		end
