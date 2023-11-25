@@ -162,9 +162,9 @@ sea.addEvent("onHookSpawn", function(player)
 end, -1)
 
 sea.addEvent("onHookDrop", function(player, item, itemType, ammoIn, ammo, mode, x, y)
-	if player:exhaust("pick") then
+	if not player:exhaust("pick") then
 		if tibia.groundItems[y][x][1] then
-			player:showTutorial("Pick Exhaust", "Try not to spam picking up, as there is an exhaust of 1 second per try.")
+			player:showTutorial("Pick Exhaust", "Try not to spam picking up, as there is an exhaust of half a second per try.")
 		end
 
 		return 1
@@ -182,8 +182,10 @@ sea.addEvent("onHookSecond", function()
 			player.deaths = player.id
 		end
 
-		if player.lastPosition.x then
-			local tile = sea.Tile.get(unpack(player.lastPosition))
+		local lastPosition = player.lastPosition
+
+		if lastPosition.x then
+			local tile = sea.Tile.get(lastPosition.x, lastPosition.y)
 			if tile.zone.HEAL and ((tile.zone.HEAL > 0 and tile.zone.HOUSE) or (tile.zone.HEAL < 0 and not tile.zone.SAFE)) and player.tmp.hp > player.hp then
 				player.hp = player.health + math.min(10, tile.zone.HEAL)
 				player.health = player.hp
