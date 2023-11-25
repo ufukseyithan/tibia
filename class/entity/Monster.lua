@@ -60,18 +60,6 @@ function Monster:damage(player, damage, weapon)
 
 	player:showTutorial("Damage Monster", "You have attacked a monster! Good job! Keep on attacking it until it dies.")
 
-	local weaponName
-	if weapon.id == 251 then
-		weaponName = 'rune'
-	elseif weapon.id == 46 then
-		weaponName = 'firewave'
-		damage = damage / 5
-	else
-        local equipmentSlot = player.equipment.slots["Right Hand"]
-
-		weaponName = equipmentSlot:isOccupied() and equipmentSlot.item.config.name or 'dagger'
-	end
-
 	self.health = self.health - damage
 
 	if self.health <= 0 then
@@ -100,9 +88,7 @@ function Monster:hit(player, damage)
 		tibia.radiusSound("weapons/knife_hit.wav", self.x, self.y)
 	end
 
-    player:hit(self, -1, damage)
-
-	return true
+    player:hit(self, -1, damage * self.config.attack)
 end
 
 function Monster:die()

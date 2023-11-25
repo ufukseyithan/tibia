@@ -22,8 +22,8 @@ function sea.Player:addExp(amount)
 	return true
 end
 
-function sea.Player:hit(source, weapon, hpdmg)
-	local hp, damage, weaponName, name = self.health
+function sea.Player:hit(source, itemType, damage)
+	local hp, weaponName, name = self.health
 	if hpdmg <= 0 or source == 0 then
 		self.hp = hp - hpdmg
 		return
@@ -36,7 +36,9 @@ function sea.Player:hit(source, weapon, hpdmg)
 			return 1 
 		end
 
-		if table.contains({400, 401, 402, 403, 404}, source.equipment[7]) then 
+		local equipmentSlots = source.equipment.slots
+
+		if table.contains({400, 401, 402, 403, 404}, equipmentSlots["Mount"]:isOccupied() and equipmentSlots["Mount"].item.id or 0) then 
 			source:message("You may not attack on a horse.") 
 			return 1 
 		end
@@ -49,23 +51,27 @@ function sea.Player:hit(source, weapon, hpdmg)
 		self:showTutorial("Hit", "A player is attacking you! You can fight back by swinging your weapon at him.")
 
 		local attack = source.tmp.attack
-		if weapon == 251 then
+
+		if itemType.id == 251 then
 			damage = math.ceil(2500 / math.random(80, 120))
 			weaponName = 'Rune'
-		elseif weapon == 46 then
+		elseif itemType.id == 46 then
 			damage = math.ceil(500 / math.random(80, 120))
 			weaponName = 'Firewave'
 		else
 			local dmgMul = ((self.level + 50) * attack / defence) / math.random(60, 140)
 			damage = math.ceil(20 * dmgMul)
-			weaponName = source.equipment[3] and tibia.config.item[source.equipment[3]].name or 'Dagger'
+
+			local equipmentSlot = equipmentSlots["Left Hand"]
+
+			weaponName = equipmentSlot:isOccupied() and equipmentSlot.item.config.name or 'Dagger'
 		end
 	elseif type(source) == "table" then
 		if self:isAtZone("SAFE") or self:isAtZone("NOMONSTERS") then 
 			return 1 
 		end
 		
-		damage = math.ceil(math.random(10, 20) * hpdmg * source.config.attack / defence / 15)
+		damage = math.ceil(math.random(10, 20) * damage / defence / 15)
 		source, weaponName = 0, source.config.name
 	end
 
