@@ -1,6 +1,9 @@
 function sea.Player:exhaust(action, delay)
+	if exhaust[action] then
+		return false
+	end
+
 	local exhaust = self.tmp.exhaust
-	local temp = exhaust[action]
 
 	exhaust[action] = true
 
@@ -10,7 +13,7 @@ function sea.Player:exhaust(action, delay)
 
 	timerEx(delay or tibia.config.exhaust[action], cooldown)
 
-	return temp
+	return true
 end
 
 function sea.Player:isAtZone(zone)
