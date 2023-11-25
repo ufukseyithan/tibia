@@ -7,19 +7,32 @@ function Item:constructor(config, attributes)
     attributes = attributes or {}
 
     self.config = config
-
-    if config.stackable or config.currency then
-		self.amount = attributes.amount or 0
-	end
+	self.amount = attributes.amount or 1
 end
 
 function Item:count()
 	return self.amount or 1
 end
 
+function Item:consume(amount)
+	amount = amount or 1
+
+	if amount >= self.amount then
+		local temp = self.amount
+
+		self:destroy()
+
+		return temp
+	else
+		self.amount = self.amount - amount
+
+		return amount
+	end
+end
+
 function Item:destroy()
 	local x, y, height = self:isOnGround()
-	local container, slot = self:isInContainer()
+	local slot = self:isInSlot()
 
 	if x then
 		local tile = sea.Tile.get(x, y)
@@ -33,14 +46,14 @@ function Item:destroy()
 		Item.getGroundItems(x, y)[height] = nil
 		tibia.updateTileItems(x, y)
 	elseif container then
-		container[slot] = nil
+		slot.item = nil
 	end
 end
 
 function Item:occupy(container, slot)
 	self:destroy()
 
-	container[slot] = self
+	slot.item = self
 end
 
 function Item:reposition(x, y)
@@ -64,8 +77,8 @@ function Item:isOnGround()
 	return self.x, self.y, self.height
 end
 
-function Item:isInContainer()
-	return self.container, self.slot
+function Item:isInSlot()
+	return self.slot
 end
 
 -------------------------
@@ -88,15 +101,15 @@ end
 --        CONST        --
 -------------------------
 
-function Item.create(itemID, attributes)
-	local config = tibia.config.items[itemID]
+function Item.create(id, attributes)
+	local config = tibia.config.items[id]
     if not config then
         return
     end
 
 	local item = Item.new(config, attributes)
 
-	item.id = itemID
+	item.id = id
 
 	return item
 end
@@ -108,8 +121,8 @@ function Item.getGroundItems(x, y)
     return tibia.groundItems[y][x]
 end
 
-function Item.spawn(itemID, x, y, attributes)
-	local item = Item.create(itemID, attributes)
+function Item.spawn(id, x, y, attributes)
+	local item = Item.create(id, attributes)
 
 	item:reposition(x, y)
 

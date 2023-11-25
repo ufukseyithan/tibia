@@ -12,7 +12,7 @@ tibia.config = {
 		-- function for calculation experience for each level.
 		calc = function(level)
 			level = level - 1
-			return (level)^3 - 3 * (level)^2 + 8 * (level)
+			return (level) ^ 3 - 3 * (level) ^ 2 + 8 * (level)
 		end
 	}, 
 	
