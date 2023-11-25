@@ -1,6 +1,0 @@
--- GROUND ITEMS --
-
-
-
--- houses --
-

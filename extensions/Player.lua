@@ -177,14 +177,13 @@ function sea.Player:dropItem(item, equip)
 end
 
 function sea.Player:updateStats()
-	local hp, spd, atk, def = self.tmp.hp, self.tmp.speed, self.tmp.attack, self.tmp.defence
+	local hp, spd, atk, def = 0, 0, 0, 0
 
 	self:stripAll()
 	
 	local equipmentImage = self.tmp.equipmentImage
-
-	for k, equipmentImage in pairs(equipmentImage) do
-		equipmentImage:destroy()
+	for k, v in pairs(equipmentImage) do
+		v:destroy()
 		equipmentImage[k] = nil
 	end
 
@@ -225,6 +224,8 @@ function sea.Player:updateStats()
 			end
 		end		
 	end
+
+	-- set primary weapon, secondaryh weapon, melee
 
 	self.tmp.attack = atk
 	self.tmp.defence = def
