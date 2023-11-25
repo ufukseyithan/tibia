@@ -7,6 +7,7 @@ function Item:constructor(config, attributes)
     attributes = attributes or {}
 
     self.config = config
+	self.maxStack = config.stackable and config.maxStack or self.defaultMaxStack 
 	self.amount = attributes.amount or 1
 end
 
@@ -17,17 +18,39 @@ end
 function Item:consume(amount)
 	amount = amount or 1
 
-	if amount >= self.amount then
-		local temp = self.amount
+	local consumeAmount = math.max(0, self.amount - amount)
 
+	self.amount = self.amount - consumeAmount
+
+	if self.amount <= 0 then
 		self:destroy()
-
-		return temp
-	else
-		self.amount = self.amount - amount
-
-		return amount
 	end
+
+	return consumeAmount
+end
+
+function Item:restore(amount)
+	amount = amount or 1
+
+	local restoreAmount = math.min(self.maxStack, self.amount + amount)
+
+	self.amount = self.amount + restoreAmount
+
+	return restoreAmount
+end
+
+function Item:split(amount)
+	if not self.config.stackable then
+		return
+	end
+
+	amount = amount or math.ceil(self.amount / 2)
+
+	local newStack = Item.create(self.id, self.attributes)
+
+	newItem:restore(self:consume(amount))
+
+	return newStack
 end
 
 function Item:destroy()
@@ -45,12 +68,20 @@ function Item:destroy()
 
 		Item.getGroundItems(x, y)[height] = nil
 		tibia.updateTileItems(x, y)
-	elseif container then
+
+		self.x, self.y, self.height = nil, nil, nil
+	elseif slot then
 		slot.item = nil
 	end
 end
 
-function Item:occupy(container, slot)
+function Item:occupy(slot)
+	local config = self.config
+
+	if slot.type and slot.type ~= config.type then
+		return
+	end
+
 	self:destroy()
 
 	slot.item = self
