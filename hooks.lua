@@ -1,5 +1,12 @@
 sea.addEvent("onHookJoin", function(player)
-	player.tmp = {hp = 100, attack = 1, defence = 1, speed = 0, equip = {}, exhaust = {}}
+	player.tmp = {
+		hp = 100, 
+		attack = 1, 
+		defence = 1, 
+		speed = 0, 
+		equipmentImage = {}, 
+		exhaust = {}
+	}
 
 	for k, v in ipairs(tibia.config.slots) do
 		player.tmp.equip[k] = {}
@@ -164,12 +171,7 @@ sea.addEvent("onHookSpawn", function(player)
 	--updateHUD(id)
 	--hudtxt2(id,0,player.usgn ~= 0 and player.name or "NOT LOGGED IN","255100100", 565, 407-tibia.config.pixels, 1)
 
-	local newItems, previousItems = {}, {}
-	for i, v in ipairs(tibia.config.slots) do
-		newItems[i] = player.equipment[i]
-		previousItems[i] = 0
-	end
-	player:updateEQ(newItems, previousItems)
+	player:updateStats()
 
 	player.health = player.hp <= 0 and 250 or player.hp
 
@@ -338,14 +340,6 @@ sea.addEvent("onHookDie", function(victim, killer, weapon, x, y)
 	
 	parse("effect", "colorsmoke", x, y, 64, 64, 192, 0, 0)
 	radiussound("weapons/c4_explode.wav", x, y)
-
-	local newItems, previousItems = {}, {}
-	for i, v in ipairs(tibia.config.slots) do
-		previousItems[i] = victim.equipment[i]
-		newItems[i] = 0
-	end
-
-	victim:updateEQ(newItems, previousItems)
 end, 1)
 
 sea.addEvent("onHookUse", function(player, event, data, x, y)

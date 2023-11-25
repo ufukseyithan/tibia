@@ -1,10 +1,11 @@
 tibia.config = {
 	password = "", 
+
+	inventoryCapacity = 50, 
 	
 	-- maximum number of monsters on the map at one time. if set to 0, monsters.lua is not loaded at all.
 	maxMonsters = 192, 
-	-- maximum inventory items a player can carry.
-	maxItems = 50, 
+	
 	-- maximum height an item stack on the ground can be (they can be as high as you want, but only the top few will be shown when this is set).
 	maxHeight = 5, 
 	
@@ -19,16 +20,18 @@ tibia.config = {
 	stats = {'Experience', 'Level', 'Money'}, --ignore
 
 	-- slot names for each slot. can be customised.
+	-- the order is important since the last item will always be renderer last
 	slots = {
-		"Head", 
-		"Torso", 
-		"Right Hand", 
-		"Left Hand", 
 		"Legs", 
 		"Feet", 
 		"Mount", 
 		"Accessories", 
+		
+		"Right Hand", 
+		"Left Hand", 
 		"Runes", 
+		"Torso", 
+		"Head", 
 	}, 
 	
 	-- colour for hudtxt (only one for now... no point then)

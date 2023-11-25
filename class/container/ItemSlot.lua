@@ -5,6 +5,10 @@ function ItemSlot:constructor(item, type)
     self.type = type
 end
 
+function ItemSlot:isOccupied()
+    return self.item and true or false
+end
+
 -------------------------
 --        INIT         --
 -------------------------
