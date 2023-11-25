@@ -5,7 +5,7 @@ tibia.pvpZone = tibia.config.pvpZone[mapName] or tibia.config.pvpZone[tibia.conf
 tibia.noPvpZone = tibia.config.noPvpZone[mapName] or tibia.config.noPvpZone[tibia.config.defaultMap]
 tibia.noMonstersZone = tibia.config.noMonstersZone[mapName] or tibia.config.noMonstersZone[tibia.config.defaultMap]
 tibia.safeZone = tibia.config.safeZone[mapName] or tibia.config.safeZone[tibia.config.defaultMap]
-tibia.houses = tibia.config.house[mapName] or tibia.config.house[tibia.config.defaultMap]
+tibia.house = tibia.config.house[mapName] or tibia.config.house[tibia.config.defaultMap]
 tibia.tileZone = {}
 
 for y = 0, sea.map.ySize do
@@ -51,7 +51,7 @@ for y = 0, sea.map.ySize do
 			end
 		end
 
-		for i, v in ipairs(tibia.houses) do
+		for i, v in ipairs(tibia.house) do
 			tileZone.HOUSE = (x >= v.pos1[1] and x <= v.pos2[1] and y >= v.pos1[2] and y <= v.pos2[2]) and i or nil
 			tileZone.HOUSEDOOR = (x == v.door[1] and y == v.door[2]) and i or nil
 			tileZone.HOUSEENT = (x == v.ent[1] and y == v.ent[2]) and i or nil

@@ -59,7 +59,7 @@ function tibia.saveServer()
 	end
 	
 	local tmp = {}
-	for i, v in pairs(tibia.houses) do
+	for i, v in pairs(tibia.house) do
 		if v.owner then
 			tmp[i] = {owner = v.owner, endtime = v.endtime, allow = v.allow, doors = v.doors}
 		end
@@ -137,7 +137,7 @@ function tibia.updateTime(t)
 end
 
 function tibia.houseExpire(id)
-	local house = tibia.houses[id]
+	local house = tibia.house[id]
 	if not house.owner then
 		return false
 	end

@@ -40,7 +40,7 @@ sea.addEvent("onHookMovetile", function(player, x, y)
 	if tile.zone.HOUSE then
 		player:showTutorial("House", "This is a house. For more information about houses, type !house")
 
-		house = tibia.houses[tile.zone.HOUSE]
+		house = tibia.house[tile.zone.HOUSE]
 		if not house.owner then
 			player:setPosition(tileToPixel(lastPosition.x), tileToPixel(lastPosition.y))
 			player:message("This house has no owner. Type \"!house\" for a list of house commands.")
@@ -195,7 +195,7 @@ end, -1)
 sea.addEvent("onHookMinute", function()
 	tibia.minutes = tibia.minutes + 1
 	
-	for i, v in ipairs(tibia.houses) do
+	for i, v in ipairs(tibia.house) do
 		if v.owner then
 			local difftime = os.difftime(v.endtime, os.time())
 			if difftime <= 0 then
@@ -333,7 +333,7 @@ sea.addEvent("onHookUse", function(player, event, data, x, y)
 
 	local tile = sea.Tile.get(x, y)
 	if tile and tile.zone.HOUSE then
-		local house = tibia.houses[tile.zone.HOUSE]
+		local house = tibia.house[tile.zone.HOUSE]
 		local entity = sea.Entity.get(x, y)
 		local name = entity.name
 		local door = tonumber(name:sub(name:find('_')+1))
