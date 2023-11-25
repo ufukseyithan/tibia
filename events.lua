@@ -317,8 +317,8 @@ sea.addEvent("onHookDie", function(victim, killer, weapon, x, y)
 		end
 	end
 	
-	parse("effect", "colorsmoke", x, y, 64, 64, 192, 0, 0)
-	radiussound("weapons/c4_explode.wav", x, y)
+	sea.effect("colorsmoke", x, y, 64, 64, 192, 0, 0)
+	tibia.radiusSound("weapons/c4_explode.wav", x, y)
 end, 1)
 
 sea.addEvent("onHookUse", function(player, event, data, x, y)

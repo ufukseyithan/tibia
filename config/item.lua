@@ -838,7 +838,7 @@ tibia.config.item = {
 	},
 	
 	[1337] = {
-		name = 'money', 
+		name = 'Rupee', 
 		article = 'some', 
 		r = 0, g = 150, b = 0, 
 		fimage = 'gfx/weiwen/money.png', 
