@@ -1,7 +1,7 @@
 local equip = sea.Player.equipItem
 local eat = sea.Player.eat
 
-tibia.config.items = {
+tibia.config.item = {
 	[0] = {
 		name = ""
 	}, 
@@ -846,7 +846,7 @@ tibia.config.items = {
 tibia.config.itemFunctions = {}
 tibia.config.teleport = tibia.config.item[105].teleport
 
-for k, v in pairs(tibia.config.items) do
+for k, v in pairs(tibia.config.item) do
 	v.article = v.article or "a"
 	v.plural = v.plural or v.name .. "s"
 	v.action = type(v.action) == "table" and v.action or {v.action}

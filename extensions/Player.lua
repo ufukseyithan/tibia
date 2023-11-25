@@ -138,6 +138,7 @@ function sea.Player:pickItem()
 			item:destroy()
 		elseif self:addItem(item) then
 			self:message("You have picked up "..item.fullName..".")
+			player:showTutorial("Pick", "You have picked up something. Press F3 to access your inventory!")
 		end
 	end
 

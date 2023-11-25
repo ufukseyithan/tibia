@@ -169,8 +169,8 @@ sea.addEvent("onHookSpawn", function(player)
 		newItems[i] = player.equipment[i]
 		previousItems[i] = 0
 	end
-
 	player:updateEQ(newItems, previousItems)
+
 	player.health = player.hp <= 0 and 250 or player.hp
 
 	return 'x'
@@ -187,14 +187,8 @@ sea.addEvent("onHookDrop", function(player, item, itemType, ammoIn, ammo, mode, 
 
 	player.tmp.exhaust.pick = true
 	timerEx(tibia.config.exhaust.pick, "rem.pickExhaust", 1, player)
-
-	if tibia.groundItems[y][x][1] then
-		player:showTutorial("Pick", "You have picked up something. Press F3 to access your inventory!")
-	end
 	
 	player:pickItem()
-
-	return 1
 end, -1)
 
 sea.addEvent("onHookSecond", function()
@@ -277,7 +271,7 @@ sea.addEvent("onHookServeraction", function(player, action)
 		local item = player.equipment[9]
 		if item then
 			local amount, items = player:itemCount(item.id)
-			player:alert("Using " .. (amount == 0 and ("the last " .. .name) or ("one of " .. item.fullName)) .. "...")
+			player:alert("Using "..(amount == 0 and ("the last "..name) or ("one of "..item.fullName)) .. "...")
 
 			item.config.func[1](id, 9, item.id, true)
 			if amount > 0 then
