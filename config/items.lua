@@ -40,7 +40,7 @@ tibia.config.items = {
 		r = 180, g = 180, b = 180, 
 		action = {"wear","check time"}, 
 		slot = 8, 
-		func = {equip, function(player) player:message(ITEMS[3].desc) end},
+		func = {equip, function(player) player:message(tibia.config.item[3].desc) end},
 	},
 	
 	[4] = {
@@ -844,7 +844,7 @@ tibia.config.items = {
 	}
 }
 tibia.config.itemFunctions = {}
-tibia.config.teleport = tibia.config.items[105].teleport
+tibia.config.teleport = tibia.config.item[105].teleport
 
 for k, v in pairs(tibia.config.items) do
 	v.article = v.article or "a"

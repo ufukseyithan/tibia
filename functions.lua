@@ -146,7 +146,7 @@ function tibia.updateTime(t)
 	end
 
 	local text = string.format("%02d:%02d", math.floor(tibia.global.time / 60), tostring(tibia.global.time % 60))
-	ITEMS[3].desc = "The time is "..text.."."
+	tibia.config.item[3].desc = "The time is "..text.."."
 
 	sea.game.daylightTime = tibia.global.time / 4
 					
@@ -174,8 +174,8 @@ function tibia.houseExpire(id)
 					table.insert(player.Inventory, item[1])
 
 					local tile = sea.tile[x][y]
-					if tile.zone.HEAL and ITEMS[item[1]].heal then
-						tile.zone.HEAL = tile.HEAL - ITEMS[item[1]].heal
+					if tile.zone.HEAL and tibia.config.item[item[1]].heal then
+						tile.zone.HEAL = tile.HEAL - tibia.config.item[item[1]].heal
 						if tile.zone.HEAL == 0 then
 							tile.zone.HEAL = nil
 						end

@@ -67,7 +67,7 @@ function Monster:damage(player, damage, weapon)
 		weaponName = 'firewave'
 		damage = damage / 5
 	else
-		weaponName = player.equipment[3] and ITEMS[player.equipment[3]].name or 'dagger'
+		weaponName = player.equipment[3] and tibia.config.item[player.equipment[3]].name or 'dagger'
 	end
 
 	self.health = self.health - damage

@@ -16,7 +16,7 @@ function Item:count()
 end
 
 function Item:consume(amount)
-	amount = amount or 1
+	amount = amount or self.amount
 
 	local consumeAmount = math.max(0, self.amount - amount)
 
@@ -79,12 +79,22 @@ function Item:occupy(slot)
 	local config = self.config
 
 	if slot.type and slot.type ~= config.type then
-		return
+		return false
 	end
 
-	self:destroy()
+	if config.stackable and slot.item and slot.item.id == self.id then
+		item:restore(self:consume())
 
-	slot.item = self
+		return self.amount <= 0 and true or self
+	elseif not slot.item then
+		self:destroy()
+
+		slot.item = self
+
+		return true
+	end
+
+	return false
 end
 
 function Item:reposition(x, y)
@@ -133,7 +143,7 @@ end
 -------------------------
 
 function Item.create(id, attributes)
-	local config = tibia.config.items[id]
+	local config = tibia.config.item[id]
     if not config then
         return
     end

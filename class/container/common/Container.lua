@@ -4,10 +4,22 @@ function Container:constructor()
     self.slots = {}
 end
 
+function Container:clear(slot)
+	if slot then
+		slot:remove()
+	else
+		for _, slot in pairs(self.slots) do
+			slot:destroy()
+		end
+	end
+
+	return true
+end
+
 function Container:itemCount(id)
 	local amount, items = 0, {}
 
-	for _, item in ipairs(self.slots) do
+	for _, item in pairs(self.slots) do
 		if item.id == id then
 			amount = amount + item:count()
 			table.insert(items, item)
@@ -18,7 +30,7 @@ function Container:itemCount(id)
 end
 
 function Container:removeItem(id, amount, tell)
-	if not tibia.config.items[id] or id == 0 then 
+	if not tibia.config.item[id] or id == 0 then 
 		return false 
 	end
 
@@ -33,16 +45,20 @@ function Container:removeItem(id, amount, tell)
 			end
 
 			if removed == amount then
-				if tell then
-					self:message("You have lost "..item.fullName..".")
-				end
-
 				return true
 			end
 		end
 	end
 
 	return false
+end
+
+function Container:addItem(item)
+	for _, slot in pairs(self.slots) do
+		item:occupy(slot)
+	end
+
+	return item.amount > 0 and item or true
 end
 
 -------------------------

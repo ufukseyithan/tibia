@@ -425,7 +425,7 @@ for i, j in ipairs(NPCs) do
 				itemid = l[1]
 				text = text .. "buy "
 			end
-			text = text .. ITEMS[itemid].name .. "|" .. l[2] .. ","
+			text = text .. tibia.config.item[itemid].name .. "|" .. l[2] .. ","
 		end
 		j.menu = text
 	end
@@ -484,20 +484,20 @@ function NPCmenu(id, title, button)
 			if itemid then
 				sell = v.trade[button][1] < 0
 				price = v.trade[button][2]
-				radiusmsg(string.format("�255255100%s %s says : %s %s", os.date'%X', player(id, 'name'), price > 0 and "buy" or "sell", ITEMS[itemid].name), player(id, 'x'), player(id, 'y'))
+				radiusmsg(string.format("�255255100%s %s says : %s %s", os.date'%X', player(id, 'name'), price > 0 and "buy" or "sell", tibia.config.item[itemid].name), player(id, 'x'), player(id, 'y'))
 				if sell then
 					if removeitem(id, itemid, 1, true) then
 						addmoney(id, price)
 						message(id, "You have recieved $" .. price .. ".", "255255255")
-						msg2(id, "You have sold " .. ITEMS[itemid].article .. " " .. ITEMS[itemid].name .. " for $" .. price .. ".")
+						msg2(id, "You have sold " .. tibia.config.item[itemid].article .. " " .. tibia.config.item[itemid].name .. " for $" .. price .. ".")
 						return menu(id, NPCs[i].menu)
 					end
-					msg2(id, "You do not have " .. ITEMS[itemid].article .. " " .. ITEMS[itemid].name .. " to sell.")
+					msg2(id, "You do not have " .. tibia.config.item[itemid].article .. " " .. tibia.config.item[itemid].name .. " to sell.")
 					return
 				elseif addmoney(id, -price) then
 					if additem(id, itemid, 1, true) then
 						message(id, "You have lost $" .. price .. ".", "255255255")
-						msg2(id, "You have bought " .. ITEMS[itemid].article .. " " .. ITEMS[itemid].name .. " for $" .. price .. ".")
+						msg2(id, "You have bought " .. tibia.config.item[itemid].article .. " " .. tibia.config.item[itemid].name .. " for $" .. price .. ".")
 						return menu(id, NPCs[i].menu)
 					end
 					msg2(id, "You do not have enough capacity.")

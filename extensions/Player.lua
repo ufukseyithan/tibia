@@ -58,7 +58,7 @@ function sea.Player:hit(source, weapon, hpdmg)
 		else
 			local dmgMul = ((self.level + 50) * attack / defence) / math.random(60, 140)
 			damage = math.ceil(20 * dmgMul)
-			weaponName = source.equipment[3] and ITEMS[source.equipment[3]].name or 'Dagger'
+			weaponName = source.equipment[3] and tibia.config.item[source.equipment[3]].name or 'Dagger'
 		end
 	elseif type(source) == "table" then
 		if self:isAtZone("SAFE") or self:isAtZone("NOMONSTERS") then 
@@ -100,54 +100,28 @@ function sea.Player:showTutorial(name, message)
 	end
 end
 
-function sea.Player:clearInventory(slot)
-	if slot then
-		table.remove(self.inventory, slot)
-	else
-		self.inventory = {}
-	end
+function sea.Player:addItem(item, tell)
+	local left = self.inventory:addItem(item)
 
-	return true
-end
-
-function sea.Player:addItem(item, amount, tell)
-	amount = amount and math.floor(amount) or 1
-
-	if amount == 1 then
-		if #self.inventory < tibia.config.maxItems then
-			table.insert(self.inventory, item)
-
-			if tell then
+	if left then
+		if tell then
+			if type(addition) == "table" then
+				self:message("You have received "..item.fullName..". "..left.amount.." are dropped due to lack of space.")
+			else
 				self:message("You have received "..item.fullName..".")
 			end
-
-			return true
 		end
+	end
 
-		return false
-	else
-		local added = 0
-		while #self.inventory < tibia.config.maxItems and added < amount do
-			table.insert(self.inventory, item)
-			added = added + 1
-		end
+	return left
+end
 
-		local remaining = amount - added
-		local dropped = 0
-		while dropped < remaining do
-			tibia.Item.spawn(item.id, self.lastPosition.x, self.lastPosition.y)
-			dropped = dropped + 1
-		end
-
+function sea.Player:removeItem(id, amount, tell)
+	if self.inventory:removeItem(id, amount) then
 		if tell then
-			if remaining == 0 then
-				player:message("You have received "..item.fullName..".")
-			else
-				player:message("You have received "..item.fullName..". "..remaining.." are dropped due to lack of space.")
-			end
+			-- self:message("You have lost "..item.fullName..".")
+			self:message("You have lost item.")
 		end
-
-		return true
 	end
 end
 
@@ -170,33 +144,16 @@ function sea.Player:pickItem()
 	return true
 end
 
-function sea.Player:dropItem(itemSlot, equip)
-	local inv = (equip and self.equipment or self.inventory)
-
-	local item = inv[itemSlot]
-
+function sea.Player:dropItem(item, equip)
 	if item:reposition(self.lastPosition.x, self.lastPosition.y) then
 		self:message("You have dropped "..item.fullName..".")
 
 		if equip then
 			self:updateEQ({[itemSlot] = 0}, {[itemSlot] = inv[itemSlot]})
-			inv[itemSlot] = nil
-		else
-			table.remove(inv, itemSlot)
 		end
 	else
 		self:message("You may not drop something here.")
 	end
-end
-
-function sea.Player:destroyItem(slot, equip)
-	if equip then
-		self.equipment[slot]:destroy()
-	else
-		self.inventory[slot]:destroy()
-	end
-
-	return true
 end
 
 function sea.Player:updateEQ(newItems, previousItems)
@@ -211,6 +168,10 @@ function sea.Player:updateEQ(newItems, previousItems)
 	local hp, spd, atk, def = 0, 0, 0, 0
 	local equip, strip = self:getItems(), {50, 41}
 
+
+
+	-- Head slot
+
 	for i, v in pairs(newItems) do
 		if previousItems[i] then
 			if self.tmp.equip[i].image then
@@ -222,49 +183,49 @@ function sea.Player:updateEQ(newItems, previousItems)
 				table.insert(strip, self.tmp.equip[i].equip)
 				self.tmp.equip[i].equip = nil
 			end
-			if ITEMS[previousItems[i]].hp then
-				hp=hp-ITEMS[previousItems[i]].hp
+			if tibia.config.item[previousItems[i]].hp then
+				hp=hp-tibia.config.item[previousItems[i]].hp
 			end
-			if ITEMS[previousItems[i]].speed then
-				spd=spd-ITEMS[previousItems[i]].speed
+			if tibia.config.item[previousItems[i]].speed then
+				spd=spd-tibia.config.item[previousItems[i]].speed
 			end
-			if ITEMS[previousItems[i]].atk then
-				atk=atk-ITEMS[previousItems[i]].atk
+			if tibia.config.item[previousItems[i]].atk then
+				atk=atk-tibia.config.item[previousItems[i]].atk
 			end
-			if ITEMS[previousItems[i]].def then
-				def=def-ITEMS[previousItems[i]].def
+			if tibia.config.item[previousItems[i]].def then
+				def=def-tibia.config.item[previousItems[i]].def
 			end
 		end
 
 		if newItems[i] ~= 0 then
-			if ITEMS[newItems[i]].hp then
-				hp=hp+ITEMS[newItems[i]].hp
+			if tibia.config.item[newItems[i]].hp then
+				hp=hp+tibia.config.item[newItems[i]].hp
 			end
-			if ITEMS[newItems[i]].speed then
-				spd=spd+ITEMS[newItems[i]].speed
+			if tibia.config.item[newItems[i]].speed then
+				spd=spd+tibia.config.item[newItems[i]].speed
 			end
-			if ITEMS[newItems[i]].atk then
-				atk=atk+ITEMS[newItems[i]].atk
+			if tibia.config.item[newItems[i]].atk then
+				atk=atk+tibia.config.item[newItems[i]].atk
 			end
-			if ITEMS[newItems[i]].def then
-				def=def+ITEMS[newItems[i]].def
+			if tibia.config.item[newItems[i]].def then
+				def=def+tibia.config.item[newItems[i]].def
 			end
-			if ITEMS[newItems[i]].equip then
-				self.tmp.equip[i].equip = ITEMS[newItems[i]].equip
-				self:equip(ITEMS[newItems[1]].equip)
-				table.insert(equip, ITEMS[newItems[i]].equip)
+			if tibia.config.item[newItems[i]].equip then
+				self.tmp.equip[i].equip = tibia.config.item[newItems[i]].equip
+				self:equip(tibia.config.item[newItems[1]].equip)
+				table.insert(equip, tibia.config.item[newItems[i]].equip)
 			end
-			if ITEMS[newItems[i]].eimage then 
+			if tibia.config.item[newItems[i]].eimage then 
 				if not self.tmp.equip[i].image then
-					self.tmp.equip[i].image = image(ITEMS[newItems[i]].eimage, ITEMS[newItems[i]].static and 0 or 1, 0, (ITEMS[newItems[i]].ground and 100 or 200)+id)
-					if ITEMS[newItems[i]].r then
-						imagecolor(self.tmp.equip[i].image, ITEMS[newItems[i]].r, ITEMS[newItems[i]].g, ITEMS[newItems[i]].b)
+					self.tmp.equip[i].image = image(tibia.config.item[newItems[i]].eimage, tibia.config.item[newItems[i]].static and 0 or 1, 0, (tibia.config.item[newItems[i]].ground and 100 or 200)+id)
+					if tibia.config.item[newItems[i]].r then
+						imagecolor(self.tmp.equip[i].image, tibia.config.item[newItems[i]].r, tibia.config.item[newItems[i]].g, tibia.config.item[newItems[i]].b)
 					end
-					local scalex, scaley = ITEMS[newItems[i]].escalex or 1, ITEMS[newItems[i]].escaley or 1
+					local scalex, scaley = tibia.config.item[newItems[i]].escalex or 1, tibia.config.item[newItems[i]].escaley or 1
 					scalex = scalex * -1
 					imagescale(self.tmp.equip[i].image, scalex, scaley)
-					if ITEMS[newItems[i]].blend then
-						imageblend(self.tmp.equip[i].image, ITEMS[newItems[i]].blend)
+					if tibia.config.item[newItems[i]].blend then
+						imageblend(self.tmp.equip[i].image, tibia.config.item[newItems[i]].blend)
 					end
 				end
 			end
@@ -290,22 +251,21 @@ function sea.Player:updateEQ(newItems, previousItems)
 	self.speed = self.tmp.speed
 end
 
-function sea.Player:eat(slot, itemID)
-	tibia.radiusMessage(self.name.." eats "..ITEMS[itemID].article.." ".. ITEMS[itemID].name .. ".", self.x, self.y, 384)
+function sea.Player:eat(item)
+	tibia.radiusMessage(self.name.." eats "..item.fullName..".", self.x, self.y, 384)
 
-	self.health = self.health + ITEMS[itemID].food()
+	self.health = self.health + item.config.food()
 
 	self.hp = health
 
-	self:destroyItem(itemSlot)
+	item:consume()
 end
 
-function sea.Player:equipItem(itemSlot, itemID, equip)
-	local index = equip and "Equipment" or "Inventory"
+function sea.Player:equipItem(item, equip)
 	local previousItems, newItems = {}, {}
 
 	if equip then
-		if not self:addItem(itemID) then
+		if not self:addItem(item) then
 			return
 		end
 
@@ -313,23 +273,23 @@ function sea.Player:equipItem(itemSlot, itemID, equip)
 		self.equipment[itemSlot] = nil
 		newItems[itemSlot] = 0
 	else
-		if ITEMS[itemID].level and self.level < ITEMS[itemID].level then
-			self:message("You need to be level " .. ITEMS[itemID].level .. " or above to equip it.")
+		if tibia.config.item[itemID].level and self.level < tibia.config.item[itemID].level then
+			self:message("You need to be level " .. tibia.config.item[itemID].level .. " or above to equip it.")
 			return
 		end
 
-		newItems[ITEMS[itemID].slot] = itemID
-		if ITEMS[itemID].slot == 4 then
+		newItems[tibia.config.item[itemID].slot] = itemID
+		if tibia.config.item[itemID].slot == 4 then
 			if self.equipment[3] then
-				if ITEMS[self.equipment[3]].twohand then
+				if tibia.config.item[self.equipment[3]].twohand then
 						if not self:addItem(self.equipment[3]) then return end
 						previousItems[3] = self.equipment[3] or 0
 						self.equipment[3] = nil
 						newItems[3] = 0
 				end
 			end
-		elseif ITEMS[itemID].slot == 3 then
-			if ITEMS[itemID].twohand then
+		elseif tibia.config.item[itemID].slot == 3 then
+			if tibia.config.item[itemID].twohand then
 				if self.equipment[4] then
 					if not self:addItem(self.equipment[4]) then return end
 					previousItems[4] = self.equipment[4] or 0
@@ -340,14 +300,14 @@ function sea.Player:equipItem(itemSlot, itemID, equip)
 		end
 		
 		self:destroyItem(itemSlot)
-		if self.equipment[ITEMS[itemID].slot] then
-			previousItems[ITEMS[itemID].slot] = self.equipment[ITEMS[itemID].slot]
-			self:addItem(player.equipment[ITEMS[itemID].slot])
+		if self.equipment[tibia.config.item[itemID].slot] then
+			previousItems[tibia.config.item[itemID].slot] = self.equipment[tibia.config.item[itemID].slot]
+			self:addItem(player.equipment[tibia.config.item[itemID].slot])
 		else
-			previousItems[ITEMS[itemID].slot] = 0
+			previousItems[tibia.config.item[itemID].slot] = 0
 		end
 
-		self.equipment[ITEMS[itemID].slot] = itemID
+		self.equipment[tibia.config.item[itemID].slot] = itemID
 	end
 
 	self:updateEQ(newItems, previousItems)
@@ -365,14 +325,14 @@ function sea.Player:itemActions(itemSlot, equip)
 		itemID = self.inventory[itemSlot] or 0
 	end
 
-	for i, v in ipairs(ITEMS[itemID].action) do
+	for i, v in ipairs(tibia.config.item[itemID].action) do
 		menu:addButton(v, function(player)
-			ITEMS[itemID].func[i](player, itemSlot, itemID, equip)
+			tibia.config.item[itemID].func[i](player, itemSlot, itemID, equip)
 		end)
 	end
 
 	menu:setStaticButton(8, "Examine", function(player)
-		player:message("You see "..tibia.itemFullName(itemID)..". "..(ITEMS[itemID].desc or "")..(ITEMS[itemID].level and "You need to be level "..ITEMS[itemID].level.." or above to equip it." or ""))
+		player:message("You see "..tibia.itemFullName(itemID)..". "..(tibia.config.item[itemID].desc or "")..(tibia.config.item[itemID].level and "You need to be level "..tibia.config.item[itemID].level.." or above to equip it." or ""))
 	end)
 
 	menu:setStaticButton(9, "Drop", function(player)
@@ -388,8 +348,8 @@ function sea.Player:viewInventory(page)
 	for k, v in pairs(self.inventory) do
 		local name
 
-		if ITEMS[v] then
-			name = ITEMS[v].name
+		if tibia.config.item[v] then
+			name = tibia.config.item[v].name
 		else
 			name = k or ""
 		end
@@ -406,7 +366,7 @@ function sea.Player:viewEquipment()
 	local menu = sea.Menu.new("Equipment")
 
 	for k, v in ipairs(tibia.config.slots) do
-		local name = ITEMS[self.equipment[k] or 0].name or ("ITEM ID "..self.equipment[k])
+		local name = tibia.config.item[self.equipment[k] or 0].name or ("ITEM ID "..self.equipment[k])
 
 		menu:addButton(name, function(player)
 			return player:itemActions(k, true)
