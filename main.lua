@@ -15,6 +15,6 @@ return {
         "commands",
         "functions",
         "events",
-        "server"
+        "init"
     }
 }
