@@ -270,69 +270,10 @@ function sea.Player:equipItem(item, equip)
 	self:updateStats()
 end
 
-function sea.Player:itemActions(item, equip)
-	local text = item.fullName.." Actions"
-
-	local menu = sea.Menu.new(text)
-
-	local config = item.config
-
-	for i, v in ipairs(config.action) do
-		menu:addButton(v, function(player)
-			config.func[i](player, item, equip)
-		end)
-	end
-
-	menu:setStaticButton(8, "Examine", function(player)
-		player:message("You see "..item.fullName..". "..(config.desc or "")..(config.level and "You need to be level "..config.level.." or above to equip it." or ""))
-	end)
-
-	menu:setStaticButton(9, "Drop", function(player)
-		player:dropItem(item, equip)
-	end)
-
-	return menu
-end
-
 function sea.Player:viewInventory(page)
-	local menu = sea.Menu.new("Inventory")
-
-	for k, slot in pairs(self.inventory.slots) do
-		local name
-
-		if slot:isOccupied() then
-			local item = slot.item
-			local config = item.config
-	
-			menu:addButton(config.name, function(player)
-				return player:itemActions(item)
-			end, k)
-		else
-			menu:addButton("Empty")
-		end
-	end
-
-	self:displayMenu(menu, page)
+	self:displayMenu(self.inventory:getMenu(), page)
 end
 
 function sea.Player:viewEquipment()
-	local menu = sea.Menu.new("Equipment")
-
-	local equipmentSlots = self.equipment.slots
-	for _, slotName in ipairs(tibia.config.slots) do
-		local slot = equipmentSlots[slotName]
-
-		if slot:isOccupied() then
-			local item = slot.item
-			local config = item.config
-
-			menu:addButton(config.name, function(player)
-				return player:itemActions(item, true)
-			end, slotName)
-		else
-			menu:addButton("Empty", nil, slotName)
-		end
-	end
-
-	self:displayMenu(menu, page)
+	self:displayMenu(self.equipment:getMenu(), page)
 end

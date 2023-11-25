@@ -9,6 +9,26 @@ function Equipment:constructor()
     self:super(slots)
 end
 
+function Equipment:getMenu()
+    local menu = sea.Menu.new("Equipment")
+
+	local equipmentSlots = self.slots
+	for _, slotName in ipairs(tibia.config.slots) do
+		local slot = equipmentSlots[slotName]
+
+		if slot:isOccupied() then
+			local item = slot.item
+			local config = item.config
+
+			menu:addButton(config.name, function(player)
+				return item:getActionMenu(true)
+			end, slotName)
+		else
+			menu:addButton("Empty", nil, slotName)
+		end
+	end
+end
+
 -------------------------
 --        INIT         --
 -------------------------

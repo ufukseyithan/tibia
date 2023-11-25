@@ -9,6 +9,25 @@ function Inventory:constructor()
     self:super(slots)
 end
 
+function Inventory:getMenu()
+    local menu = sea.Menu.new("Inventory")
+
+	for k, slot in pairs(self.slots) do
+		local name
+
+		if slot:isOccupied() then
+			local item = slot.item
+			local config = item.config
+	
+			menu:addButton(config.name, function(player)
+				return item:getActionMenu(item)
+			end, k)
+		else
+			menu:addButton("Empty")
+		end
+	end
+end
+
 -------------------------
 --        CONST        --
 -------------------------

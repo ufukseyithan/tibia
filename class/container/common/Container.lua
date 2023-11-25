@@ -59,7 +59,9 @@ end
 
 function Container:addItem(item)
 	for _, slot in pairs(self.slots) do
-		item:occupy(slot)
+		if item:occupy(slot) then
+			break
+		end
 	end
 
 	return item.amount > 0 and item or true

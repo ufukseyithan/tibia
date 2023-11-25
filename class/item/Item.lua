@@ -122,6 +122,30 @@ function Item:isInSlot()
 	return self.slot
 end
 
+function Item:getActionMenu(equip)
+	local text = self.fullName.." Actions"
+
+	local menu = sea.Menu.new(text)
+
+	local config = self.config
+
+	for i, v in ipairs(config.action) do
+		menu:addButton(v, function(player)
+			config.func[i](player, self, equip)
+		end)
+	end
+
+	menu:setStaticButton(8, "Examine", function(player)
+		player:message("You see "..self.fullName..". "..(config.desc or "")..(config.level and "You need to be level "..config.level.." or above to equip it." or ""))
+	end)
+
+	menu:setStaticButton(9, "Drop", function(player)
+		player:dropItem(self, equip)
+	end)
+
+	return menu
+end
+
 -------------------------
 --      PROPERTIES     --
 -------------------------
