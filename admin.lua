@@ -177,7 +177,7 @@ sea.addEvent("onHookSay", function(player, words)
 
 				for i = 1, 6 do
 					if math.random(0,1) == 1 then
-						parse("sv_sound", "weapons/explode"..i..".wav")
+						sea.Player.playSoundForAll("weapons/explode"..i..".wav")
 					end
 				end
 			else

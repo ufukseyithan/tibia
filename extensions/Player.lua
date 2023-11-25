@@ -29,11 +29,9 @@ function sea.Player:addExp(amount)
 
 	if previousLevel ~= self.level then
         self:message("You have leveled up to level "..self.level.."!")
-
-        parse("sv_sound2", id, 'fun/Victory_Fanfare.ogg')
+		self:playSound("fun/Victory_Fanfare.ogg")
 	end
 
-	updateHUD(id)
 	return true
 end
 
@@ -252,7 +250,7 @@ function sea.Player:updateStats()
 end
 
 function sea.Player:eat(item)
-	tibia.radiusMessage(self.name.." eats "..item.fullName..".", self.x, self.y, 384)
+	tibia.radiusMessage(self.name.." eats "..item.config.name..".", self.x, self.y, 384)
 
 	self.health = self.health + item.config.food()
 
