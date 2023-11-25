@@ -11,6 +11,10 @@ return {
     },
 
     scripts = {
+        "admin",
+        "commands",
+        "functions",
+        "events",
         "server"
     }
 }

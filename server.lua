@@ -75,12 +75,6 @@ tibia.global = {}
 tibia.global.time = 0
 tibia.global.rain = 0
 
-dofile(dir..'functions.lua')
-dofile(dir..'admin.lua')
-dofile(dir..'commands.lua')
-dofile(dir..'npcs.lua')
-dofile(dir..'hooks.lua')
-
 TMPGROUNDITEMS = {}
 TMPHOUSES = {}
 local file = io.open(dir.."saves/"..sea.map.name..".lua")

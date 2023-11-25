@@ -69,7 +69,7 @@ function Monster:damage(player, damage, weapon)
 	else
         local equipmentSlot = player.equipment.slots["Right Hand"]
 
-		weaponName = equipmentSlot:isOccupied() and equipmentSlot.config.name or 'dagger'
+		weaponName = equipmentSlot:isOccupied() and equipmentSlot.item.config.name or 'dagger'
 	end
 
 	self.health = self.health - damage
