@@ -145,7 +145,7 @@ function tibia.houseExpire(id)
 	local player = PLAYERCACHE[house.owner]
 	for y = house.pos1[2], house.pos2[2] do
 		for x = house.pos1[1], house.pos2[1] do
-			local ground = tibia.Item.getGroundItems(x, y)
+			local ground = tibia.Item.get(x, y)
 			local height = #ground
 			while height > 0 do
 				local item = ground[height]

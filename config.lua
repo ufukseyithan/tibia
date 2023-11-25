@@ -1,7 +1,7 @@
 tibia.config = {
 	password = "", 
 
-	inventoryCapacity = 45, 
+	inventoryCapacity = 48, 
 	
 	-- maximum number of monsters on the map at one time. if set to 0, monsters.lua is not loaded at all.
 	maxMonsters = 192, 

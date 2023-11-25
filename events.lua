@@ -52,7 +52,7 @@ sea.addEvent("onHookMovetile", function(player, x, y)
 		end
 	end
 
-	if tibia.Item.getGroundItems(x, y)[1] then
+	if tibia.Item.get(x, y)[1] then
 		player:showTutorial("Pick", "You have stumbled upon something. Press the drop weapon button (default G) to pick it up.")
 	end
 

@@ -71,7 +71,7 @@ function Item:destroy()
 			self.image = nil
 		end
 
-		Item.getGroundItems(x, y)[height] = nil
+		Item.get(x, y)[height] = nil
 
 		Item.updateTile(x, y)
 
@@ -108,7 +108,7 @@ end
 function Item:reposition(x, y)
 	self:destroy()
 
-	local ground = Item.getGroundItems(x, y)
+	local ground = Item.get(x, y)
 	local tile = sea.Tile.get(x, y)
 	local height = #ground + 1
 
@@ -187,7 +187,7 @@ function Item.create(id, attributes)
 	return item
 end
 
-function Item.getGroundItems(x, y)
+function Item.get(x, y)
     tibia.groundItems[y] = tibia.groundItems[y] or {}
     tibia.groundItems[y][x] = tibia.groundItems[y][x] or {}
 
@@ -204,7 +204,7 @@ end
 
 local maxHeight = tibia.config.maxHeight
 function Item.updateTile(x, y)
-	local groundItems = Item.getGroundItems(x, y)
+	local groundItems = Item.get(x, y)
 
      if #groundItems > 0 then
           for i = 1, #groundItems do

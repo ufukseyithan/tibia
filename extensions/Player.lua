@@ -123,7 +123,7 @@ end
 
 function sea.Player:addItem(item, tell)
 	if item.config.currency then		
-		player:addMoney(item.amount)
+		self:addMoney(item.amount)
 		item:destroy()
 
 		if tell then
@@ -158,7 +158,7 @@ function sea.Player:removeItem(id, amount, tell)
 end
 
 function sea.Player:pickItem()
-	local ground = tibia.Item.getGroundItems(self.lastPosition.x, self.lastPosition.y)
+	local ground = tibia.Item.get(self.lastPosition.x, self.lastPosition.y)
 	local height = #ground
 
 	if height > 0 then
@@ -303,7 +303,11 @@ function sea.Player:equipItem(item, equip)
 end
 
 function sea.Player:viewInventory(page)
-	self:displayMenu(self.inventory:getMenu(), page)
+	local menu = self.inventory:getMenu()
+
+	menu:setStaticButton(9, "Rupees", nil, self.money)
+
+	self:displayMenu(menu, page)
 end
 
 function sea.Player:viewEquipment()
