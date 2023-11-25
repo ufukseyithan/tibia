@@ -88,7 +88,7 @@ if file then
 				if TMPGROUNDITEMS[y][x] then
 					for _, j in ipairs(TMPGROUNDITEMS[y][x]) do
 						if j < 0 then
-							tibia.Item.spawn(1337, x, y, -j)
+							tibia.Item.spawn(1337, x, y, {amount = -j})
 						else
 							tibia.Item.spawn(j, x, y)
 						end

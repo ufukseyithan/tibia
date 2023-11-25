@@ -293,7 +293,7 @@ sea.addEvent("onHookDie", function(victim, killer, weapon, x, y)
 		if money ~= 0 then
 			victim:addMoney(-money)
 
-			tibia.Item.spawn(1337, tileX, tileY, money)
+			tibia.Item.spawn(1337, tileX, tileY, {amount = money})
 		end
 
 		if victim.level >= 5 then
@@ -312,7 +312,7 @@ sea.addEvent("onHookDie", function(victim, killer, weapon, x, y)
 		local money = victim.money
 		if money ~= 0 then
 			if victim:addMoney(money) then
-				tibia.Item.spawn(1337, tileX, tileY, math.max(100, money))
+				tibia.Item.spawn(1337, tileX, tileY, {amount = math.max(100, money)})
 			end
 		end
 	end

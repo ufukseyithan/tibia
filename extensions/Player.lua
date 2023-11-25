@@ -167,14 +167,12 @@ function sea.Player:pickItem()
 end
 
 function sea.Player:dropItem(item, equip)
-	if item:reposition(self.lastPosition.x, self.lastPosition.y) then
-		self:message("You have dropped "..item.fullName..".")
+	item:reposition(self.lastPosition.x, self.lastPosition.y)
 
-		if equip then
-			self:updateStats()
-		end
-	else
-		self:message("You may not drop something here.")
+	self:message("You have dropped "..item.fullName..".")
+
+	if equip then
+		self:updateStats()
 	end
 end
 
@@ -219,7 +217,7 @@ function sea.Player:updateStats()
 					image:scale(scaleX, scaleY)
 
 					if config.blend then
-						image.blend = config.blend
+						image.blendMode = config.blend
 					end
 
 					equipmentImage[slotName] = image

@@ -66,7 +66,13 @@ function Item:destroy()
 			end
 		end
 
+		if self.image then
+			self.image:destroy()
+			self.image = nil
+		end
+
 		Item.getGroundItems(x, y)[height] = nil
+
 		Item.updateTile(x, y)
 
 		self.x, self.y, self.height = nil, nil, nil
@@ -82,15 +88,17 @@ function Item:occupy(slot)
 		return false
 	end
 
-	if config.stackable and slot.item and slot.item.id == self.id then
+	if config.stackable and slot:isOccupied() and slot.item.id == self.id then
 		item:restore(self:consume())
 
 		return self.amount <= 0 and true or self
 	elseif not slot.item then
 		self:destroy()
 
-		slot.item = self
+		self.slot = slot
 
+		slot.item = self
+		
 		return true
 	end
 
@@ -197,14 +205,16 @@ end
 local maxHeight = tibia.config.maxHeight
 function Item.updateTile(x, y)
 	local groundItems = Item.getGroundItems(x, y)
-	if #groundItems ~= 0 then
-		for i = 1, #groundItems do
-			local item = groundItems[i]
-			if item and item.image then
-				item.image:destroy()
-			end
-		end
-	end
+
+     if #groundItems > 0 then
+          for i = 1, #groundItems do
+               local item = groundItems[i]
+               if item and item.image then
+					item.image:destroy()
+                    item.image = nil
+               end
+          end
+     end
 
 	local height = 0
 	for i = (#groundItems - maxHeight + 1 > 0) and (#groundItems - maxHeight + 1) or 1, #groundItems do
@@ -212,8 +222,7 @@ function Item.updateTile(x, y)
 		local item = groundItems[i]
         local config = item.config
 		local amount = item.amount
-		local x = config.offsetX and tileToPixel(x) + config.offsetX or tileToPixel(x)
-		local y = config.offsetY and tileToPixel(y) + config.offsetY or tileToPixel(y)
+		local x, y = tileToPixel(x) + (config.offsetX or 0), tileToPixel(y) + (config.offsetY or 0)
 		local heightOffset = (height < maxHeight and height or maxHeight) * 3
 
 		if config.currency then
@@ -236,7 +245,6 @@ function Item.updateTile(x, y)
                 item.image.color = sea.Color.new(128, 255, 128)
 			elseif amount < 1000 then
                 item.image.color = sea.Color.new(128, 128, 255)
-				imagecolor(item[2], 128, 128, 255)
 			elseif amount < 2000 then
                 item.image.color = sea.Color.new(255, 128, 128)
 			elseif amount < 5000 then
