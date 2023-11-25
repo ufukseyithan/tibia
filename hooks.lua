@@ -7,20 +7,8 @@ sea.addEvent("onHookJoin", function(player)
 		equipmentImage = {}, 
 		exhaust = {}
 	}
-
-	for k, v in ipairs(tibia.config.slots) do
-		player.tmp.equip[k] = {}
-	end
 end, -1)
 
--- @TODO no need this
-sea.addEvent("onHookLeave", function(player, reason)
-	for k, v in ipairs(player.tmp.equip) do
-		if v.image then
-			freeimage(v.image) 
-		end
-	end
-end, -1)
 
 sea.addEvent("onHookLeave", function(player, oldName, newName)
 	--hudtxt2(id, 0, player.usgn ~= 0 and newName or "NOT LOGGED IN", "255100100", 565, 407-tibia.config.pixels, 1)
@@ -38,13 +26,13 @@ sea.addEvent("onHookMovetile", function(player, x, y)
 		return
 	end
 
-	local playerLastPosition = player.lastPosition
+	local lastPosition = player.lastPosition
 
 	local tile = sea.Tile.get(x, y)
 
 	if tile:isWaterTile() or player.tmp.paralyse then
 		if not (player.equipment[7] and tibia.config.item[player.equipment[7]].water) then
-			player:setPosition(tileToPixel(playerLastPosition.x), tileToPixel(playerLastPosition.y))
+			player:setPosition(tileToPixel(lastPosition.x), tileToPixel(lastPosition.y))
 			return
 		end
 	end
@@ -54,7 +42,7 @@ sea.addEvent("onHookMovetile", function(player, x, y)
 
 		house = tibia.houses[tile.zone.HOUSE]
 		if not house.owner then
-			player:setPosition(tileToPixel(playerLastPosition.x), tileToPixel(playerLastPosition.y))
+			player:setPosition(tileToPixel(lastPosition.x), tileToPixel(lastPosition.y))
 			player:message("This house has no owner. Type \"!house\" for a list of house commands.")
 			return
 		elseif not (player.usgn == house.owner or table.contains(house.allow, player.usgn)) then
@@ -64,7 +52,7 @@ sea.addEvent("onHookMovetile", function(player, x, y)
 		end
 	end
 
-	if tibia.groundItems[y][x][1] then
+	if tibia.Item.getGroundItems(x, y)[1] then
 		player:showTutorial("Pick", "You have stumbled upon something. Press the drop weapon button (default G) to pick it up.")
 	end
 
@@ -161,9 +149,9 @@ sea.addEvent("onHookSpawn", function(player)
 		end
 	end
 
-	local playerLastPosition = player.lastPosition
-	if playerLastPosition.x then
-		player:setPosition(tileToPixel(playerLastPosition.x), tileToPixel(playerLastPosition.y))
+	local lastPosition = player.lastPosition
+	if lastPosition.x then
+		player:setPosition(tileToPixel(lastPosition.x), tileToPixel(lastPosition.y))
 	else
 		player:setPosition(player.respawnPosition[1], player.respawnPosition[2])
 	end

@@ -162,43 +162,49 @@ function sea.Player:updateStats()
 
 	self:stripAll()
 	
-	for _, equipmentImage in pairs(self.tmp.equipmentImage) do
+	local equipmentImage = self.tmp.equipmentImage
+
+	for k, equipmentImage in pairs(equipmentImage) do
 		equipmentImage:destroy()
+		equipmentImage[k] = nil
 	end
 
-	local equipment = self.equipment
-	for _, slot in ipairs(tibia.config.slots) do
-		local item = equipment.slots[slot].item
-		local config = item.config
+	local equipmentSlots = self.equipment.slots
+	for _, slotName in ipairs(tibia.config.slots) do
+		local slot = equipmentSlots[slotName]
 
-		hp = hp + (config.hp or 0)
-		spd = spd + (config.speed or 0)
-		atk = atk + (config.atk or 0)
-		def = def + (config.def or 0)
+		if slot:isOccupied() then
+			local item = equipmentSlots[slotName].item
+			local config = item.config
 
-		if config.equip then
-			self:equip(config.equip)
-			table.insert(equip, config.equip)
-		end
+			hp = hp + (config.hp or 0)
+			spd = spd + (config.speed or 0)
+			atk = atk + (config.atk or 0)
+			def = def + (config.def or 0)
 
-		if config.eimage then 
-			if not self.tmp.equipmentImage[slot].image then
-				local image = sea.Image.create(config.eimage, config.static and 0 or 1, 0, (config.ground and 100 or 200) + self.id)
-				
-				if config.r then
-					image.color = sea.Color.new(config.r, config.g, config.b)
-				end
-
-				local scaleX, scaleY = -(config.escalex or 1), config.escaley or 1
-				image:scale(scaleX, scaleY)
-
-				if config.blend then
-					image.blend = config.blend
-				end
-
-				self.tmp.equipmentImage[slot] = image
+			if config.equip then
+				self:equip(config.equip)
 			end
-		end
+
+			if config.eimage then 
+				if not equipmentImage[slotName].image then
+					local image = sea.Image.create(config.eimage, config.static and 0 or 1, 0, (config.ground and 100 or 200) + self.id)
+					
+					if config.r then
+						image.color = sea.Color.new(config.r, config.g, config.b)
+					end
+
+					local scaleX, scaleY = -(config.escalex or 1), config.escaley or 1
+					image:scale(scaleX, scaleY)
+
+					if config.blend then
+						image.blend = config.blend
+					end
+
+					equipmentImage[slotName] = image
+				end
+			end
+		end		
 	end
 
 	self.tmp.attack = atk
@@ -264,30 +270,25 @@ function sea.Player:equipItem(item, equip)
 	self:updateStats()
 end
 
-function sea.Player:itemActions(itemSlot, equip)
-	local text = (equip and "Equip" or "Item").." Actions"
+function sea.Player:itemActions(item, equip)
+	local text = item.fullName.." Actions"
 
 	local menu = sea.Menu.new(text)
 
-	local itemID
-	if equip then
-		itemID = self.equipment[itemSlot] or 0
-	else
-		itemID = self.inventory[itemSlot] or 0
-	end
+	local config = item.config
 
-	for i, v in ipairs(tibia.config.item[itemID].action) do
+	for i, v in ipairs(config.action) do
 		menu:addButton(v, function(player)
-			tibia.config.item[itemID].func[i](player, itemSlot, itemID, equip)
+			config.func[i](player, item, equip)
 		end)
 	end
 
 	menu:setStaticButton(8, "Examine", function(player)
-		player:message("You see "..tibia.itemFullName(itemID)..". "..(tibia.config.item[itemID].desc or "")..(tibia.config.item[itemID].level and "You need to be level "..tibia.config.item[itemID].level.." or above to equip it." or ""))
+		player:message("You see "..item.fullName..". "..(config.desc or "")..(config.level and "You need to be level "..config.level.." or above to equip it." or ""))
 	end)
 
 	menu:setStaticButton(9, "Drop", function(player)
-		player:dropItem(itemSlot, equip)
+		player:dropItem(item, equip)
 	end)
 
 	return menu
@@ -296,18 +297,19 @@ end
 function sea.Player:viewInventory(page)
 	local menu = sea.Menu.new("Inventory")
 
-	for k, v in pairs(self.inventory) do
+	for k, slot in pairs(self.inventory.slots) do
 		local name
 
-		if tibia.config.item[v] then
-			name = tibia.config.item[v].name
+		if slot:isOccupied() then
+			local item = slot.item
+			local config = item.config
+	
+			menu:addButton(config.name, function(player)
+				return player:itemActions(item)
+			end, k)
 		else
-			name = k or ""
+			menu:addButton("Empty")
 		end
-
-		menu:addButton(name, function(player)
-			return player:itemActions(k)
-		end, k)
 	end
 
 	self:displayMenu(menu, page)
@@ -316,12 +318,20 @@ end
 function sea.Player:viewEquipment()
 	local menu = sea.Menu.new("Equipment")
 
-	for k, v in ipairs(tibia.config.slots) do
-		local name = tibia.config.item[self.equipment[k] or 0].name or ("ITEM ID "..self.equipment[k])
+	local equipmentSlots = self.equipment.slots
+	for _, slotName in ipairs(tibia.config.slots) do
+		local slot = equipmentSlots[slotName]
 
-		menu:addButton(name, function(player)
-			return player:itemActions(k, true)
-		end, v)
+		if slot:isOccupied() then
+			local item = slot.item
+			local config = item.config
+
+			menu:addButton(config.name, function(player)
+				return player:itemActions(item, true)
+			end, slotName)
+		else
+			menu:addButton("Empty", nil, slotName)
+		end
 	end
 
 	self:displayMenu(menu, page)

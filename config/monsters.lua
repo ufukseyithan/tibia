@@ -6,7 +6,7 @@ tibia.config.monsterSpawn = {
 
 local spawn = tibia.config.monsterSpawn
 
-tibia.config.monsters = {
+tibia.config.monster = {
 	{
 		name = 'Bulbasaur', health = 100, image = 'gfx/weiwen/pokemon/1.png', scaleX = 2, scaleY = 2, r = 136, g = 224, b = 32, 
 		attack = 1.9, defence = 2.1, speed = 6, attackSpeed = 8, runAt = 10, 
@@ -107,7 +107,7 @@ tibia.config.monsters = {
 				self.config.speed = 10
 				self.agility = true
 				self.image.color = sea.Color.new(155, 255, 155)
-				timer(5000, "tibia.config.monsterSkills.endAgility", self.id)
+				timer(5000, "tibia.config.monsterSkill.endAgility", self.id)
 			elseif dist <= 32 then
 				self:hit(target, 10)
 			end
@@ -235,7 +235,7 @@ tibia.config.monsters = {
 				self.attack = 3.3
 				self.rage = true
 				imagecolor(self.image, 255, 155, 155)
-				timer(5000, "tibia.config.monsterSkills.endRage", self.id)
+				timer(5000, "tibia.config.monsterSkill.endRage", self.id)
 			elseif dist <= 96 then
 				sea.radiusMessage("Mankey uses karate chop!", self.x, self.y)
 				self:hit(target, 20)
@@ -296,7 +296,7 @@ tibia.config.monsters = {
 				self.config.defence = 7.5
 				self.harden = true
 				imagecolor(self.image, 155, 155, 255)
-				timer(5000, "tibia.config.monsterSkills.endHarden", self.id)
+				timer(5000, "tibia.config.monsterSkill.endHarden", self.id)
 			end
 		end},
 	}, 
@@ -347,7 +347,7 @@ tibia.config.monsters = {
 	}, 
 }
 
-tibia.config.monsterSkills = {
+tibia.config.monsterSkill = {
 	endAgility = function(id)
 		self = tibia.monster[tonumber(id)]
 		self.speed = self._spd

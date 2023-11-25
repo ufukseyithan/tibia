@@ -67,7 +67,9 @@ function Monster:damage(player, damage, weapon)
 		weaponName = 'firewave'
 		damage = damage / 5
 	else
-		weaponName = player.equipment[3] and tibia.config.item[player.equipment[3]].name or 'dagger'
+        local equipmentSlot = player.equipment.slots["Right Hand"]
+
+		weaponName = equipmentSlot:isOccupied() and equipmentSlot.config.name or 'dagger'
 	end
 
 	self.health = self.health - damage
@@ -79,7 +81,7 @@ function Monster:damage(player, damage, weapon)
 
 		self:die()
 	else
-		parse("effect", "colorsmoke", self.x, self.y, 10, config.scaley, config.r or 192, config.g or 0, config.b or 0)
+		sea.effect("colorsmoke", self.x, self.y, 10, config.scaleY, config.r or 192, config.g or 0, config.b or 0)
 	end
 
 	tibia.radiusSound("weapons/machete_hit.wav", self.x, self.y)
@@ -155,14 +157,14 @@ sea.addEvent("onHookHitzone", function(image, player, object, itemType)
 		return
 	end
 
-	if table.contains({400, 401, 402, 403, 404}, player.equipment[7]) then
+	if table.contains({400, 401, 402, 403, 404}, player.equipment.slots["Mount"].item) then
 		player:alert("You may not attack on a horse.")
 		return
 	end
 
-    for _, m in pairs(tibia.monster) do
-        if m.image == image then
-            m:damage(player, math.ceil(20 * ((player.level + 50) * player.tmp.attack / m.config.defence) / math.random(60, 140)), itemType)
+    for _, monster in pairs(tibia.monster) do
+        if monster.image == image then
+            monster:damage(player, math.ceil(20 * ((player.level + 50) * player.tmp.attack / monster.config.defence) / math.random(60, 140)), itemType)
         end
     end
 end, -1)
@@ -176,15 +178,15 @@ if tibia.config.maxMonsters > 0 then
             while #tibia.monster < tibia.config.maxMonsters do
                 local rand, mapName, spawnNo
                 while true do 
-                    rand = math.random(#tibia.config.monsters)
-                    mapName = tibia.config.monsters[rand].spawn[sea.map.name] and sea.map.name or tibia.config.defaultMap
-                    spawnNo = math.random(#tibia.config.monsters[rand].spawn[mapName])
-                    if math.random(0, 100) < tibia.config.monsters[rand].spawnChance[mapName][spawnNo] then
+                    rand = math.random(#tibia.config.monster)
+                    mapName = tibia.config.monster[rand].spawn[sea.map.name] and sea.map.name or tibia.config.defaultMap
+                    spawnNo = math.random(#tibia.config.monster[rand].spawn[mapName])
+                    if math.random(0, 100) < tibia.config.monster[rand].spawnChance[mapName][spawnNo] then
                         break
                     end
                 end 
 
-                local config = deepcopy(tibia.config.monsters[rand])
+                local config = deepcopy(tibia.config.monster[rand])
                 local x, y, tileX, tileY, tile
                 local spawn = config.spawn[mapName][spawnNo]
                 repeat
