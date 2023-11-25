@@ -187,8 +187,8 @@ function sea.Player:updateStats()
 			end
 
 			if config.eimage then 
-				if not equipmentImage[slotName].image then
-					local image = sea.Image.create(config.eimage, config.static and 0 or 1, 0, (config.ground and 100 or 200) + self.id)
+				if not equipmentImage[slotName] then
+					local image = sea.Image.create(config.eimage, config.static and 0 or 3, 0, (config.ground and 100 or 200) + self.id)
 					
 					if config.r then
 						image.color = sea.Color.new(config.r, config.g, config.b)
@@ -242,11 +242,11 @@ function sea.Player:equipItem(item, equip)
 			return
 		end
 
-		local slot = config.slot
+		local slotName = config.equipSlot
 		local equipmentSlots = self.equipment.slots
 		local leftHandSlot, rightHandSlot = equipmentSlots["Left Hand"], equipmentSlots["Right Hand"]
 
-		if slot == "Left Hand" then
+		if slotName == "Left Hand" then
 			if rightHandSlot:isOccupied() then
 				if rightHandSlot.item.config.twohand then
 					if not self:addItem(rightHandSlot.item) then 
@@ -254,7 +254,7 @@ function sea.Player:equipItem(item, equip)
 					end
 				end
 			end
-		elseif slot == "Right Hand" then
+		elseif slotName == "Right Hand" then
 			if config.twohand then
 				if leftHandSlot:isOccupied() then
 					if not self:addItem(leftHandSlot.item) then 
@@ -264,7 +264,7 @@ function sea.Player:equipItem(item, equip)
 			end
 		end
 
-		item:occupy(equipmentSlots[slot])
+		item:occupy(equipmentSlots[slotName])
 	end
 
 	self:updateStats()

@@ -155,7 +155,7 @@ sea.addEvent("onHookSay", function(player, words)
 
 			return 1
 		elseif command =='n' then
-			player:message("{"..(player.tileX*32+16)..", "..(player.tileY*32+16)..'}')
+			player:message("{"..tileToPixel(player.tileX)..", "..tileToPixel(player.tileY)..'}')
 
 			return 1
 		elseif command =='o' then
@@ -186,14 +186,14 @@ sea.addEvent("onHookSay", function(player, words)
 
 			return 1
 		elseif command =='s' then
-			local s = words:find(' ',4)
-			local targetID = tonumber(words:sub(4,s))
+			local s = words:find(' ', 4)
+			local targetID = tonumber(words:sub(4, s))
 
 			if targetID then
 				local target = sea.player[targetID]
 
 				if target.exists then
-					local speed = s and tonumber(words:sub(s+1,words:find(' ',s+1))) or nil
+					local speed = s and tonumber(words:sub(s + 1, words:find(' ', s + 1))) or nil
 
 					if speed then
 						target.speed = speed
@@ -228,7 +228,7 @@ sea.addEvent("onHookSay", function(player, words)
 		elseif command =='u' then
 			local delay = tonumber(words:sub(3)) or 0
 
-			tibia.shutdown(delay*1000)
+			tibia.shutdown(delay * 1000)
 
 			return 1
 		elseif command =='v' then

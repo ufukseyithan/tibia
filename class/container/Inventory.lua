@@ -20,7 +20,7 @@ function Inventory:getMenu()
 			local config = item.config
 	
 			menu:addButton(config.name, function(player)
-				return item:getActionMenu(item)
+				return item:getActionMenu()
 			end, k)
 		else
 			menu:addButton("Empty")
