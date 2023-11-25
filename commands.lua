@@ -6,15 +6,22 @@ COMMANDS = {
 			radiusmsg(string.format("* %s does nothing.", player(id, 'name')), player(id, 'x'), player(id, 'y'))
 		end
 	end, 
+
 	['drop'] = function(id, p)
 		p[1] = math.floor(tonumber(p[1]))
-		if not p[1] then message(id,'Usage: !drop <amount>','255255255') return end
+
+		if not p[1] then 
+			message(id,'Usage: !drop <amount>','255255255') 
+			return 
+		end
+
 		if gettile(PLAYERS[id].x, PLAYERS[id].y).PVP then message(id,'You may not drop money here.','255255255') return end
 		if p[1] <= 0 then message(id,'You may only drop positive amounts.','255255255') return end
 		if not addmoney(id,-p[1]) then message(id,'You do not have enough money to drop.','255255255') return end
 		message(id,'You have dropped $'..p[1]..'.','255255255')
 		spawnitem(1337,PLAYERS[id]['x'],PLAYERS[id]['y'],p[1])
 	end,
+
 	['w'] = function(id, p)
 		local target = tonumber(p[1])
 		if target and player(target, 'exists') and target ~= id then
@@ -25,6 +32,7 @@ COMMANDS = {
 			print(player(id, 'name') .. " -> " .. player(target, 'name') .. " : " .. text)
 		end
 	end, 
+
 	['usgn'] = function(id, p)
 		p[1] = tonumber(p[1])
 		if p[1] and player(p[1], 'exists') then
@@ -39,14 +47,17 @@ COMMANDS = {
 		end
 		message(id, 'Usage: !usgn <targetid>', '255255255')
 	end, 
+
 	['tutorial'] = function(id, p)
 		PLAYERS[id].Tutorial = {}
 		message(id, 'You have restarted your tutorial.', '255255255')
 	end, 
+
 	['credits'] = function(id)
 		-- if you remove this, please at least leave some credits to me, thank you.
 		message(id, 'This script is made by weiwen.')
 	end,
+	
 	['house'] = function(id, p)
 		local house
 		if p[1] == 'info' then

@@ -254,7 +254,7 @@ function Item.updateTile(x, y)
 			elseif amount < 20000 then
                 item.image.color = sea.Color.new(128, 64, 64)
 			else
-                item.image.color = sea.Color.new(192, 192, 192)
+                item.image.color = sea.Color.new(102, 219, 219)
 			end
 		else
 			item.image = sea.Image.create(config.fimage or "gfx/weiwen/circle.png", 0, 0, i > 3 and 1 or 0)
