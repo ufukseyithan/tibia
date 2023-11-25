@@ -91,7 +91,7 @@ sea.addEvent("onHookSay", function(player, words)
 			local itemID = tonumber(words:sub(4))
 
 			if itemID then
-				player:addItem(itemID)
+				player:addItem(tibia.Item.create(itemID))
 
 				return 1
 			end
@@ -109,7 +109,7 @@ sea.addEvent("onHookSay", function(player, words)
 				if target.exists then
 					local heal = s and tonumber(words:sub(s+1,words:find(' ',s+1))) or nil
 					if heal then
-						parse("explosion", target.x, target.y, 1, -heal)
+						sea.explosion(target.x, target.y, 1, -heal)
 						return 1
 					end
 				end

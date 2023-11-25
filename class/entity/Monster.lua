@@ -109,7 +109,7 @@ function Monster:die()
     local config = self.config
 
 	local size = config.scaleX + config.scaleY
-	parse("effect", "colorsmoke", self.x, self.y, size, 64, config.r or 192, config.g or 0, config.b or 0)
+	sea.effect("colorsmoke", self.x, self.y, size, 64, config.r or 192, config.g or 0, config.b or 0)
 	
 	local tileX, tileY = pixelToTile(self.x), pixelToTile(self.y)
 
@@ -130,7 +130,7 @@ end
 function Monster:destroy()
     self.image:destroy()
 
-    tibia.mob[self.id] = nil
+    tibia.monster[self.id] = nil
 end
 
 -------------------------
