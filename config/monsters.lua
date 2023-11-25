@@ -1,7 +1,7 @@
 tibia.config.monsterSpawn = {
-	FULLMAP = {{0, 0}, {150, 150}},
-	BOTTOMHALF = {{0, 100}, {150, 150}},
-	ONIXCAVE = {{165, 30}, {184, 48}},
+	fullMap = {{0, 0}, {150, 150}},
+	bottomHalf = {{0, 100}, {150, 150}},
+	onixCave = {{165, 30}, {184, 48}},
 }
 
 local spawn = tibia.config.monsterSpawn
@@ -12,7 +12,7 @@ tibia.config.monster = {
 		attack = 1.9, defence = 2.1, speed = 6, attackSpeed = 8, runAt = 10, 
 		spawnChance = {['rpg_mapb'] = {5}}, 
 		spawn = {
-			['rpg_mapb'] = {spawn.BOTTOMHALF}
+			['rpg_mapb'] = {spawn.bottomHalf}
 		}, 
 		exp = 15, money = 100, loot = {{chance = 5000, id = 102}, {chance = 250, id = 221}}, 
 		spc = {1500, function(self) 
@@ -25,7 +25,7 @@ tibia.config.monster = {
 		attack = 2.2, defence = 1.8, speed = 6, attackSpeed = 8, runAt = 10,  
 		spawnChance = {['rpg_mapb'] = {5}}, 
 		spawn = {
-			['rpg_mapb'] = {spawn.BOTTOMHALF}
+			['rpg_mapb'] = {spawn.bottomHalf}
 		}, 
 		exp = 15, money = 100, loot = {{chance = 5000, id = 100}, {chance = 250, id = 222}}, 
 		spc = {1000, function(self) 
@@ -40,7 +40,7 @@ tibia.config.monster = {
 		attack = 1.7, defence = 2.3, speed = 6, attackSpeed = 8, runAt = 10, 
 		spawnChance = {['rpg_mapb'] = {5}}, 
 		spawn = {
-			['rpg_mapb'] = {spawn.BOTTOMHALF}
+			['rpg_mapb'] = {spawn.bottomHalf}
 		}, 
 		exp = 15, money = 100, loot = {{chance = 5000, id = 101}, {chance = 250, id = 223}}, 
 		spc = {1000, function(self) 
@@ -55,7 +55,7 @@ tibia.config.monster = {
 		attack = 1.1, defence = 1.2, speed = 7, attackSpeed = 10, runAt = 20, 
 		spawnChance = {['rpg_mapb'] = {100}}, 
 		spawn = {
-			['rpg_mapb'] = {spawn.FULLMAP}
+			['rpg_mapb'] = {spawn.fullMap}
 		}, 
 		exp = 5, money = 30, loot = {{chance = 8000, id = 1}}, 
 	}, 
@@ -64,7 +64,7 @@ tibia.config.monster = {
 		attack = 1.2, defence = 1.1, speed = 7, attackSpeed = 10, runAt = 20, 
 		spawnChance = {['rpg_mapb'] = {100}}, 
 		spawn = {
-			['rpg_mapb'] = {spawn.FULLMAP}
+			['rpg_mapb'] = {spawn.fullMap}
 		}, 
 		exp = 5, money = 30, loot = {{chance = 8000, id = 1}}, 
 	}, 
@@ -73,7 +73,7 @@ tibia.config.monster = {
 		attack = 1.2, defence = 1.2, speed = 10, attackSpeed = 7, runAt = 20, 
 		spawnChance = {['rpg_mapb'] = {50}}, 
 		spawn = {
-			['rpg_mapb'] = {spawn.FULLMAP}
+			['rpg_mapb'] = {spawn.fullMap}
 		}, 
 		exp = 13, money = 60, loot = {}, 
 		spc = {500, function(self) 
@@ -86,7 +86,7 @@ tibia.config.monster = {
 		attack = 1.0, defence = 1.0, speed = 9, attackSpeed = 5, runAt = 20, 
 		spawnChance = {['rpg_mapb'] = {100}}, 
 		spawn = {
-			['rpg_mapb'] = {spawn.FULLMAP}
+			['rpg_mapb'] = {spawn.fullMap}
 		}, 
 		exp = 7, money = 50, loot = {{chance = 8000, id = 4}}, 
 	}, 
@@ -95,7 +95,7 @@ tibia.config.monster = {
 		attack = 1.4, defence = 1.0, speed = 10, attackSpeed = 7, runAt = 20, 
 		spawnChance = {['rpg_mapb'] = {50}}, 
 		spawn = {
-			['rpg_mapb'] = {spawn.FULLMAP}
+			['rpg_mapb'] = {spawn.fullMap}
 		}, 
 		exp = 13, money =60, loot = {}, 
 		spc = {2500, function(self, target, dist) 
@@ -118,7 +118,7 @@ tibia.config.monster = {
 		attack = 1.8, defence = 1.2, speed = 7, attackSpeed = 8, runAt = 10, 
 		spawnChance = {['rpg_mapb'] = {20}}, 
 		spawn = {
-			['rpg_mapb'] = {spawn.FULLMAP}
+			['rpg_mapb'] = {spawn.fullMap}
 		}, 
 		exp = 10, money = 80, loot = {}, 
 		spc = {500, function(self, target, dist) 
@@ -133,7 +133,7 @@ tibia.config.monster = {
 		attack = 2.1, defence = 2.1, speed = 7, attackSpeed = 7, runAt = 10, 
 		spawnChance = {['rpg_mapb'] = {5}}, 
 		spawn = {
-			['rpg_mapb'] = {spawn.BOTTOMHALF}
+			['rpg_mapb'] = {spawn.bottomHalf}
 		}, 
 		exp = 25, money = 120, loot = {{chance = 5000, id = 103}, {chance = 250, id = 220}}, 
 		spc = {500, function(self) 
@@ -148,7 +148,7 @@ tibia.config.monster = {
 		attack = 1.7, defence = 2.1, speed = 7, attackSpeed = 7, runAt = 10, 
 		spawnChance = {['rpg_mapb'] = {5, 20}}, 
 		spawn = {
-			['rpg_mapb'] = {spawn.BOTTOMHALF, spawn.ONIXCAVE}
+			['rpg_mapb'] = {spawn.bottomHalf, spawn.onixCave}
 		}, 
 		exp = 18, money = 120, loot = {}, 
 		spc = {1000, function(self) 
@@ -161,7 +161,7 @@ tibia.config.monster = {
 		attack = 1.8, defence = 1.2, speed = 7, attackSpeed = 8, runAt = 10, 
 		spawnChance = {['rpg_mapb'] = {20}}, 
 		spawn = {
-			['rpg_mapb'] = {spawn.FULLMAP}
+			['rpg_mapb'] = {spawn.fullMap}
 		}, 
 		exp = 10, money = 80, loot = {}, 
 		spc = {750, function(self, target, dist) 
@@ -176,7 +176,7 @@ tibia.config.monster = {
 		attack = 1.8, defence = 1.2, speed = 7, attackSpeed = 8, runAt = 10, 
 		spawnChance = {['rpg_mapb'] = {20}}, 
 		spawn = {
-			['rpg_mapb'] = {spawn.FULLMAP}
+			['rpg_mapb'] = {spawn.fullMap}
 		}, 
 		exp = 10, money = 80, loot = {}, 
 		spc = {750, function(self, target, dist) 
@@ -191,7 +191,7 @@ tibia.config.monster = {
 		attack = 2.2, defence = 1.8, speed = 7, attackSpeed = 8, runAt = 0, 
 		spawnChance = {['rpg_mapb'] = {10}}, 
 		spawn = {
-			['rpg_mapb'] = {spawn.FULLMAP}
+			['rpg_mapb'] = {spawn.fullMap}
 		},  
 		exp = 10, money = 100, loot = {{chance = 5000, id = 104}}, 
 		spc = {500, function(self, target, dist) 
@@ -214,7 +214,7 @@ tibia.config.monster = {
 		attack = 2.2, defence = 2.2, speed = 10, attackSpeed = 6, runAt = 0, 
 		spawnChance = {['rpg_mapb'] = {10}}, 
 		spawn = {
-			['rpg_mapb'] = {spawn.FULLMAP}
+			['rpg_mapb'] = {spawn.fullMap}
 		}, 
 		exp = 25, money = 100, loot = {{chance = 1000, id = 230}},
 	}, 
@@ -223,7 +223,7 @@ tibia.config.monster = {
 		attack = 2.5, defence = 1.8, speed = 10, attackSpeed = 6, runAt = 0, range = 48, 
 		spawnChance = {['rpg_mapb'] = {10}}, 
 		spawn = {
-			['rpg_mapb'] = {spawn.BOTTOMHALF}
+			['rpg_mapb'] = {spawn.bottomHalf}
 		}, 
 		exp = 25, money = 120, loot = {{chance = 1000, id = 300},{chance = 1000, id = 301},{chance = 1000, id = 302},{chance = 1000, id = 303},{chance = 1000, id = 304},{chance = 1000, id = 305},{chance = 1000, id = 306}}, 
 		spc = {1000, function(self, target, dist) 
@@ -247,7 +247,7 @@ tibia.config.monster = {
 		attack = 0.6, defence = 1.0, speed = 5, attackSpeed = 10, runAt = 100, 
 		spawnChance = {['rpg_mapb'] = {10}}, 
 		spawn = {
-			['rpg_mapb'] = {spawn.FULLMAP}
+			['rpg_mapb'] = {spawn.fullMap}
 		}, 
 		exp = 8, money = 50, loot = {{chance = 5000, id = 105}}, 
 		spc = {2500, function(self) 
@@ -264,7 +264,7 @@ tibia.config.monster = {
 		attack = 1.2, defence = 1.5, speed = 8, attackSpeed = 10, runAt = 50, 
 		spawnChance = {['rpg_mapb'] = {10}}, 
 		spawn = {
-			['rpg_mapb'] = {spawn.BOTTOMHALF}
+			['rpg_mapb'] = {spawn.bottomHalf}
 		}, 
 		exp = 8, money = 100, loot = {}, 
 		spc = {1000, function(self, target, dist)
@@ -284,7 +284,7 @@ tibia.config.monster = {
 		attack = 1.8, defence = 5.0, speed = 3, attackSpeed = 10, runAt = 0, range = 64, 
 		spawnChance = {['rpg_mapb'] = {5}}, 
 		spawn = {
-			['rpg_mapb'] = {spawn.ONIXCAVE}
+			['rpg_mapb'] = {spawn.onixCave}
 		}, 
 		exp = 100, money = 300, loot = {{chance = 1000, id = 310},{chance = 1000, id = 311},{chance = 1000, id = 312},{chance = 1000, id = 313},{chance = 1000, id = 314},{chance = 1000, id = 315},{chance = 1000, id = 316}}, 
 		spc = {1000, function(self) 
@@ -305,7 +305,7 @@ tibia.config.monster = {
 		attack = 2.3, defence = 2.3, speed = 5, attackSpeed = 8, runAt = 20, range = 48, 
 		spawnChance = {['rpg_mapb'] = {10}}, 
 		spawn = {
-			['rpg_mapb'] = {spawn.BOTTOMHALF}
+			['rpg_mapb'] = {spawn.bottomHalf}
 		}, 
 		exp = 30, money = 130, loot = {{chance = 5000, id = 103}}, 
 		spc = {1000, function(self) 
@@ -328,7 +328,7 @@ tibia.config.monster = {
 		attack = 2.0, defence = 1.7, speed = 4, attackSpeed = 10, runAt = 20, range = 48, 
 		spawnChance = {['rpg_mapb'] = {10}}, 
 		spawn = {
-			['rpg_mapb'] = {spawn.BOTTOMHALF}
+			['rpg_mapb'] = {spawn.bottomHalf}
 		}, 
 		exp = 30, money = 150, loot = {{chance = 5000, id = 106}}, 
 		spc = {1000, function(self) 
