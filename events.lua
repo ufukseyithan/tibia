@@ -174,18 +174,17 @@ sea.addEvent("onHookSecond", function()
 	tibia.updateTime()
 
 	for _, player in ipairs(sea.Player.get()) do
-		if player.health > 0 then
+		if player.alive then
 			player.score = player.level
 			player.deaths = player.id
-		end
 
-		local lastPosition = player.lastPosition
-
-		if lastPosition.x then
-			local tile = sea.Tile.get(lastPosition.x, lastPosition.y)
-			if tile.zone.HEAL and ((tile.zone.HEAL > 0 and tile.zone.HOUSE) or (tile.zone.HEAL < 0 and not tile.zone.SAFE)) and player.tmp.hp > player.hp then
-				player.hp = player.health + math.min(10, tile.zone.HEAL)
-				player.health = player.hp
+			local lastPosition = player.lastPosition
+			if lastPosition.x then
+				local tile = sea.Tile.get(lastPosition.x, lastPosition.y)
+				if tile.zone.HEAL and ((tile.zone.HEAL > 0 and tile.zone.HOUSE) or (tile.zone.HEAL < 0 and not tile.zone.SAFE)) and player.tmp.hp > player.hp then
+					player.hp = player.health + math.min(10, tile.zone.HEAL)
+					player.health = player.hp
+				end
 			end
 		end
 	end
