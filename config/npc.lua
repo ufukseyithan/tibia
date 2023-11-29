@@ -348,7 +348,7 @@ tibia.config.npc[13].func = function(npc, id, words, state)
 			PLAYERS[id].tmp.npcstate = {npc, 2}
 		elseif contains(words, "no") then
 			NPCspeak(npc, "Oh, you don't want to win?")
-		elseif contains(words, "earning") or contains(words, "money") then
+		elseif contains(words, "earning") or contains(words, "rupee") then
 			NPCspeak(npc, "I have $" .. tibia.global.NPC13 .. " currently.")
 		end
 	elseif state == 2 then
@@ -362,7 +362,7 @@ tibia.config.npc[13].func = function(npc, id, words, state)
 				NPCspeak(npc, "You'll win $" .. bet*6 .. " if you pick the correct number! Pick a number from 1-6!")
 				PLAYERS[id].tmp.npcstate = {npc, 3}
 			else
-				NPCspeak(npc, "You don't have that much money!")
+				NPCspeak(npc, "You don't have that much rupee!")
 				PLAYERS[id].tmp.npcstate = {npc, 1}
 			end
 		else
@@ -384,7 +384,7 @@ tibia.config.npc[14].func = function(npc, id, words, state)
 				message(id, "You have lost $10.", "255255255")
 				parse("setpos " .. id .. " 3536 1264")
 			else
-				NPCspeak(npc, "No money, no crossing.")
+				NPCspeak(npc, "No rupee, no crossing.")
 			end
 		elseif contains(words, "no") then
 			NPCspeak(npc, "Not crossing?")
@@ -504,7 +504,7 @@ function NPCmenu(id, title, button)
 					msg2(id, "You do not have enough capacity.")
 					return
 				end
-				msg2(id, "You do not have enough money.")
+				msg2(id, "You do not have enough rupee.")
 			end
 			return
 		end

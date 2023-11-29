@@ -16,7 +16,7 @@ tibia.command = {
 		end
 
 		if player:isAtZone('PVP') then 
-			player:message('You may not drop money here.') 
+			player:message('You may not drop rupee here.') 
 			return 
 		end
 
@@ -26,7 +26,7 @@ tibia.command = {
 		end
 
 		if not player:addMoney(-p[1]) then
-			player:message('You do not have enough money to drop.') 
+			player:message('You do not have enough rupee to drop.') 
 			return 
 		end
 
@@ -99,7 +99,7 @@ tibia.command = {
 					message(id, 'You have bought this house for $' .. house.price .. ', 24 hours.', '255255255')
 				end
 			else
-				message(id, 'You do not have enough money. It costs $' .. house.price .. ' per 24 hours.', '255255255')
+				message(id, 'You do not have enough rupee. It costs $' .. house.price .. ' per 24 hours.', '255255255')
 			end
 		elseif p[1] == 'extend' then
 			if player(id, 'usgn') == 0 then message(id, 'You are not logged in to U.S.G.N. .', '255255255') return end

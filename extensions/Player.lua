@@ -82,7 +82,7 @@ function sea.Player:hit(source, itemType, damage)
 			local leftHandSlot = equipmentSlots["Left Hand"]
 			weaponName = leftHandSlot:isOccupied() and leftHandSlot.item.config.name or 'Dagger'
 		end
-	elseif type(source) == "table" then
+	else -- if it is a monster
 		if self:isAtZone("SAFE") or self:isAtZone("NOMONSTERS") then 
 			return 1 
 		end
@@ -90,6 +90,8 @@ function sea.Player:hit(source, itemType, damage)
 		damage = math.ceil(math.random(10, 20) * damage / defence / 15)
 		source, weaponName = 0, source.config.name
 	end
+
+	self:message(damage)
 
 	local resultHP = hp - damage
 	if resultHP > 0 then
@@ -106,11 +108,11 @@ function sea.Player:hit(source, itemType, damage)
 end
 
 function sea.Player:addMoney(amount)
-	if amount < 0 and self.money + amount < 0 then
+	if amount < 0 and self.rupee + amount < 0 then
 		return false
 	end
 
-	self.money = self.money + amount
+	self.rupee = self.rupee + amount
 	
 	return true
 end
@@ -190,7 +192,7 @@ function sea.Player:dropItem(item, equip)
 end
 
 function sea.Player:updateStats()
-	local hp, spd, atk, def = 0, 0, 0, 0
+	local hp, atk, def, spd = 100, 1, 1, 0
 
 	self:stripAll()
 	
@@ -238,7 +240,7 @@ function sea.Player:updateStats()
 		end		
 	end
 
-	-- set primary weapon, secondaryh weapon, melee
+	-- set weapon, strip knife
 
 	self.tmp.attack = atk
 	self.tmp.defence = def
@@ -257,7 +259,7 @@ function sea.Player:eat(item)
 
 	self.health = self.health + item.config.food()
 
-	self.hp = health
+	self.hp = self.health
 
 	item:consume()
 end
@@ -306,11 +308,11 @@ end
 function sea.Player:viewInventory(page)
 	local menu = self.tmp.inventory:getMenu()
 
-	menu:setStaticButton(9, "Rupees", nil, self.money)
+	menu:setStaticButton(9, "Rupees", nil, self.rupee)
 
 	self:displayMenu(menu, page)
 end
 
-function sea.Player:viewEquipment()
+function sea.Player:viewEquipment(page)
 	self:displayMenu(self.tmp.equipment:getMenu(), page)
 end

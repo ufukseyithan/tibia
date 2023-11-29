@@ -89,11 +89,11 @@ tibia.config = {
 	
 	-- experience gained will be multiplied by this value.
 	expRAte = 1, 
-	-- money loot will be multiplied by this value.
+	-- rupee loot will be multiplied by this value.
 	moneyRate = 1, 
 	-- drop chance will be multiplied by this value.
 	dropRate = 1, 
-	-- player death money loot will be multiplied by this value.
+	-- player death rupee loot will be multiplied by this value.
 	playerMoneyRate = 1, 
 	-- player drop chance will be this value out of 10000. i.e. 2000 means 20%
 	playerDropRate = 2000, 
@@ -120,7 +120,7 @@ return {
 		data = {
 			xp = 0,
 			level = 1,
-			money = 50,
+			rupee = 50,
 			hp = 100,
 			mp = 100,
 			inventory = {},
@@ -147,7 +147,7 @@ return {
 			maxClientsIP = 2,
 			idleKick = 0,
 			hudScale = 1,
-			hud = 64,
+			hud = 65,
 			radar = 0,
 			flashlight = 0,
 			infiniteAmmo = 1,

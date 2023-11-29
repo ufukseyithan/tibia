@@ -841,7 +841,7 @@ tibia.config.item = {
 		currency = true,
 		article = 'some', 
 		r = 0, g = 150, b = 0, 
-		fimage = 'gfx/weiwen/money.png', 
+		fimage = 'gfx/weiwen/rupee.png', 
 	}
 }
 

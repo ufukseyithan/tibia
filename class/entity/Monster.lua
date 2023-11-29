@@ -83,7 +83,7 @@ function Monster:hit(player, damage)
 	if player.weapon == 41 and (math.abs(math.rad(player.rotation) - math.atan2(player.y - self.y, player.x - self.x) + math.pi / 2) % (2 * math.pi) <= math.pi * 2 / 3) then
 		damage = damage / 4
 
-		tibia.radiusSound("weapons/ricmetal" .. math.random(1,2) .. ".wav", self.x, self.y)
+		tibia.radiusSound("weapons/ricmetal"..math.random(1,2)..".wav", self.x, self.y)
 	else
 		tibia.radiusSound("weapons/knife_hit.wav", self.x, self.y)
 	end
@@ -99,7 +99,7 @@ function Monster:die()
 	
 	local tileX, tileY = pixelToTile(self.x), pixelToTile(self.y)
 
-	tibia.Item.spawn(1337, tileX, tileY, {amount = math.floor(config.money * math.random(50, 150) / 100) * tibia.config.moneyRate})
+	tibia.Item.spawn(1337, tileX, tileY, {amount = math.floor(config.rupee * math.random(50, 150) / 100) * tibia.config.moneyRate})
 
 	for _, loot in ipairs(config.loot) do
 		local chance = math.random(10000)

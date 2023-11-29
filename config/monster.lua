@@ -14,7 +14,7 @@ tibia.config.monster = {
 		spawn = {
 			['rpg_mapb'] = {spawn.bottomHalf}
 		}, 
-		exp = 15, money = 100, loot = {{chance = 5000, id = 102}, {chance = 250, id = 221}}, 
+		exp = 15, rupee = 100, loot = {{chance = 5000, id = 102}, {chance = 250, id = 221}}, 
 		spc = {1500, function(self) 
 			sea.radiusMessage("Bulbasaur casts heal!", self.x, self.y)
 			parse("effect \"colorsmoke\" " .. self.x .. " " .. self.y .. " 5 5 255 255 255")
@@ -27,7 +27,7 @@ tibia.config.monster = {
 		spawn = {
 			['rpg_mapb'] = {spawn.bottomHalf}
 		}, 
-		exp = 15, money = 100, loot = {{chance = 5000, id = 100}, {chance = 250, id = 222}}, 
+		exp = 15, rupee = 100, loot = {{chance = 5000, id = 100}, {chance = 250, id = 222}}, 
 		spc = {1000, function(self) 
 			sea.radiusMessage("Charmander uses ember!", self.x, self.y)
 			parse('explosion ' .. self.x .. ' ' .. self.y .. ' 96 40')
@@ -42,7 +42,7 @@ tibia.config.monster = {
 		spawn = {
 			['rpg_mapb'] = {spawn.bottomHalf}
 		}, 
-		exp = 15, money = 100, loot = {{chance = 5000, id = 101}, {chance = 250, id = 223}}, 
+		exp = 15, rupee = 100, loot = {{chance = 5000, id = 101}, {chance = 250, id = 223}}, 
 		spc = {1000, function(self) 
 			sea.radiusMessage("Squirtle uses watergun!", self.x, self.y)
 			parse('explosion ' .. self.x .. ' ' .. self.y .. ' 96 40')
@@ -57,7 +57,7 @@ tibia.config.monster = {
 		spawn = {
 			['rpg_mapb'] = {spawn.fullMap}
 		}, 
-		exp = 5, money = 30, loot = {{chance = 8000, id = 1}}, 
+		exp = 5, rupee = 30, loot = {{chance = 8000, id = 1}}, 
 	}, 
 	{
 		name = 'Weedle', health = 100, image = 'gfx/weiwen/pokemon/13.png', scaleX = 1.5, scaleY = 1.5, r = 104, g = 152, b = 40, 
@@ -66,7 +66,7 @@ tibia.config.monster = {
 		spawn = {
 			['rpg_mapb'] = {spawn.fullMap}
 		}, 
-		exp = 5, money = 30, loot = {{chance = 8000, id = 1}}, 
+		exp = 5, rupee = 30, loot = {{chance = 8000, id = 1}}, 
 	}, 
 	{
 		name = 'Pidgey', health = 100, image = 'gfx/weiwen/pokemon/16.png', scaleX = 2, scaleY = 2, 
@@ -75,7 +75,7 @@ tibia.config.monster = {
 		spawn = {
 			['rpg_mapb'] = {spawn.fullMap}
 		}, 
-		exp = 13, money = 60, loot = {}, 
+		exp = 13, rupee = 60, loot = {}, 
 		spc = {500, function(self) 
 			sea.radiusMessage("Pidgey uses sand attack!", self.x, self.y)
 			parse('flashposition ' .. self.x .. ' ' .. self.y .. ' 100')
@@ -88,7 +88,7 @@ tibia.config.monster = {
 		spawn = {
 			['rpg_mapb'] = {spawn.fullMap}
 		}, 
-		exp = 7, money = 50, loot = {{chance = 8000, id = 4}}, 
+		exp = 7, rupee = 50, loot = {{chance = 8000, id = 4}}, 
 	}, 
 	{
 		name = 'Spearow', health = 100, image = 'gfx/weiwen/pokemon/21.png', scaleX = 2, scaleY = 2, 
@@ -97,7 +97,7 @@ tibia.config.monster = {
 		spawn = {
 			['rpg_mapb'] = {spawn.fullMap}
 		}, 
-		exp = 13, money =60, loot = {}, 
+		exp = 13, rupee =60, loot = {}, 
 		spc = {2500, function(self, target, dist) 
 			if not self.agility then
 				tibia.radiusMessage("Spearow uses agility!", self.x, self.y)
@@ -120,7 +120,7 @@ tibia.config.monster = {
 		spawn = {
 			['rpg_mapb'] = {spawn.fullMap}
 		}, 
-		exp = 10, money = 80, loot = {}, 
+		exp = 10, rupee = 80, loot = {}, 
 		spc = {500, function(self, target, dist) 
 			if dist <= 96 then
 				sea.radiusMessage("Ekans uses poison sting!", self.x, self.y)
@@ -135,7 +135,7 @@ tibia.config.monster = {
 		spawn = {
 			['rpg_mapb'] = {spawn.bottomHalf}
 		}, 
-		exp = 25, money = 120, loot = {{chance = 5000, id = 103}, {chance = 250, id = 220}}, 
+		exp = 25, rupee = 120, loot = {{chance = 5000, id = 103}, {chance = 250, id = 220}}, 
 		spc = {500, function(self) 
 			sea.radiusMessage("Pikachu uses thundershock!", self.x, self.y)
 			parse('explosion ' .. self.x .. ' ' .. self.y .. ' 96 40')
@@ -150,7 +150,7 @@ tibia.config.monster = {
 		spawn = {
 			['rpg_mapb'] = {spawn.bottomHalf, spawn.onixCave}
 		}, 
-		exp = 18, money = 120, loot = {}, 
+		exp = 18, rupee = 120, loot = {}, 
 		spc = {1000, function(self) 
 			sea.radiusMessage("Sandshrew uses sand attack!", self.x, self.y)
 			parse('flashposition ' .. self.x .. ' ' .. self.y .. ' 100')
@@ -163,7 +163,7 @@ tibia.config.monster = {
 		spawn = {
 			['rpg_mapb'] = {spawn.fullMap}
 		}, 
-		exp = 10, money = 80, loot = {}, 
+		exp = 10, rupee = 80, loot = {}, 
 		spc = {750, function(self, target, dist) 
 			if dist <= 96 then
 				sea.radiusMessage("NidoranF uses poison sting!", self.x, self.y)
@@ -178,7 +178,7 @@ tibia.config.monster = {
 		spawn = {
 			['rpg_mapb'] = {spawn.fullMap}
 		}, 
-		exp = 10, money = 80, loot = {}, 
+		exp = 10, rupee = 80, loot = {}, 
 		spc = {750, function(self, target, dist) 
 			if dist <= 96 then
 				sea.radiusMessage("NidoranM uses horn attack!", self.x, self.y)
@@ -193,7 +193,7 @@ tibia.config.monster = {
 		spawn = {
 			['rpg_mapb'] = {spawn.fullMap}
 		},  
-		exp = 10, money = 100, loot = {{chance = 5000, id = 104}}, 
+		exp = 10, rupee = 100, loot = {{chance = 5000, id = 104}}, 
 		spc = {500, function(self, target, dist) 
 			sea.radiusMessage("Vulpix uses flamethrower!", self.x, self.y)
 			local x1, y1 = self.x, self.y
@@ -216,7 +216,7 @@ tibia.config.monster = {
 		spawn = {
 			['rpg_mapb'] = {spawn.fullMap}
 		}, 
-		exp = 25, money = 100, loot = {{chance = 1000, id = 230}},
+		exp = 25, rupee = 100, loot = {{chance = 1000, id = 230}},
 	}, 
 	{
 		name = 'Mankey', health = 100, image = 'gfx/weiwen/pokemon/56.png', scaleX = 2, scaleY = 2, 
@@ -225,7 +225,7 @@ tibia.config.monster = {
 		spawn = {
 			['rpg_mapb'] = {spawn.bottomHalf}
 		}, 
-		exp = 25, money = 120, loot = {{chance = 1000, id = 300},{chance = 1000, id = 301},{chance = 1000, id = 302},{chance = 1000, id = 303},{chance = 1000, id = 304},{chance = 1000, id = 305},{chance = 1000, id = 306}}, 
+		exp = 25, rupee = 120, loot = {{chance = 1000, id = 300},{chance = 1000, id = 301},{chance = 1000, id = 302},{chance = 1000, id = 303},{chance = 1000, id = 304},{chance = 1000, id = 305},{chance = 1000, id = 306}}, 
 		spc = {1000, function(self, target, dist) 
 			if not self.rage then
 				tibia.radiusMessage("Mankey uses rage!", self.x, self.y)
@@ -249,7 +249,7 @@ tibia.config.monster = {
 		spawn = {
 			['rpg_mapb'] = {spawn.fullMap}
 		}, 
-		exp = 8, money = 50, loot = {{chance = 5000, id = 105}}, 
+		exp = 8, rupee = 50, loot = {{chance = 5000, id = 105}}, 
 		spc = {2500, function(self) 
 			sea.radiusMessage("Abra uses teleport!", self.x, self.y)
 			parse("effect \"colorsmoke\" " .. self.x .. " " .. self.y .. " 5 5 255 255 255")
@@ -266,7 +266,7 @@ tibia.config.monster = {
 		spawn = {
 			['rpg_mapb'] = {spawn.bottomHalf}
 		}, 
-		exp = 8, money = 100, loot = {}, 
+		exp = 8, rupee = 100, loot = {}, 
 		spc = {1000, function(self, target, dist)
 			if dist <= 64 and not target.tmp.paralyse then
 				sea.radiusMessage("Gastly uses lick!", self.x, self.y)
@@ -286,7 +286,7 @@ tibia.config.monster = {
 		spawn = {
 			['rpg_mapb'] = {spawn.onixCave}
 		}, 
-		exp = 100, money = 300, loot = {{chance = 1000, id = 310},{chance = 1000, id = 311},{chance = 1000, id = 312},{chance = 1000, id = 313},{chance = 1000, id = 314},{chance = 1000, id = 315},{chance = 1000, id = 316}}, 
+		exp = 100, rupee = 300, loot = {{chance = 1000, id = 310},{chance = 1000, id = 311},{chance = 1000, id = 312},{chance = 1000, id = 313},{chance = 1000, id = 314},{chance = 1000, id = 315},{chance = 1000, id = 316}}, 
 		spc = {1000, function(self) 
 			if not self.harden then
 				sea.radiusMessage("Onix uses harden!", self.x, self.y)
@@ -307,7 +307,7 @@ tibia.config.monster = {
 		spawn = {
 			['rpg_mapb'] = {spawn.bottomHalf}
 		}, 
-		exp = 30, money = 130, loot = {{chance = 5000, id = 103}}, 
+		exp = 30, rupee = 130, loot = {{chance = 5000, id = 103}}, 
 		spc = {1000, function(self) 
 			if self.health < 20 then
 				sea.radiusMessage("Voltorb uses selfdestruct!", self.x, self.y)
@@ -330,7 +330,7 @@ tibia.config.monster = {
 		spawn = {
 			['rpg_mapb'] = {spawn.bottomHalf}
 		}, 
-		exp = 30, money = 150, loot = {{chance = 5000, id = 106}}, 
+		exp = 30, rupee = 150, loot = {{chance = 5000, id = 106}}, 
 		spc = {1000, function(self) 
 			if self.health < 20 then
 				sea.radiusMessage("Koffing uses explosion!", self.x, self.y)

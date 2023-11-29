@@ -62,7 +62,7 @@ sea.addEvent("onHookMovetile", function(player, x, y)
 	elseif tile.zone.NOPVP then
 		player:showTutorial("No PvP", "You have entered a NO PVP zone. PVP is disabled here, but monsters can still spawn.")
 	elseif tile.zone.PVP then
-		player:showTutorial("PvP", "You have entered a DEATHMATCH zone. In this area, you may fight for money. If you die here, you will drop a maximum of $100.")
+		player:showTutorial("PvP", "You have entered a DEATHMATCH zone. In this area, you may fight for rupee. If you die here, you will drop a maximum of $100.")
 	end
 
 	player.lastPosition.x, player.lastPosition.y = x, y
@@ -129,7 +129,7 @@ sea.addEvent("onHookSay", function(player, words)
 end, -1)
 
 sea.addEvent("onHookSpawn", function(player)
-	if player.usgn == 0 then
+	if not player.usgn then
 		player:message("Please register a U.S.G.N. account at \"http://www.usgn.de/\" and make sure that you are logged in!", sea.Color.red)
 	else
 		if player.info[1] then
@@ -152,6 +152,8 @@ sea.addEvent("onHookSpawn", function(player)
 	--hudtxt2(id,0,player.usgn ~= 0 and player.name or "NOT LOGGED IN","255100100", 565, 407-tibia.config.pixels, 1)
 
 	player:updateStats()
+
+	print(player.hp)
 
 	player.health = player.hp <= 0 and 250 or player.hp
 
@@ -265,13 +267,13 @@ sea.addEvent("onHookDie", function(victim, killer, weapon, x, y)
 	local PVP = sea.Tile.get(tileX, tileY).zone.PVP
 	
 	if not PVP then
-		victim:showTutorial("Die", "You are dead. Try your best not to die, you'll drop some of your equipment and money if you do.")
+		victim:showTutorial("Die", "You are dead. Try your best not to die, you'll drop some of your equipment and rupee if you do.")
 
-		local money = math.min(victim.money, math.floor(victim.level * math.random(50, 150) / 10 * tibia.config.playerMoneyRate))
-		if money ~= 0 then
-			victim:addMoney(-money)
+		local rupee = math.min(victim.rupee, math.floor(victim.level * math.random(50, 150) / 10 * tibia.config.playerMoneyRate))
+		if rupee ~= 0 then
+			victim:addMoney(-rupee)
 
-			tibia.Item.spawn(1337, tileX, tileY, {amount = money})
+			tibia.Item.spawn(1337, tileX, tileY, {amount = rupee})
 		end
 
 		if victim.level >= 5 then
@@ -289,10 +291,10 @@ sea.addEvent("onHookDie", function(victim, killer, weapon, x, y)
 	else
 		victim.hp, victim.lastPosition.x, victim.lastPosition.y = 5, tibia.pvpZone[PVP][3][1], tibia.pvpZone[PVP][3][2]
 
-		local money = victim.money
-		if money ~= 0 then
-			if victim:addMoney(money) then
-				tibia.Item.spawn(1337, tileX, tileY, {amount = math.max(100, money)})
+		local rupee = victim.rupee
+		if rupee ~= 0 then
+			if victim:addMoney(rupee) then
+				tibia.Item.spawn(1337, tileX, tileY, {amount = math.max(100, rupee)})
 			end
 		end
 	end
