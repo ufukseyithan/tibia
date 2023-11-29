@@ -1,9 +1,9 @@
 function sea.Player:exhaust(action, delay)
+	local exhaust = self.tmp.exhaust
+
 	if exhaust[action] then
 		return false
 	end
-
-	local exhaust = self.tmp.exhaust
 
 	exhaust[action] = true
 
@@ -52,7 +52,7 @@ function sea.Player:hit(source, itemType, damage)
 			return 1 
 		end
 
-		local equipmentSlots = source.equipment.slots
+		local equipmentSlots = source.tmp.equipment.slots
 
 		if table.contains({400, 401, 402, 403, 404}, equipmentSlots["Mount"]:isOccupied() and equipmentSlots["Mount"].item.id or 0) then 
 			source:message("You may not attack on a horse.") 
@@ -134,7 +134,7 @@ function sea.Player:addItem(item, tell)
 		return true
 	end
 
-	local left = self.inventory:addItem(item)
+	local left = self.tmp.inventory:addItem(item)
 
 	if left then
 		if tell then
@@ -150,7 +150,7 @@ function sea.Player:addItem(item, tell)
 end
 
 function sea.Player:removeItem(id, amount, tell)
-	if self.inventory:removeItem(id, amount) then
+	if self.tmp.inventory:removeItem(id, amount) then
 		if tell then
 			-- self:message("You have lost "..item.fullName..".")
 			self:message("You have lost item.")
@@ -200,7 +200,7 @@ function sea.Player:updateStats()
 		equipmentImage[k] = nil
 	end
 
-	local equipmentSlots = self.equipment.slots
+	local equipmentSlots = self.tmp.equipment.slots
 	for _, slotName in ipairs(tibia.config.slots) do
 		local slot = equipmentSlots[slotName]
 
@@ -276,7 +276,7 @@ function sea.Player:equipItem(item, equip)
 		end
 
 		local slotName = config.equipSlot
-		local equipmentSlots = self.equipment.slots
+		local equipmentSlots = self.tmp.equipment.slots
 		local leftHandSlot, rightHandSlot = equipmentSlots["Left Hand"], equipmentSlots["Right Hand"]
 
 		if slotName == "Left Hand" then
@@ -304,7 +304,7 @@ function sea.Player:equipItem(item, equip)
 end
 
 function sea.Player:viewInventory(page)
-	local menu = self.inventory:getMenu()
+	local menu = self.tmp.inventory:getMenu()
 
 	menu:setStaticButton(9, "Rupees", nil, self.money)
 
@@ -312,5 +312,5 @@ function sea.Player:viewInventory(page)
 end
 
 function sea.Player:viewEquipment()
-	self:displayMenu(self.equipment:getMenu(), page)
+	self:displayMenu(self.tmp.equipment:getMenu(), page)
 end

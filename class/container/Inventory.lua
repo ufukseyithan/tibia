@@ -1,10 +1,14 @@
 local Inventory = class(tibia.Container)
 
-function Inventory:constructor()
-    local slots = {}
-    for i = 1, self.capacity do
-        slots[i] = true
-    end
+function Inventory:constructor(data)
+	local slots = {}
+	for i = 1, self.capacity do
+		slots[i] = tibia.ItemSlot.new(data and data[i])
+
+		if data then
+			data[i] = slots[i].data
+		end
+	end
 
     self:super(slots)
 end

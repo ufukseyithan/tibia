@@ -123,17 +123,19 @@ return {
 			money = 50,
 			hp = 100,
 			mp = 100,
-			inventory = function() return tibia.Inventory.new() end,
-			equipment = function() return tibia.Equipment.new() end,
+			inventory = {},
+			equipment = {},
 			respawnPosition = {784, 240},
 			tutorial = {},
 			info = {},
-			lastPosition = {0, 0}
+			lastPosition = {}
 		}
 	},
 
-	gameSetting = {
-		itemDrop = false
+	game = {
+		setting = {
+			itemDrop = false
+		}
 	},
 
 	server = {

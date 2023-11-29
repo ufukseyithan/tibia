@@ -1,14 +1,13 @@
 tibia.groundItems = {}
 local Item = class()
 
-Item.defaultMaxStack = 200
-
 function Item:constructor(config, attributes)
-    attributes = attributes or {}
+	attributes = attributes or {}
 
     self.config = config
-	self.maxStack = config.stackable and config.maxStack or self.defaultMaxStack 
-	self.amount = attributes.amount or 1
+	self.attributes = attributes
+
+	self.attributes.amount = attributes.amount or 1
 end
 
 function Item:count()
@@ -24,6 +23,8 @@ function Item:consume(amount)
 
 	if self.amount <= 0 then
 		self:destroy()
+	else
+		self:updateSlot()
 	end
 
 	return consumeAmount
@@ -35,6 +36,8 @@ function Item:restore(amount)
 	local restoreAmount = math.min(self.maxStack, self.amount + amount)
 
 	self.amount = self.amount + restoreAmount
+
+	self:updateSlot()
 
 	return restoreAmount
 end
@@ -72,12 +75,11 @@ function Item:destroy()
 		end
 
 		Item.get(x, y)[height] = nil
-
 		Item.updateTile(x, y)
-
 		self.x, self.y, self.height = nil, nil, nil
 	elseif slot then
-		slot.item = nil
+		slot:reset()
+		self.slot = nil
 	end
 end
 
@@ -88,16 +90,18 @@ function Item:occupy(slot)
 		return false
 	end
 
-	if config.stackable and slot:isOccupied() and slot.item.id == self.id then
-		item:restore(self:consume())
+	if slot:isOccupied() then
+		if config.stackable and slot.item.id == self.id then
+			item:restore(self:consume())
 
-		return self.amount <= 0 and true or self
-	elseif not slot.item then
+			return self.amount <= 0 and true or self
+		end
+	else
 		self:destroy()
 
 		self.slot = slot
 
-		slot.item = self
+		self:updateSlot()
 		
 		return true
 	end
@@ -130,6 +134,16 @@ function Item:isInSlot()
 	return self.slot
 end
 
+function Item:updateSlot()
+	local slot = self:isInSlot()
+
+	if slot then
+		slot.data.id = self.id
+		slot.data.attributes = self.attributes
+		slot.item = self
+	end
+end
+
 function Item:getActionMenu(equip)
 	local text = self.fullName.." Actions"
 
@@ -158,6 +172,20 @@ end
 --      PROPERTIES     --
 -------------------------
 
+function Item:maxStackProperty()
+	return function(self)
+		return self.config.stackable and self.config.maxStack or self.defaultMaxStack 
+	end
+end
+
+function Item:amountProperty()
+	return function(self)
+        return self.attributes.amount
+    end, function(self, value)
+		self.attributes.amount = math.clamp(value, 0, self.maxStack)
+	end
+end
+
 function Item:fullNameProperty()
 	return function(self)
         local config, amount = self.config, self.amount
@@ -173,6 +201,8 @@ end
 -------------------------
 --        CONST        --
 -------------------------
+
+Item.defaultMaxStack = 200
 
 function Item.create(id, attributes)
 	local config = tibia.config.item[id]

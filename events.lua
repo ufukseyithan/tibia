@@ -1,5 +1,7 @@
 sea.addEvent("onHookJoin", function(player)
 	player.tmp = {
+		inventory = tibia.Inventory.new(player.inventory),
+		equipment = tibia.Equipment.new(player.equipment),
 		hp = 100, 
 		attack = 1, 
 		defence = 1, 
@@ -7,11 +9,6 @@ sea.addEvent("onHookJoin", function(player)
 		equipmentImage = {}, 
 		exhaust = {}
 	}
-end, -1)
-
-
-sea.addEvent("onHookLeave", function(player, oldName, newName)
-	--hudtxt2(id, 0, player.usgn ~= 0 and newName or "NOT LOGGED IN", "255100100", 565, 407-tibia.config.pixels, 1)
 end, -1)
 
 sea.addEvent("onHookWalkover", function()
@@ -244,24 +241,6 @@ sea.addEvent("onHookServeraction", function(player, action)
 	elseif action == 3 then
 		player:showTutorial("Equipment", "This is your equipment. You can unequip or use items by clicking on them.")
 		player:viewEquipment()
-	elseif action == 4 then
-		if player:exhaust("use") then
-			return
-		end
-
-		local item = player.equipment[9]
-		if item then
-			local amount, items = player:itemCount(item.id)
-			player:alert("Using "..(amount == 0 and ("the last "..name) or ("one of "..item.fullName)) .. "...")
-
-			item.config.func[1](id, 9, item.id, true)
-			if amount > 0 then
-				table.remove(player.inventory, items[1])
-				player.equipment[9] = item
-			end
-		else
-			player:message("You can hold a rune and use F4 to cast it easily.")
-		end
 	end
 end)
 
@@ -299,7 +278,7 @@ sea.addEvent("onHookDie", function(victim, killer, weapon, x, y)
 		if victim.level >= 5 then
 			local previousItems = {}
 			for i, v in ipairs(tibia.config.slots) do
-				if victim.equipment[i] and math.random(10000) <= tibia.config.playerDropRate then
+				if victim.tmp.equipment.slots[i] and math.random(10000) <= tibia.config.playerDropRate then
 					victim:dropItem(i, true)
 				end
 			end

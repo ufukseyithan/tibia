@@ -1,11 +1,7 @@
 local Container = class()
 
 function Container:constructor(slots)
-    self.slots = slots or {}
-
-	for k, v in pairs(slots) do
-		self.slots[k] = tibia.ItemSlot.new()
-	end
+    self.slots = slots
 end
 
 function Container:clear(slot)
@@ -24,7 +20,7 @@ function Container:itemCount(id)
 	local amount, items = 0, {}
 
 	for _, slot in pairs(self.slots) do
-		if slot.item.id == id then
+		if slot:isOccupied() and slot.item.id == id then
 			amount = amount + slot.item:count()
 			table.insert(items, slot.item)
 		end
@@ -59,7 +55,7 @@ end
 
 function Container:addItem(item)
 	for _, slot in pairs(self.slots) do
-		if item:occupy(slot) then
+		if item:occupy(slot) == true then
 			break
 		end
 	end

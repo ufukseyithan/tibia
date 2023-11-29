@@ -1,9 +1,13 @@
 local Equipment = class(tibia.Container)
 
-function Equipment:constructor()
+function Equipment:constructor(data)
     local slots = {}
     for _, slotName in pairs(tibia.config.slots) do
-        slots[slotName] = true
+        slots[slotName] = tibia.ItemSlot.new(data and data[slotName])
+
+		if data then
+			data[slotName] = slots[slotName].data
+		end
     end
 
     self:super(slots)
