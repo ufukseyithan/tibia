@@ -54,7 +54,8 @@ function sea.Player:hit(source, itemType, damage)
 
 		local equipmentSlots = source.tmp.equipment.slots
 
-		if table.contains({400, 401, 402, 403, 404}, equipmentSlots["Mount"]:isOccupied() and equipmentSlots["Mount"].item.id or 0) then 
+		local mountSlot = equipmentSlots["Mount"]
+		if table.contains({400, 401, 402, 403, 404}, mountSlot:isOccupied() and mountSlot.item.id or 0) then 
 			source:message("You may not attack on a horse.") 
 			return 1 
 		end
@@ -78,9 +79,8 @@ function sea.Player:hit(source, itemType, damage)
 			local dmgMul = ((self.level + 50) * attack / defence) / math.random(60, 140)
 			damage = math.ceil(20 * dmgMul)
 
-			local equipmentSlot = equipmentSlots["Left Hand"]
-
-			weaponName = equipmentSlot:isOccupied() and equipmentSlot.item.config.name or 'Dagger'
+			local leftHandSlot = equipmentSlots["Left Hand"]
+			weaponName = leftHandSlot:isOccupied() and leftHandSlot.item.config.name or 'Dagger'
 		end
 	elseif type(source) == "table" then
 		if self:isAtZone("SAFE") or self:isAtZone("NOMONSTERS") then 
