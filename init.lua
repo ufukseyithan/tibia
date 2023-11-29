@@ -84,7 +84,7 @@ if file then
 
 	for y = 0, sea.map.ySize do
 		if TMPGROUNDITEMS[y] then
-			for x = 0, map'xsize' do
+			for x = 0, sea.map.xSize do
 				if TMPGROUNDITEMS[y][x] then
 					for _, j in ipairs(TMPGROUNDITEMS[y][x]) do
 						if j < 0 then
