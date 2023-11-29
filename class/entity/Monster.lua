@@ -104,7 +104,7 @@ function Monster:die()
 	for _, loot in ipairs(config.loot) do
 		local chance = math.random(10000)
 		if chance <= loot.chance then
-			tibia.Item.spawnItem(loot.id, tileX, tileY)
+			tibia.Item.spawn(loot.id, tileX, tileY)
 		end
 	end
 
@@ -143,7 +143,8 @@ sea.addEvent("onHookHitzone", function(image, player, object, itemType)
 		return
 	end
 
-	if table.contains({400, 401, 402, 403, 404}, player.equipment.slots["Mount"].item) then
+    local mountSlot = player.tmp.equipment.slots["Mount"]
+	if mountSlot:isOccupied() and table.contains({400, 401, 402, 403, 404}, mountSlot.item.id) then
 		player:alert("You may not attack on a horse.")
 		return
 	end

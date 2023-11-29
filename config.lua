@@ -88,7 +88,7 @@ tibia.config = {
 	defaultMap = 'rpg_mapb', 
 	
 	-- experience gained will be multiplied by this value.
-	expRAte = 1, 
+	expRate = 1, 
 	-- rupee loot will be multiplied by this value.
 	moneyRate = 1, 
 	-- drop chance will be multiplied by this value.
@@ -110,7 +110,7 @@ tibia.config = {
 
 tibia.config.expTable = {
 	__index = function(t, level)
-		return tibia.config.exp.calc(k)
+		return tibia.config.exp.calc(level)
 	end
 }
 setmetatable(tibia.config.expTable, tibia.config.expTable)
