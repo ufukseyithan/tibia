@@ -71,9 +71,6 @@ tibia.hudImage:scale(130, tibia.config.pixels + #tibia.config.stats * tibia.conf
 tibia.hudImage.alpha = 0.5
 
 tibia.minutes = 0
-tibia.global = {}
-tibia.global.time = 0
-tibia.global.rain = 0
 
 TMPGROUNDITEMS = {}
 TMPHOUSES = {}
@@ -107,10 +104,3 @@ if file then
 	TMPGROUNDITEMS = nil
 	TMPHOUSES = nil
 end
-
-local file = io.open(dir.."saves/players.lua")
-if file then
-	io.close(file)
-	dofile(dir.."saves/players.lua")
-end
-file = nil

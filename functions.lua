@@ -71,12 +71,12 @@ function tibia.saveServer()
 	end
 	file:close()
 	
-	file:write("\n\n-- GLOBAL STORAGES --\n\n")
+	--[[file:write("\n\n-- GLOBAL STORAGES --\n\n")
 	for k, v in pairs(tibia.global) do
 		local text = "GLOBAL[" .. table.valToString(k) .. "] = " .. table.valToString(v) .. "\n"
 		file:write(text)
 	end
-	file:close()
+	file:close()]]
 end
 
 function tibia.shutdown(delay)
@@ -102,38 +102,38 @@ function tibia.shutdown(delay)
 end
 
 function tibia.updateTime(t)
-	tibia.global.time = t or (tibia.global.time + 1) % 1440
+	sea.game.time = t or (sea.game.time + 1) % 1440
 
-	if tibia.global.rain == 0 then
+	if sea.game.rain == 0 then
 		if math.random(480) == 1 then
-			tibia.global.rain = 1
+			sea.game.rain = 1
 			parse("trigger", "rain")
 		end
-	elseif tibia.global.rain == 1 then
+	elseif sea.game.rain == 1 then
 		if math.random(5) == 1 then
-			tibia.global.rain = 2
+			sea.game.rain = 2
 			parse("trigger", "storm")
 		else
-			tibia.global.rain = 3
+			sea.game.rain = 3
 		end
-	elseif tibia.global.rain == 2 then
+	elseif sea.game.rain == 2 then
 		if math.random(20) == 1 then
-			tibia.global.rain = 3
+			sea.game.rain = 3
 			parse("trigger", "storm")
 		end
-	elseif tibia.global.rain == 3 then
+	elseif sea.game.rain == 3 then
 		if math.random(20) == 1 then
-			tibia.global.rain = 0
+			sea.game.rain = 0
 			parse("trigger", "rain")
 		end
 	end
 
-	local text = string.format("%02d:%02d", math.floor(tibia.global.time / 60), tostring(tibia.global.time % 60))
+	local text = string.format("%02d:%02d", math.floor(sea.game.time / 60), tostring(sea.game.time % 60))
 	tibia.config.item[3].desc = "The time is "..text.."."
 
-	sea.game.daylightTime = tibia.global.time / 4
+	sea.game.daylightTime = sea.game.time / 4
 					
-	return tibia.global.time
+	return sea.game.time
 end
 
 function tibia.houseExpire(id)

@@ -135,6 +135,11 @@ return {
 	game = {
 		setting = {
 			itemDrop = false
+		},
+
+		data = {
+			rain = 0,
+			time = 0
 		}
 	},
 
