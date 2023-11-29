@@ -6,21 +6,21 @@ function ItemSlot:constructor(data, type)
         attributes = {}
     }
 
-    if data then
+    if data and data.id ~= 0 then
         self.item = tibia.Item.create(data.id, data.attributes)
+        self.item.slot = self
     end
 
     self.type = type
 end
 
 function ItemSlot:isOccupied()
-    return self.data.id ~= 0
+    return self.item ~= nil
 end
 
 function ItemSlot:reset()
     self.data.id = 0
     self.data.attributes = {}
-
     self.item = nil
 end
 

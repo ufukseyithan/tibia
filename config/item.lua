@@ -9,6 +9,7 @@ tibia.config.item = {
 	[1] = {
 		name = "apple", 
 		article = "an", 
+		stackable = true,
 		desc = "No visible worms.", 
 		r = 255, g = 0, b = 0, 
 		action = "eat", 

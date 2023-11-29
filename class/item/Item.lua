@@ -17,9 +17,9 @@ end
 function Item:consume(amount)
 	amount = amount or self.amount
 
-	local consumeAmount = math.max(0, self.amount - amount)
+	local temp = self.amount
 
-	self.amount = self.amount - consumeAmount
+	self.amount = self.amount - amount
 
 	if self.amount <= 0 then
 		self:destroy()
@@ -27,19 +27,19 @@ function Item:consume(amount)
 		self:updateSlot()
 	end
 
-	return consumeAmount
+	return temp - self.amount
 end
 
 function Item:restore(amount)
 	amount = amount or 1
 
-	local restoreAmount = math.min(self.maxStack, self.amount + amount)
+	local temp = self.amount
 
-	self.amount = self.amount + restoreAmount
+	self.amount = self.amount + amount
 
 	self:updateSlot()
 
-	return restoreAmount
+	return self.amount - temp
 end
 
 function Item:split(amount)
@@ -90,20 +90,17 @@ function Item:occupy(slot)
 		return false
 	end
 
-	if slot:isOccupied() then
-		if config.stackable and slot.item.id == self.id then
-			item:restore(self:consume())
-
-			return self.amount <= 0 and true or self
-		end
-	else
+	if not slot:isOccupied() then
 		self:destroy()
 
 		self.slot = slot
-
 		self:updateSlot()
 		
 		return true
+	elseif config.stackable and slot.item.id == self.id then
+		local temp = self.amount
+
+		return slot.item:restore(self:consume()) >= temp or self
 	end
 
 	return false
@@ -139,7 +136,7 @@ function Item:updateSlot()
 
 	if slot then
 		slot.data.id = self.id
-		slot.data.attributes = self.attributes
+		slot.data.attributes.amount = self.amount
 		slot.item = self
 	end
 end

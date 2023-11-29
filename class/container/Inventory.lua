@@ -16,16 +16,14 @@ end
 function Inventory:getMenu()
     local menu = sea.Menu.new("Inventory")
 
-	for k, slot in pairs(self.slots) do
-		local name
-
+	for _, slot in pairs(self.slots) do
 		if slot:isOccupied() then
 			local item = slot.item
 			local config = item.config
 	
 			menu:addButton(config.name, function(player)
 				return item:getActionMenu()
-			end, k)
+			end, config.stackable and item.amount or "")
 		else
 			menu:addButton("Empty")
 		end
