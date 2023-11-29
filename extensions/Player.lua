@@ -166,12 +166,13 @@ function sea.Player:pickItem()
 
 	if height > 0 then
 		local item = ground[height]
+		local itemName = item.fullName
 
 		if self:addItem(item) then
 			if item.config.currency then
 				self:message("You have picked up "..item.amount.." rupees.")
 			else
-				self:message("You have picked up "..item.fullName..".")
+				self:message("You have picked up "..itemName..".")
 			end
 			
 			self:showTutorial("Pick", "You have picked up something. Press F3 to access your inventory!")
@@ -261,7 +262,7 @@ function sea.Player:eat(item)
 
 	self.hp = self.health
 
-	item:consume()
+	item:consume(1)
 end
 
 function sea.Player:equipItem(item, equip)
