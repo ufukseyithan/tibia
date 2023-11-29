@@ -153,8 +153,6 @@ sea.addEvent("onHookSpawn", function(player)
 
 	player:updateStats()
 
-	print(player.hp)
-
 	player.health = player.hp <= 0 and 250 or player.hp
 
 	return 'x'
