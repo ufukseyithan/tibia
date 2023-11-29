@@ -145,7 +145,7 @@ sea.addEvent("onHookSpawn", function(player)
 	if lastPosition.x then
 		player:setPosition(tileToPixel(lastPosition.x), tileToPixel(lastPosition.y))
 	else
-		player:setPosition(player.respawnPosition[1], player.respawnPosition[2])
+		player:setPosition(unpack(player.respawnPosition))
 	end
 
 	--updateHUD(id)
@@ -158,7 +158,7 @@ sea.addEvent("onHookSpawn", function(player)
 	return 'x'
 end, -1)
 
-sea.addEvent("onHookDrop", function(player, item, itemType, ammoIn, ammo, mode, x, y)
+sea.addEvent("onHookDrop", function(player)
 	if not player:exhaust("pick") then
 		if tibia.groundItems[y][x][1] then
 			player:showTutorial("Pick Exhaust", "Try not to spam picking up, as there is an exhaust of half a second per try.")
@@ -278,8 +278,10 @@ sea.addEvent("onHookDie", function(victim, killer, weapon, x, y)
 		if victim.level >= 5 then
 			local previousItems = {}
 			for i, v in ipairs(tibia.config.slots) do
-				if victim.tmp.equipment.slots[i] and math.random(10000) <= tibia.config.playerDropRate then
-					victim:dropItem(i, true)
+				local slot = victim.tmp.equipment.slots[i]
+
+				if slot:isOccupied() and math.random(10000) <= tibia.config.playerDropRate then
+					victim:dropItem(slot.item, true)
 				end
 			end
 		end
