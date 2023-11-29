@@ -271,7 +271,7 @@ sea.addEvent("onHookDie", function(victim, killer, weapon, x, y)
 
 		local rupee = math.min(victim.rupee, math.floor(victim.level * math.random(50, 150) / 10 * tibia.config.playerMoneyRate))
 		if rupee ~= 0 then
-			victim:addMoney(-rupee)
+			victim:addRupee(-rupee)
 
 			tibia.Item.spawn(1337, tileX, tileY, {amount = rupee})
 		end
@@ -293,7 +293,7 @@ sea.addEvent("onHookDie", function(victim, killer, weapon, x, y)
 
 		local rupee = victim.rupee
 		if rupee ~= 0 then
-			if victim:addMoney(rupee) then
+			if victim:addRupee(rupee) then
 				tibia.Item.spawn(1337, tileX, tileY, {amount = math.max(100, rupee)})
 			end
 		end

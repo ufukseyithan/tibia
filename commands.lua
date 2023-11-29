@@ -25,7 +25,7 @@ tibia.command = {
 			return 
 		end
 
-		if not player:addMoney(-p[1]) then
+		if not player:addRupee(-p[1]) then
 			player:message('You do not have enough rupee to drop.') 
 			return 
 		end

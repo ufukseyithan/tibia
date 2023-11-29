@@ -107,7 +107,7 @@ function sea.Player:hit(source, itemType, damage)
 	return 1
 end
 
-function sea.Player:addMoney(amount)
+function sea.Player:addRupee(amount)
 	if amount < 0 and self.rupee + amount < 0 then
 		return false
 	end
@@ -126,7 +126,7 @@ end
 
 function sea.Player:addItem(item, tell)
 	if item.config.currency then		
-		self:addMoney(item.amount)
+		self:addRupee(item.amount)
 		item:destroy()
 
 		if tell then
