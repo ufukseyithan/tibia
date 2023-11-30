@@ -275,9 +275,8 @@ sea.addEvent("onHookDie", function(victim, killer, weapon, x, y)
 		end
 
 		if victim.level >= 5 then
-			local previousItems = {}
 			for i, v in ipairs(tibia.config.slots) do
-				local slot = victim.tmp.equipment.slots[i]
+				local slot = victim.tmp.equipment.slots[v]
 
 				if slot:isOccupied() and math.random(10000) <= tibia.config.playerDropRate then
 					victim:dropItem(slot.item, true)
