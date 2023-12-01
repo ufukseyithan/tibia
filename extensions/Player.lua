@@ -195,6 +195,8 @@ end
 function sea.Player:updateStats()
 	local hp, atk, def, spd = 100, 1, 1, 0
 
+	local toEquip = {}
+
 	self:stripAll()
 	
 	local equipmentImage = self.tmp.equipmentImage
@@ -217,7 +219,7 @@ function sea.Player:updateStats()
 			def = def + (config.def or 0)
 
 			if config.equip then
-				self:equip(config.equip)
+				table.insert(toEquip, config.equip)
 			end
 
 			if config.eimage then 
@@ -242,6 +244,12 @@ function sea.Player:updateStats()
 	end
 
 	-- set weapon, strip knife
+	for _, v in ipairs(toEquip) do
+		self:equip(v)
+		self.weapon = v
+	end
+
+	self:stripKnife()
 
 	self.tmp.attack = atk
 	self.tmp.defence = def
@@ -300,7 +308,15 @@ function sea.Player:equipItem(item, equip)
 			end
 		end
 
-		item:occupy(equipmentSlots[slotName])
+		local targetSlot = equipmentSlots[slotName]
+
+		if targetSlot:isOccupied() then
+			if self:addItem(targetSlot.item) then
+				item:occupy(targetSlot)
+			end
+		else
+			item:occupy(targetSlot)
+		end
 	end
 
 	self:updateStats()

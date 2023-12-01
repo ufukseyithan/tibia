@@ -106,6 +106,20 @@ function Item:occupy(slot)
 	return false
 end
 
+function Item:swap(slot)
+	if not self:isInSlot() then
+		return
+	end
+
+	local temp = slot.item
+
+	slot.item = self
+	self:updateSlot()
+
+	self.slot.item = temp
+	self.slot:updateSlot()
+end
+
 function Item:reposition(x, y)
 	self:destroy()
 
