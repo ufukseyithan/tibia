@@ -313,6 +313,8 @@ function sea.Player:equipItem(item, equip)
 		if targetSlot:isOccupied() then
 			if self:addItem(targetSlot.item) then
 				item:occupy(targetSlot)
+			else
+				item:swap(targetSlot)
 			end
 		else
 			item:occupy(targetSlot)
