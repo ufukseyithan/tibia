@@ -20,7 +20,7 @@ tibia.config = {
 	stats = {'Experience', 'Level', 'Money'}, --ignore
 
 	-- slot names for each slot. can be customised.
-	-- the order is important since the last item will always be renderer last
+	-- the order is important since the last item will always be rendered last
 	slots = {
 		"Legs", 
 		"Feet", 

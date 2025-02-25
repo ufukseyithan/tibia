@@ -68,7 +68,7 @@ tibia.command = {
 
 	['credits'] = function(id)
 		-- if you remove this, please at least leave some credits to me, thank you.
-		message(id, 'This script is made by weiwen.')
+		message(id, 'This script is made by weiwen. Edite by Masea.')
 	end,
 
 	['house'] = function(id, p)
