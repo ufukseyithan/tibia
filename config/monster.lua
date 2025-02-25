@@ -16,8 +16,8 @@ tibia.config.monster = {
 		}, 
 		exp = 15, rupee = 100, loot = {{chance = 5000, id = 102}, {chance = 250, id = 221}}, 
 		spc = {1500, function(self) 
-			sea.radiusMessage("Bulbasaur casts heal!", self.x, self.y)
-			parse("effect \"colorsmoke\" " .. self.x .. " " .. self.y .. " 5 5 255 255 255")
+			tibia.radiusMessage("Bulbasaur casts heal!", self.x, self.y)
+			sea.effect("colorsmoke", self.x, self.y, 5, 5, 255, 255, 255)
 		end}, 
 	}, 
 	{
@@ -29,10 +29,10 @@ tibia.config.monster = {
 		}, 
 		exp = 15, rupee = 100, loot = {{chance = 5000, id = 100}, {chance = 250, id = 222}}, 
 		spc = {1000, function(self) 
-			sea.radiusMessage("Charmander uses ember!", self.x, self.y)
-			parse('explosion ' .. self.x .. ' ' .. self.y .. ' 96 40')
-			parse('effect "colorsmoke" ' .. self.x .. ' ' .. self.y .. ' 100 64 255 128 0')
-			parse('effect "colorsmoke" ' .. self.x .. ' ' .. self.y .. ' 100 96 255 255 0')
+			tibia.radiusMessage("Charmander uses ember!", self.x, self.y)
+			sea.explosion(self.x, self.y, 96, 40)
+			sea.effect("colorsmoke", self.x, self.y, 100, 64, 255, 128, 0)
+			sea.effect("colorsmoke", self.x, self.y, 100, 96, 255, 255, 0)
 		end},
 	}, 
 	{
@@ -44,10 +44,10 @@ tibia.config.monster = {
 		}, 
 		exp = 15, rupee = 100, loot = {{chance = 5000, id = 101}, {chance = 250, id = 223}}, 
 		spc = {1000, function(self) 
-			sea.radiusMessage("Squirtle uses watergun!", self.x, self.y)
-			parse('explosion ' .. self.x .. ' ' .. self.y .. ' 96 40')
-			parse('effect "colorsmoke" ' .. self.x .. ' ' .. self.y .. ' 100 96 255 255 255')
-			parse('effect "colorsmoke" ' .. self.x .. ' ' .. self.y .. ' 75 96 128 128 255')
+			tibia.radiusMessage("Squirtle uses watergun!", self.x, self.y)
+			sea.explosion(self.x, self.y, 96, 40)
+			sea.effect("colorsmoke", self.x, self.y, 100, 96, 255, 255, 255)
+			sea.effect("colorsmoke", self.x, self.y, 75, 96, 128, 128, 255)
 		end},
 	}, 
 	{
@@ -77,8 +77,8 @@ tibia.config.monster = {
 		}, 
 		exp = 13, rupee = 60, loot = {}, 
 		spc = {500, function(self) 
-			sea.radiusMessage("Pidgey uses sand attack!", self.x, self.y)
-			parse('flashposition ' .. self.x .. ' ' .. self.y .. ' 100')
+			tibia.radiusMessage("Pidgey uses sand attack!", self.x, self.y)
+			sea.flashAtPosition(self.x, self.y, 100)
 		end},
 	}, 
 	{
@@ -107,7 +107,7 @@ tibia.config.monster = {
 				self.config.speed = 10
 				self.agility = true
 				self.image.color = sea.Color.new(155, 255, 155)
-				timer(5000, "tibia.config.monsterSkill.endAgility", self.id)
+				timerEx(5000, "tibia.config.monsterSkill.endAgility", 1, self)
 			elseif dist <= 32 then
 				self:hit(target, 10)
 			end
@@ -123,7 +123,7 @@ tibia.config.monster = {
 		exp = 10, rupee = 80, loot = {}, 
 		spc = {500, function(self, target, dist) 
 			if dist <= 96 then
-				sea.radiusMessage("Ekans uses poison sting!", self.x, self.y)
+				tibia.radiusMessage("Ekans uses poison sting!", self.x, self.y)
 				self:hit(target, 20)
 			end
 		end},
@@ -137,10 +137,10 @@ tibia.config.monster = {
 		}, 
 		exp = 25, rupee = 120, loot = {{chance = 5000, id = 103}, {chance = 250, id = 220}}, 
 		spc = {500, function(self) 
-			sea.radiusMessage("Pikachu uses thundershock!", self.x, self.y)
-			parse('explosion ' .. self.x .. ' ' .. self.y .. ' 96 40')
-			parse('effect "colorsmoke" ' .. self.x .. ' ' .. self.y .. ' 100 96 255 255 0')
-			parse('effect "colorsmoke" ' .. self.x .. ' ' .. self.y .. ' 75 64 255 255 255')
+			tibia.radiusMessage("Pikachu uses thundershock!", self.x, self.y)
+			sea.explosion(self.x, self.y, 96, 40)
+			sea.effect("colorsmoke", self.x, self.y, 100, 96, 255, 255, 0)
+			sea.effect("colorsmoke", self.x, self.y, 75, 64, 255, 255, 255)
 		end},
 	}, 
 	{
@@ -152,8 +152,8 @@ tibia.config.monster = {
 		}, 
 		exp = 18, rupee = 120, loot = {}, 
 		spc = {1000, function(self) 
-			sea.radiusMessage("Sandshrew uses sand attack!", self.x, self.y)
-			parse('flashposition ' .. self.x .. ' ' .. self.y .. ' 100')
+			tibia.radiusMessage("Sandshrew uses sand attack!", self.x, self.y)
+			sea.flashPositionAt(self.x, self.y, 100)
 		end},
 	},
 	{
@@ -166,7 +166,7 @@ tibia.config.monster = {
 		exp = 10, rupee = 80, loot = {}, 
 		spc = {750, function(self, target, dist) 
 			if dist <= 96 then
-				sea.radiusMessage("NidoranF uses poison sting!", self.x, self.y)
+				tibia.radiusMessage("NidoranF uses poison sting!", self.x, self.y)
 				self:hit(target, 20)
 			end
 		end},
@@ -181,7 +181,7 @@ tibia.config.monster = {
 		exp = 10, rupee = 80, loot = {}, 
 		spc = {750, function(self, target, dist) 
 			if dist <= 96 then
-				sea.radiusMessage("NidoranM uses horn attack!", self.x, self.y)
+				tibia.radiusMessage("NidoranM uses horn attack!", self.x, self.y)
 				self:hit(target, 20)
 			end
 		end},
@@ -195,18 +195,20 @@ tibia.config.monster = {
 		},  
 		exp = 10, rupee = 100, loot = {{chance = 5000, id = 104}}, 
 		spc = {500, function(self, target, dist) 
-			sea.radiusMessage("Vulpix uses flamethrower!", self.x, self.y)
+			tibia.radiusMessage("Vulpix uses flamethrower!", self.x, self.y)
+
 			local x1, y1 = self.x, self.y
 			local rot = math.atan2(target.y - y1, target.x - x1) + math.pi / 2
 			local x2, y2 = math.sin(rot), -math.cos(rot)
-			local fire = image("gfx/sprites/spot.bmp", 0, 0, 1)
-			imagepos(fire, x1 + x2 * 64, y1 + y2 * 64, math.deg(rot) + 180)
-			imagescale(fire, 1.5, 2)
-			imagecolor(fire, 255, 64, 0)
-			imageblend(fire, 1)
-			timer(500, "freeimage", fire)
-			parse('explosion ' .. x1+x2*100 .. ' ' .. y1+y2*100 .. ' 48 40')
-			parse('explosion ' .. x1+x2*50 .. ' ' .. y1+y2*50 .. ' 32 40')
+			local fire = sea.Image.create("gfx/sprites/spot.bmp", 0, 0, 1)
+			fire:setPosition(x1 + x2 * 64, y1 + y2 * 64, math.deg(rot) + 180)
+			fire:scale(1.5, 2)
+			fire.color = sea.Color.new(255, 64, 0)
+			fire.blend = 1
+			fire:destroyIn(500)
+
+			sea.explosion(x1 + x2 * 100, y1 + y2 * 100, 48, 40)
+			sea.explosion(x1 + x2 * 50, y1 + y2 * 50, 32, 40)
 		end},
 	}, 
 	{
@@ -229,15 +231,15 @@ tibia.config.monster = {
 		spc = {1000, function(self, target, dist) 
 			if not self.rage then
 				tibia.radiusMessage("Mankey uses rage!", self.x, self.y)
-				parse("effect \"colorsmoke\" " .. self.x .. " " .. self.y .. " 5 5 255 155 155")
+				sea.effect("colorsmoke", self.x, self.y, 5, 5, 255, 155, 155)
 				tibia.radiusSound("weapons/g_flash.wav", self.x, self.y)
 				self._atk = self.attack
 				self.attack = 3.3
 				self.rage = true
-				imagecolor(self.image, 255, 155, 155)
-				timer(5000, "tibia.config.monsterSkill.endRage", self.id)
+				self.image.color = sea.Color.new(255, 155, 155)
+				timerEx(5000, "tibia.config.monsterSkill.endRage", 1, self)
 			elseif dist <= 96 then
-				sea.radiusMessage("Mankey uses karate chop!", self.x, self.y)
+				tibia.radiusMessage("Mankey uses karate chop!", self.x, self.y)
 				self:hit(target, 20)
 			end
 		end},
@@ -251,11 +253,11 @@ tibia.config.monster = {
 		}, 
 		exp = 8, rupee = 50, loot = {{chance = 5000, id = 105}}, 
 		spc = {2500, function(self) 
-			sea.radiusMessage("Abra uses teleport!", self.x, self.y)
-			parse("effect \"colorsmoke\" " .. self.x .. " " .. self.y .. " 5 5 255 255 255")
+			tibia.radiusMessage("Abra uses teleport!", self.x, self.y)
+			sea.effect("colorsmoke", self.x, self.y, 5, 5, 255, 255, 255)
 			local dir = math.random(math.pi * 2)
 			if self:move(dir, 40) or self:move(dir, -40) then
-				parse("effect \"colorsmoke\" " .. self.x .. " " .. self.y .. " 5 5 255 255 255")
+				sea.effect("colorsmoke", self.x, self.y, 5, 5, 255, 255, 255)
 			end
 		end},
 	}, 
@@ -269,10 +271,10 @@ tibia.config.monster = {
 		exp = 8, rupee = 100, loot = {}, 
 		spc = {1000, function(self, target, dist)
 			if dist <= 64 and not target.tmp.paralyse then
-				sea.radiusMessage("Gastly uses lick!", self.x, self.y)
+				tibia.radiusMessage("Gastly uses lick!", self.x, self.y)
 				target.tmp.paralyse = true
 				target:message("You are paralysed.")
-				parse("effect \"colorsmoke\" " .. player(id, 'x') .. " " .. player(id, 'y') .. " 5 5 64 0 64")
+				sea.effect("colorsmoke", target.x, target.y, 5, 5, 64, 0, 64)
 				timerEx(3000, "rem.paralyse", 1, target)
 			elseif dist <= 32 then
 				self:hit(target, 10)
@@ -289,14 +291,14 @@ tibia.config.monster = {
 		exp = 100, rupee = 300, loot = {{chance = 1000, id = 310},{chance = 1000, id = 311},{chance = 1000, id = 312},{chance = 1000, id = 313},{chance = 1000, id = 314},{chance = 1000, id = 315},{chance = 1000, id = 316}}, 
 		spc = {1000, function(self) 
 			if not self.harden then
-				sea.radiusMessage("Onix uses harden!", self.x, self.y)
-				parse("effect \"colorsmoke\" " .. self.x .. " " .. self.y .. " 5 5 192 192 192")
+				tibia.radiusMessage("Onix uses harden!", self.x, self.y)
+				sea.effect("colorsmoke", self.x, self.y, 5, 5, 192, 192, 192)
 				tibia.radiusSound("weapons/g_flash.wav", self.x, self.y)
 				self._def = self.config.defence
 				self.config.defence = 7.5
 				self.harden = true
-				imagecolor(self.image, 155, 155, 255)
-				timer(5000, "tibia.config.monsterSkill.endHarden", self.id)
+				self.image.color = sea.Color.new(155, 155, 255)
+				timerEx(5000, "tibia.config.monsterSkill.endHarden", 1, self)
 			end
 		end},
 	}, 
@@ -310,16 +312,16 @@ tibia.config.monster = {
 		exp = 30, rupee = 130, loot = {{chance = 5000, id = 103}}, 
 		spc = {1000, function(self) 
 			if self.health < 20 then
-				sea.radiusMessage("Voltorb uses selfdestruct!", self.x, self.y)
-				parse('explosion ' .. self.x .. ' ' .. self.y .. ' 128 80')
-				parse('effect "colorsmoke" ' .. self.x .. ' ' .. self.y .. ' 100 128 255 128 0')
-				parse('effect "colorsmoke" ' .. self.x .. ' ' .. self.y .. ' 100 128 255 255 0')
+				tibia.radiusMessage("Voltorb uses selfdestruct!", self.x, self.y)
+				sea.explosion(self.x, self.y, 128, 80)
+				sea.effect("colorsmoke", self.x, self.y, 100, 128, 255, 128, 0)
+				sea.effect("colorsmoke", self.x, self.y, 100, 128, 255, 255, 0)
 				self:destroy()
 			else
-				sea.radiusMessage("Voltorb uses thundershock!", self.x, self.y)
-				parse('explosion ' .. self.x .. ' ' .. self.y .. ' 96 40')
-				parse('effect "colorsmoke" ' .. self.x .. ' ' .. self.y .. ' 100 96 255 255 0')
-				parse('effect "colorsmoke" ' .. self.x .. ' ' .. self.y .. ' 75 64 255 255 255')
+				tibia.radiusMessage("Voltorb uses thundershock!", self.x, self.y)
+				sea.explosion(self.x, self.y, 96, 40)
+				sea.effect("colorsmoke", self.x, self.y, 100, 96, 255, 255, 0)
+				sea.effect("colorsmoke", self.x, self.y, 75, 64, 255, 255, 255)
 			end
 		end},
 	}, 
@@ -333,40 +335,37 @@ tibia.config.monster = {
 		exp = 30, rupee = 150, loot = {{chance = 5000, id = 106}}, 
 		spc = {1000, function(self) 
 			if self.health < 20 then
-				sea.radiusMessage("Koffing uses explosion!", self.x, self.y)
-				parse('explosion ' .. self.x .. ' ' .. self.y .. ' 128 40')
-				parse('effect "colorsmoke" ' .. self.x .. ' ' .. self.y .. ' 100 128 255 128 0')
-				parse('effect "colorsmoke" ' .. self.x .. ' ' .. self.y .. ' 100 128 255 255 0')
+				tibia.radiusMessage("Koffing uses explosion!", self.x, self.y)
+				sea.explosion(self.x, self.y, 128, 40)
+				sea.effect("colorsmoke", self.x, self.y, 100, 128, 255, 128, 0)
+				sea.effect("colorsmoke", self.x, self.y, 100, 128, 255, 255, 0)
 				self:destroy()
 			else
-				sea.radiusMessage("Koffing uses poison fog!", self.x, self.y)
-				parse('explosion ' .. self.x .. ' ' .. self.y .. ' 96 40')
-				parse('effect "colorsmoke" ' .. self.x .. ' ' .. self.y .. ' 100 96 128 128 0')
+				tibia.radiusMessage("Koffing uses poison fog!", self.x, self.y)
+				sea.explosion(self.x, self.y, 96, 40)
+				sea.effect("colorsmoke", self.x, self.y, 100, 96, 128, 128, 0)
 			end
 		end},
 	}, 
 }
 
 tibia.config.monsterSkill = {
-	endAgility = function(id)
-		self = tibia.monster[tonumber(id)]
+	endAgility = function(self)
 		self.speed = self._spd
 		self._spd = nil
-		imagecolor(self.image, 255, 255, 255)
+		self.image.color = sea.Color.white
 		self.agility = nil
 	end,
 	endRage = function(id)
-		self = tibia.monster[tonumber(id)]
 		self.attack = self._atk
 		self._atk = nil
-		imagecolor(self.image, 255, 255, 255)
+		self.image.color = sea.Color.white
 		self.rage = nil
 	end,
 	endHarden = function(id)
-		self = tibia.monster[tonumber(id)]
 		self.defence = self._def
 		self._def = nil
-		imagecolor(self.image, 255, 255, 255)
+		self.image.color = sea.Color.white
 		self.harden = nil
 	end,
 }

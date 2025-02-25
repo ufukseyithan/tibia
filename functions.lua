@@ -33,8 +33,8 @@ function tibia.explosion(x, y, size, damage, player)
 end
 
 function tibia.saveServer()
-	local dir = 'sys/lua/sea-framework/app/tibia/'
-	local file = io.open(dir.."saves/"..sea.map.name.. ".lua", 'w+') or io.tmpfile()
+	local savesDir = sea.app.tibia.path.saves
+	local file = io.open(savesDir..sea.map.name.. ".lua", 'w+') or io.tmpfile()
 	
 	local tmp = {}
 	local groundItems = tibia.groundItems
