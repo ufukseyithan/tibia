@@ -10,6 +10,11 @@ function Item:constructor(config, attributes)
 	self.attributes.amount = attributes.amount or 1
 end
 
+function Item:changeId(id)
+	self.id = id
+	self.config = tibia.config.item[id]
+end
+
 function Item:count()
 	return self.amount or 1
 end
@@ -129,8 +134,9 @@ function Item:reposition(x, y)
 
 	self.x, self.y, self.height = x, y, height
 
-    if self.config.heal then
-        tile.zone.HEAL = (tile.zone.HEAL or 0) + config.heal
+	local heal = self.config.heal
+    if heal then
+        tile.zone.HEAL = (tile.zone.HEAL or 0) + heal
     end
 
 	ground[height] = self
@@ -164,7 +170,7 @@ function Item:getActionMenu(equip)
 
 	for i, v in ipairs(config.action) do
 		menu:addButton(v, function(player)
-			config.func[i](player, self, equip)
+			return config.func[i](player, self, equip)
 		end)
 	end
 

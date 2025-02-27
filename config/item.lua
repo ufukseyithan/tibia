@@ -74,7 +74,7 @@ tibia.config.item = {
 			sea.effect("colorsmoke", player.x, player.y, 100, 64, 255, 128, 0)
 			sea.effect("colorsmoke", player.x, player.y, 75, 64, 255, 0, 0)
 			self:destroy()
-		end,equip},
+		end, equip},
 	},
 
 	[101] = {
@@ -90,7 +90,7 @@ tibia.config.item = {
 			sea.effect("colorsmoke", player.x, player.y, 100, 64, 255, 255, 255)
 			sea.effect("colorsmoke", player.x, player.y, 75, 64, 128, 128, 255)
 			self:destroy()
-		end,equip},
+		end, equip},
 	},
 
 	[102] = {
@@ -106,7 +106,7 @@ tibia.config.item = {
 			sea.effect("colorsmoke", player.x, player.y, 5, 5, 128, 255, 255)
 			sea.Player.playSoundForAll("materials/glass2.wav", player.x, player.y)
 			self:destroy()
-		end,equip},
+		end, equip},
 	},
 
 	[103] = {
@@ -122,7 +122,7 @@ tibia.config.item = {
 			sea.effect("colorsmoke", player.x, player.y, 100, 64, 255, 255, 0)
 			sea.effect("colorsmoke", player.x, player.y, 75, 64, 255, 255, 255)
 			self:destroy()
-		end,equip},
+		end, equip},
 	},
 
 	[104] = {
@@ -139,7 +139,7 @@ tibia.config.item = {
 				player:strip(46)
 			end)
 			self:destroy()
-		end,equip},
+		end, equip},
 	},
 
 	[105] = {
@@ -185,7 +185,7 @@ tibia.config.item = {
 			sea.explosion(player.x, player.y, 64, 15, player.id)
 			sea.effect("colorsmoke", player.x, player.y, 100, 96, 128, 128, 0)
 			self:destroy()
-		end,equip},
+		end, equip},
 	},
 
 	[200] = {
@@ -287,7 +287,9 @@ tibia.config.item = {
 		rot = 0,
 		heal = 3, 
 		action = "rotate|South", 
-		func = function(id,itemslot,itemid) PLAYERS[id].Inventory[itemslot] = ((itemid-209)%4)+210; itemactions(id,itemslot) end,
+		func = function(player, self)
+			self:changeId(((self.id - 209) % 4) + 210)
+		end,
 	},
 
 	[211] = {
@@ -298,7 +300,9 @@ tibia.config.item = {
 		rot = 90,
 		heal = 3, 
 		action = "rotate|West", 
-		func = function(id,itemslot,itemid) PLAYERS[id].Inventory[itemslot] = ((itemid-209)%4)+210; itemactions(id,itemslot) end,
+		func = function(player, self)
+			self:changeId(((self.id - 209) % 4) + 210)
+		end,
 	},
 
 	[212] = {
@@ -309,7 +313,9 @@ tibia.config.item = {
 		heal = 3, 
 		r = 255, g = 255, b = 255,
 		action = "rotate|North", 
-		func = function(id,itemslot,itemid) PLAYERS[id].Inventory[itemslot] = ((itemid-209)%4)+210; itemactions(id,itemslot) end,
+		func = function(player, self)
+			self:changeId(((self.id - 209) % 4) + 210)
+		end,
 	},
 
 	[213] = {
@@ -320,7 +326,9 @@ tibia.config.item = {
 		heal = 3, 
 		r = 255, g = 255, b = 255,
 		action = "rotate|East", 
-		func = function(id,itemslot,itemid) PLAYERS[id].Inventory[itemslot] = ((itemid-209)%4)+210; itemactions(id,itemslot) end,
+		func = function(player, self)
+			self:changeId(((self.id - 209) % 4) + 210)
+		end,
 	},
 
 	[214] = {
@@ -331,7 +339,9 @@ tibia.config.item = {
 		rot = 0,
 		heal = 3, 
 		action = "rotate|South", 
-		func = function(id,itemslot,itemid) PLAYERS[id].Inventory[itemslot] = ((itemid-213)%4)+214; itemactions(id,itemslot) end,
+		func = function(player, self)
+			self:changeId(((self.id - 213) % 4) + 214)
+		end
 	},
 
 	[215] = {
@@ -342,7 +352,9 @@ tibia.config.item = {
 		rot = 90,
 		heal = 3, 
 		action = "rotate|West", 
-		func = function(id,itemslot,itemid) PLAYERS[id].Inventory[itemslot] = ((itemid-213)%4)+214; itemactions(id,itemslot) end,
+		func = function(player, self)
+			self:changeId(((self.id - 213) % 4) + 214)
+		end
 	},
 
 	[216] = {
@@ -353,7 +365,9 @@ tibia.config.item = {
 		heal = 3, 
 		r = 169, g = 106, b = 44,
 		action = "rotate|North", 
-		func = function(id,itemslot,itemid) PLAYERS[id].Inventory[itemslot] = ((itemid-213)%4)+214; itemactions(id,itemslot) end,
+		func = function(player, self)
+			self:changeId(((self.id - 213) % 4) + 214)
+		end
 	},
 
 	[217] = {
@@ -364,7 +378,9 @@ tibia.config.item = {
 		heal = 3, 
 		r = 169, g = 106, b = 44,
 		action = "rotate|East", 
-		func = function(id,itemslot,itemid) PLAYERS[id].Inventory[itemslot] = ((itemid-213)%4)+214; itemactions(id,itemslot) end,
+		func = function(player, self)
+			self:changeId(((self.id - 213) % 4) + 214)
+		end
 	},
 
 	[218] = {
@@ -411,14 +427,10 @@ tibia.config.item = {
 		r = 255, g = 200, b = 0, 
 		action = "flip", 
 		fimage = "gfx/weiwen/circle.png", 
-		func = function(id,itemslot,itemid)
-			if PLAYERS[id].tmp.exhaust.use then
-				return
+		func = function(player, self, equip)
+			if player:exhaust('use') then
+				tibia.radiusMessage(player.name .. ' flips a coin. '..((math.random(2) == 1) and "Heads!" or "Tails!"), player.x, player.y)
 			end
-			PLAYERS[id].tmp.exhaust.use = true
-			timer(CONFIG.EXHAUST.USE, rem.useExhaust, id)
-			
-			radiusmsg(player(id,"name") .. " flips a coin. " .. ((math.random(2) == 1) and "Heads!" or "Tails!"), player(id,"x"), player(id,"y"))
 		end,
 	}, 
 	
@@ -430,13 +442,10 @@ tibia.config.item = {
 		fimage = "gfx/weiwen/table.png", 
 		fscalex = 0.5, 
 		fscaley = 0.5, 
-		func = function(id,itemslot,itemid)
-			if PLAYERS[id].tmp.exhaust.use then
-				return
+		func = function(player, self, equip)
+			if player:exhaust('use') then
+				tibia.radiusMessage(player.name .. " rolls a " .. math.random(1, 6) .. ".", player.x, player.y)
 			end
-			PLAYERS[id].tmp.exhaust.use = true
-			timer(CONFIG.EXHAUST.USE, rem.useExhaust, id)
-			radiusmsg(player(id,"name") .. " rolls a " .. math.random(1, 6) .. ".", player(id,"x"), playerw(id,"y"))
 		end,
 	}, 
 
