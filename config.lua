@@ -4,7 +4,7 @@ tibia.config = {
 	inventoryCapacity = 48, 
 	
 	-- maximum number of monsters on the map at one time. if set to 0, monsters.lua is not loaded at all.
-	maxMonsters = 96, 
+	maxMonsters = 48, 
 	
 	-- maximum height an item stack on the ground can be (they can be as high as you want, but only the top few will be shown when this is set).
 	maxHeight = 5, 

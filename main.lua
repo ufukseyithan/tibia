@@ -9,7 +9,7 @@ return {
     path = {
         gfx = "gfx/weiwen/",
         
-        saves = "sys/lua/sea-framework/app/tibia/saves/",
+        mapSave = "sys/lua/sea-framework/app/tibia/saves/"..sea.map.name.. ".lua"
     },
 
     scripts = {

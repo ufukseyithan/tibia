@@ -68,13 +68,12 @@ tibia.config.item = {
 		action = {"cast","hold"}, 
 		equipSlot = "Runes", 
 		fimage = "gfx/weiwen/rune.png", 
-		func = {function(id,itemslot,itemid,equip)
-			radiusmsg(player(id,"name") .. " casts a fireball rune.", player(id,"x"), player(id,"y"))
-			explosion(player(id, "x"), player(id,"y"), 64, 15, id)
-			local pos = player(id,"x") .. " " .. player(id,"y")
-			parse("effect \"colorsmoke\" " .. pos .. " 100 64 255 128 0;")
-			parse("effect \"colorsmoke\" " .. pos .. " 75 64 255 0 0")
-			destroyitem(id, itemslot, equip)
+		func = {function(player, self, equip)
+			tibia.radiusMessage(player.name..' casts a fireball rune.', player.x, player.y)
+			sea.explosion(player.x, player.y, 64, 15, player.id)
+			sea.effect("colorsmoke", player.x, player.y, 100, 64, 255, 128, 0)
+			sea.effect("colorsmoke", player.x, player.y, 75, 64, 255, 0, 0)
+			self:destroy()
 		end,equip},
 	},
 
@@ -85,13 +84,12 @@ tibia.config.item = {
 		action = {"cast","hold"}, 
 		equipSlot = "Runes", 
 		fimage = "gfx/weiwen/rune.png", 
-		func = {function(id,itemslot,itemid,equip)
-			radiusmsg(player(id,"name") .. " casts a waterball rune.", player(id,"x"), player(id,"y"))
-			explosion(player(id, "x"), player(id,"y"), 64, 15, id)
-			local pos = player(id,"x") .. " " .. player(id,"y")
-			parse("effect \"colorsmoke\" " .. pos .. " 100 64 255 255 255")
-			parse("effect \"colorsmoke\" " .. pos .. " 75 64 128 128 255")
-			destroyitem(id, itemslot, equip)
+		func = {function(player, self, equip)
+			tibia.radiusMessage(player.name..' casts a water gun rune.', player.x, player.y)
+			sea.explosion(player.x, player.y, 64, 15, player.id)
+			sea.effect("colorsmoke", player.x, player.y, 100, 64, 255, 255, 255)
+			sea.effect("colorsmoke", player.x, player.y, 75, 64, 128, 128, 255)
+			self:destroy()
 		end,equip},
 	},
 
@@ -102,13 +100,12 @@ tibia.config.item = {
 		action = {"cast","hold"}, 
 		equipSlot = "Runes", 
 		fimage = "gfx/weiwen/rune.png", 
-		func = {function(id,itemslot,itemid,equip)
-			radiusmsg(player(id,"name") .. " casts a healing rune.", player(id,"x"), player(id,"y"))
-			explosion(player(id, "x"), player(id,"y"), 32, -30, id)
-			local pos = player(id,"x") .. " " .. player(id,"y")
-			parse("effect \"colorsmoke\" " .. pos .. " 5 5 128 255 255")
-			radiussound("materials/glass2.wav", player(id,"x"), player(id,"y"))
-			destroyitem(id, itemslot, equip)
+		func = {function(player, self, equip)
+			tibia.radiusMessage(player.name..' casts a healing rune.', player.x, player.y)
+			sea.explosion(player.x, player.y, 32, -30, player.id)
+			sea.effect("colorsmoke", player.x, player.y, 5, 5, 128, 255, 255)
+			sea.Player.playSoundForAll("materials/glass2.wav", player.x, player.y)
+			self:destroy()
 		end,equip},
 	},
 
@@ -119,13 +116,12 @@ tibia.config.item = {
 		action = {"cast","hold"}, 
 		equipSlot = "Runes", 
 		fimage = "gfx/weiwen/rune.png", 
-		func = {function(id,itemslot,itemid,equip)
-			radiusmsg(player(id,"name") .. " casts a thundershock rune.", player(id,"x"), player(id,"y"))
-			explosion(player(id, "x"), player(id,"y"), 64, 15, id)
-			local pos = player(id,"x") .. " " .. player(id,"y")
-			parse("effect \"colorsmoke\" " .. pos .. " 100 64 255 255 0")
-			parse("effect \"colorsmoke\" " .. pos .. " 75 64 255 255 255")
-			destroyitem(id, itemslot, equip)
+		func = {function(player, self, equip)
+			tibia.radiusMessage(player.name..' casts a thundershock rune.', player.x, player.y)
+			sea.explosion(player.x, player.y, 64, 15, player.id)
+			sea.effect("colorsmoke", player.x, player.y, 100, 64, 255, 255, 0)
+			sea.effect("colorsmoke", player.x, player.y, 75, 64, 255, 255, 255)
+			self:destroy()
 		end,equip},
 	},
 
@@ -136,12 +132,13 @@ tibia.config.item = {
 		action = {"cast","hold"}, 
 		equipSlot = "Runes", 
 		fimage = "gfx/weiwen/rune.png", 
-		func = {function(id,itemslot,itemid,equip)
-			radiusmsg(player(id,"name") .. " casts a firewave rune.", player(id,"x"), player(id,"y"))
-			parse("equip " .. id .. " 46")
-			parse("setweapon " .. id .. " 46")
-			timer(1000, "parse", "strip " .. id .. " 46")
-			destroyitem(id, itemslot, equip)
+		func = {function(player, self, equip)
+			tibia.radiusMessage(player.name..' casts a flamethrower rune.', player.x, player.y)
+			player:equipAndSet(46)
+			timerEx(1000, function()
+				player:strip(46)
+			end)
+			self:destroy()
 		end,equip},
 	},
 
@@ -152,25 +149,28 @@ tibia.config.item = {
 		action = {"cast","hold"}, 
 		equipSlot = "Runes", 
 		fimage = "gfx/weiwen/rune.png", 
-		func = {function(id, itemslot, itemid, equip)
-			radiusmsg(player(id,"name") .. " is casting a teleport rune.", player(id,"x"), player(id,"y"))
-			timer(1500, "tibia.config.itemFunctions.teleport", id .. ';' .. player(id, 'health') .. ';' .. (equip and -itemslot or itemslot))
-		end, equip}, 
-		teleport = function(p)
-			local id, health, itemequipSlot = unpack(p:split(';'))
-			id, health, itemequipSlot = tonumber(id), tonumber(health), tonumber(itemslot)
-			if player(id, 'health') == health then
-				radiusmsg(player(id,"name") .. " completed casting a teleport rune.", player(id,"x"), player(id,"y"))
-				parse("effect \"colorsmoke\" " .. player(id,"x") .. " " .. player(id,"y") .. " 5 5 255 255 255")
-				local pos = PLAYERS[id].Spawn[1] .. " " .. PLAYERS[id].Spawn[2]
-				parse("effect \"colorsmoke\" " .. pos .. " 5 5 255 255 255")
-				parse("setpos " .. id .. " " .. pos)
-				radiussound("materials/glass2.wav", player(id,"x"), player(id,"y"))
-				destroyitem(id, math.abs(itemslot), itemslot < 0)
-			else
-				radiusmsg(player(id,"name") .. " failed to cast a teleport rune.", player(id,"x"), player(id,"y"))
-			end
-		end
+		func = {function(player, self, equip)
+			local health = player.health
+			tibia.radiusMessage(player.name..' casts a teleport rune.', player.x, player.y)
+
+			timerEx(1500, function()
+				if player.health == health then
+					tibia.radiusMessage(player.name..' failed to cast a teleport rune.', player.x, player.y)
+					sea.effect('colorsmoke', player.x, player.y, 5, 5, 255, 255, 255)
+
+					local spawnX, spawnY = player.respawnPosition[1], player.respawnPosition[2]
+					sea.effect('colorsmoke', spawnX, spawnY, 5, 5, 255, 255, 255)
+					player:setPosition(spawnX, spawnY)
+
+					sea.Player.playSoundForAll("materials/glass2.wav", player.x, player.y)
+
+					self:destroy()
+				else
+					tibia.radiusMessage(player.name..' failed to cast a teleport rune.', player.x, player.y)
+				end
+			end)
+
+		end, equip}
 	},
 
 	[106] = {
@@ -180,12 +180,11 @@ tibia.config.item = {
 		action = {"cast","hold"}, 
 		equipSlot = "Runes", 
 		fimage = "gfx/weiwen/rune.png", 
-		func = {function(id, itemslot, itemid, equip)
-			radiusmsg(player(id,"name") .. " casts a poison fog rune.", player(id,"x"), player(id,"y"))
-			explosion(player(id, "x"), player(id,"y"), 64, 15, id)
-			local pos = player(id,"x") .. " " .. player(id,"y")
-			parse("effect \"colorsmoke\" " .. pos .. " 100 96 128 128 0")
-			destroyitem(id, itemslot, equip)
+		func = {function(player, self, equip)
+			tibia.radiusMessage(player.name..' casts a poison fog rune.', player.x, player.y)
+			sea.explosion(player.x, player.y, 64, 15, player.id)
+			sea.effect("colorsmoke", player.x, player.y, 100, 96, 128, 128, 0)
+			self:destroy()
 		end,equip},
 	},
 
@@ -843,10 +842,6 @@ tibia.config.item = {
 		r = 0, g = 150, b = 0, 
 		fimage = 'gfx/weiwen/rupee.png', 
 	}
-}
-
-tibia.config.itemFunctions = {
-	teleport = tibia.config.item[105].teleport
 }
 
 for k, v in pairs(tibia.config.item) do

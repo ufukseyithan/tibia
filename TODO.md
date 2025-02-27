@@ -1,6 +1,6 @@
 # Refactor
-- Ground item save
-- Reverse equipment array slots (from Head to rest)
+* Ground item save
+* Reverse equipment array slots (from Head to rest)
 - Commands
 
 # Features

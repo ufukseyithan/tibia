@@ -99,7 +99,7 @@ function Monster:die()
 	
 	local tileX, tileY = pixelToTile(self.x), pixelToTile(self.y)
 
-	tibia.Item.spawn(1337, tileX, tileY, {amount = math.floor(config.rupee * math.random(50, 150) / 100) * tibia.config.moneyRate})
+	tibia.Item.spawnRupee(math.floor(config.rupee * math.random(50, 150) / 100) * tibia.config.moneyRate, tileX, tileY)
 
 	for _, loot in ipairs(config.loot) do
 		local chance = math.random(10000)

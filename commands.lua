@@ -32,7 +32,7 @@ tibia.command = {
 
 		player:message('You have dropped '..p[1]..' rupees.')
 
-		tibia.Item.spawn(1337, player.tileX, player.tileY, {amount = p[1]})
+		tibia.Item.spawnRupee(p[1], player.tileX, player.tileY)
 	end,
 
 	['w'] = function(id, p)

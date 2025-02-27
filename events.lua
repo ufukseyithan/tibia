@@ -1,4 +1,11 @@
+tibia.serverLoaded = false
+
 sea.addEvent("onHookJoin", function(player)
+	if not tibia.mapLoaded then
+		timerEx(5000, 'tibia.loadServer')
+		tibia.serverLoaded = true
+	end
+
 	player.tmp = {
 		inventory = tibia.Inventory.new(player.inventory),
 		equipment = tibia.Equipment.new(player.equipment),
@@ -224,7 +231,7 @@ sea.addEvent("onHookMinute", function()
 		end
 	end
 
-	if sea.game.password == "" and tibia.minutes % 5 == 0 then
+	if sea.game.password == "" and tibia.minutes % 5 == 0 and tibia.serverLoaded then
 		tibia.saveServer()
 	end
 end, -1)
@@ -271,7 +278,7 @@ sea.addEvent("onHookDie", function(victim, killer, weapon, x, y)
 		if rupee ~= 0 then
 			victim:addRupee(-rupee)
 
-			tibia.Item.spawn(1337, tileX, tileY, {amount = rupee})
+			tibia.Item.spawnRupee(rupee, tileX, tileY)
 		end
 
 		if victim.level >= 5 then
@@ -291,7 +298,7 @@ sea.addEvent("onHookDie", function(victim, killer, weapon, x, y)
 		local rupee = victim.rupee
 		if rupee ~= 0 then
 			if victim:addRupee(rupee) then
-				tibia.Item.spawn(1337, tileX, tileY, {amount = math.max(100, rupee)})
+				tibia.Item.spawn(math.max(100, rupee), tileX, tileY)
 			end
 		end
 	end

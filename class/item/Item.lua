@@ -51,7 +51,7 @@ function Item:split(amount)
 
 	local newStack = Item.create(self.id, self.attributes)
 
-	newItem:restore(self:consume(amount))
+	newStack:restore(self:consume(amount))
 
 	return newStack
 end
@@ -241,6 +241,10 @@ function Item.spawn(id, x, y, attributes)
 	item:reposition(x, y)
 
 	return item
+end
+
+function Item.spawnRupee(amount, x, y)
+	return Item.spawn(1337, x, y, {amount = amount})
 end
 
 local maxHeight = tibia.config.maxHeight

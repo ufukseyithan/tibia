@@ -32,9 +32,10 @@ function tibia.explosion(x, y, size, damage, player)
 	sea.explosion(x, y, size, damage, player.id)
 end
 
+local mapSavePath = sea.app.tibia.path.mapSave
+
 function tibia.saveServer()
-	local savesDir = sea.app.tibia.path.saves
-	local file = io.open(savesDir..sea.map.name.. ".lua", 'w+') or io.tmpfile()
+	local file = io.open(mapSavePath, 'w+') or io.tmpfile()
 	
 	local tmp = {}
 	local groundItems = tibia.groundItems
@@ -45,7 +46,8 @@ function tibia.saveServer()
 					tmp[y] = tmp[y] or {}
 					tmp[y][x] = {}
 					for j = 1, #groundItems[y][x] do
-						tmp[y][x][j] = groundItems[y][x][j][3] and -groundItems[y][x][j][3] or groundItems[y][x][j][1]
+						local item = groundItems[y][x][j]
+						tmp[y][x][j] = {item.id, item.attributes}
 					end
 				end
 			end
@@ -77,6 +79,36 @@ function tibia.saveServer()
 		file:write(text)
 	end
 	file:close()]]
+end
+
+function tibia.loadServer()
+	TMPGROUNDITEMS = {}
+	TMPHOUSES = {}
+
+	if io.exists(mapSavePath) then
+		dofile(mapSavePath)
+	
+		for y = 0, sea.map.ySize do
+			if TMPGROUNDITEMS[y] then
+				for x = 0, sea.map.xSize do
+					if TMPGROUNDITEMS[y][x] then
+						for _, item in ipairs(TMPGROUNDITEMS[y][x]) do
+							tibia.Item.spawn(item[1], x, y, item[2])
+						end
+					end
+				end
+			end
+		end
+	
+		for i, v in pairs(TMPHOUSES) do
+			for k, l in pairs(v) do
+				houses[i][k] = l
+			end
+		end
+	
+		TMPGROUNDITEMS = nil
+		TMPHOUSES = nil
+	end
 end
 
 function tibia.shutdown(delay)
@@ -131,7 +163,8 @@ function tibia.updateTime(t)
 	local text = string.format("%02d:%02d", math.floor(sea.game.time / 60), tostring(sea.game.time % 60))
 	tibia.config.item[3].desc = "The time is "..text.."."
 
-	sea.game.daylightTime = sea.game.time / 4
+	-- Max set 180 to not have the pitch black
+	sea.game.daylightTime = math.max(180, sea.game.time / 4)
 					
 	return sea.game.time
 end

@@ -71,36 +71,3 @@ tibia.hudImage:scale(130, tibia.config.pixels + #tibia.config.stats * tibia.conf
 tibia.hudImage.alpha = 0.5
 
 tibia.minutes = 0
-
-TMPGROUNDITEMS = {}
-TMPHOUSES = {}
-local file = io.open(dir.."saves/"..sea.map.name..".lua")
-if file then
-	io.close(file)
-	dofile(dir.."saves/"..sea.map.name..".lua")
-
-	for y = 0, sea.map.ySize do
-		if TMPGROUNDITEMS[y] then
-			for x = 0, sea.map.xSize do
-				if TMPGROUNDITEMS[y][x] then
-					for _, j in ipairs(TMPGROUNDITEMS[y][x]) do
-						if j < 0 then
-							tibia.Item.spawn(1337, x, y, {amount = -j})
-						else
-							tibia.Item.spawn(j, x, y)
-						end
-					end
-				end
-			end
-		end
-	end
-
-	for i, v in pairs(TMPHOUSES) do
-		for k, l in pairs(v) do
-			houses[i][k] = l
-		end
-	end
-
-	TMPGROUNDITEMS = nil
-	TMPHOUSES = nil
-end

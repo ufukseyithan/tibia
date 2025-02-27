@@ -17,7 +17,7 @@ function Equipment:getMenu()
     local menu = sea.Menu.new("Equipment")
 
 	local equipmentSlots = self.slots
-	for _, slotName in ipairs(tibia.config.slots) do
+	for _, slotName in ipairs(table.reverse(tibia.config.slots)) do
 		local slot = equipmentSlots[slotName]
 
 		if slot:isOccupied() then
