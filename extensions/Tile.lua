@@ -11,3 +11,15 @@ function sea.Tile:zoneProperty()
         return tibia.tileZone[self.y] and tibia.tileZone[self.y][self.x]
     end
 end
+
+function sea.Tile:houseEntranceProperty()
+    return function(self)
+        return self.zone.HOUSEENT
+    end
+end
+
+function sea.Tile:houseProperty()
+    return function(self)
+        return self.zone.HOUSE
+    end
+end

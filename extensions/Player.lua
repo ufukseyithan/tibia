@@ -335,3 +335,13 @@ end
 function sea.Player:viewEquipment(page)
 	self:displayMenu(self.tmp.equipment:getMenu(), page)
 end
+
+-------------------------
+--     PROPERTIES      --
+-------------------------
+
+function sea.Player:tileProperty()
+    return function(self)
+        return sea.Tile.get(self.lastPosition.x, self.lastPosition.y)
+    end
+end

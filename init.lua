@@ -1,5 +1,3 @@
-local dir = 'sys/lua/sea-framework/app/tibia/'
-
 local mapName = sea.map.name
 tibia.pvpZone = tibia.config.pvpZone[mapName] or tibia.config.pvpZone[tibia.config.defaultMap]
 tibia.noPvpZone = tibia.config.noPvpZone[mapName] or tibia.config.noPvpZone[tibia.config.defaultMap]
@@ -62,9 +60,6 @@ for y = 0, sea.map.ySize do
 		end
 	end
 end
-
-PLAYERS = {}
-PLAYERCACHE = {}
 
 tibia.hudImage = sea.Image.create('gfx/weiwen/1x1.png', 565, 407 + #tibia.config.stats * tibia.config.pixels / 2, 2)
 tibia.hudImage:scale(130, tibia.config.pixels + #tibia.config.stats * tibia.config.pixels)

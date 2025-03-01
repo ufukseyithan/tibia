@@ -102,7 +102,7 @@ function tibia.loadServer()
 	
 		for i, v in pairs(TMPHOUSES) do
 			for k, l in pairs(v) do
-				houses[i][k] = l
+				tibia.house[i][k] = l
 			end
 		end
 	
@@ -163,8 +163,8 @@ function tibia.updateTime(t)
 	local text = string.format("%02d:%02d", math.floor(sea.game.time / 60), tostring(sea.game.time % 60))
 	tibia.config.item[3].desc = "The time is "..text.."."
 
-	-- Max set 180 to not have the pitch black
-	sea.game.daylightTime = math.max(180, sea.game.time / 4)
+	-- Max set 133 to not have the pitch black
+	sea.game.daylightTime = math.max(sea.game.time / 4, 133)
 					
 	return sea.game.time
 end
@@ -175,7 +175,12 @@ function tibia.houseExpire(id)
 		return false
 	end
 
-	local player = PLAYERCACHE[house.owner]
+	local online = sea.Player.getByUSGN(house.owner)
+	local playerData, save
+	if not online then
+		playerData, save = sea.Player.dataStream(house.owner, 'usgn')
+	end
+
 	for y = house.pos1[2], house.pos2[2] do
 		for x = house.pos1[1], house.pos2[1] do
 			local ground = tibia.Item.get(x, y)
@@ -183,7 +188,17 @@ function tibia.houseExpire(id)
 			while height > 0 do
 				local item = ground[height]
 
-				player:addItem(item)
+				if online then
+					online:addItem(item)
+				else
+					if item.config.currency then
+						save('rupee', playerData.rupee + item.amount)
+					else
+						local tempInventory = tibia.Inventory.new(playerData.inventory)
+						tempInventory:addItem(item)
+						save()
+					end
+				end
 
 				height = height - 1
 			end

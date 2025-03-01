@@ -35,210 +35,276 @@ tibia.command = {
 		tibia.Item.spawnRupee(p[1], player.tileX, player.tileY)
 	end,
 
-	['w'] = function(id, p)
+	['w'] = function(player, p)
 		local target = tonumber(p[1])
-		if target and player(target, 'exists') and target ~= id then
-			table.remove(p, 1)
-			local text = table.concat(p, " ")
-			message(id, player(target, 'name') .. " <- " .. text)
-			message(target, player(id, 'name') .. " -> " .. text)
-			print(player(id, 'name') .. " -> " .. player(target, 'name') .. " : " .. text)
+		if target then 
+			local target = sea.player[target]
+
+			if target and target.id ~= player.id then
+				table.remove(p, 1)
+				local text = table.concat(p, " ")
+				player:message(target.name.." <- "..text)
+				target:message(player.name.." -> "..text)
+				print(player.name.." -> "..target.name.." : "..text)
+			end
 		end
 	end, 
 
-	['usgn'] = function(id, p)
+	['usgn'] = function(player, p)
 		p[1] = tonumber(p[1])
-		if p[1] and player(p[1], 'exists') then
-			local usgn = player(p[1], 'usgn')
-			if usgn ~= 0 then
-				message(id, PLAYERS[p[1]].name..' has a U.S.G.N. id of '..usgn..'.', '255255255')
-				return
-			else
-				message(id, PLAYERS[p[1]].name..' is not logged in to U.S.G.N. .', '255255255')
+		if p[1] then
+			local target = sea.player[p[1]]
+
+			if target then
+				local usgn = target.usgn
+				if usgn ~= 0 then
+					player:message(target.name..' has a U.S.G.N. ID of '..usgn..'.')
+				else
+					player:message(target.name..' is not logged in to U.S.G.N. .')
+				end
+
 				return
 			end
 		end
-		message(id, 'Usage: !usgn <targetid>', '255255255')
+
+		player:message('Usage: !usgn <targetid>')
 	end, 
 
-	['tutorial'] = function(id, p)
-		PLAYERS[id].Tutorial = {}
-		message(id, 'You have restarted your tutorial.', '255255255')
+	['tutorial'] = function(player, p)
+		player.tutorial = {}
+		player:message('You have restarted your tutorial.')
 	end, 
 
-	['credits'] = function(id)
-		-- if you remove this, please at least leave some credits to me, thank you.
-		message(id, 'This script is made by weiwen. Edite by Masea.')
+	['credits'] = function(player)
+		-- if you remove this, please at least leave some credits to me, thank you. - weiwen
+		player:message('This script is made by weiwen. Edited by Masea.')
 	end,
 
-	['house'] = function(id, p)
+	['house'] = function(player, p)
+		local tile = player.tile
 		local house
 		if p[1] == 'info' then
-			local tile = gettile(PLAYERS[id].x, PLAYERS[id].y)
-			local house = houses[tile.HOUSEENT or tile.HOUSE]
-			if not house then message(id, 'You are not in front of a house.', '255255255') return end
-			if not house.owner then message(id, 'This house does not have an owner. It costs $' .. house.price .. ' per 24 hours.', '255255255') return end
+			house = tibia.house[tile.houseEntrance or tile.house]
+			if not house then 
+				player:message('You are not in front of a house.') 
+				return 
+			end
+
+			if not house.owner then 
+				player:message('This house does not have an owner. It costs $' .. house.price .. ' per 24 hours.') 
+				return 
+			end
+
 			local time = house.endtime - os.time()
 			local seconds = time % 60
 			local minutes = ((time - seconds)/60) % 60
 			local hours = (time - minutes*60 - seconds) / 3600
-			message(id, 'This house is owned by '..PLAYERCACHE[house.owner].name..' and will expire in '..hours..' hours, '..minutes..' minutes It costs $' .. house.price .. ' per 24 hours .', '255255255')
+			local saveData = sea.Player.getSaveData(house.owner, 'usgn')
+			player:message('This house is owned by '..saveData.lastName..' and will expire in '..hours..' hours, '..minutes..' minutes It costs $' .. house.price .. ' per 24 hours .')
 		elseif p[1] == 'buy' then
-			if player(id, 'usgn') == 0 then message(id, 'You are not logged in to U.S.G.N. .', '255255255') return end
-			local tile = gettile(PLAYERS[id].x, PLAYERS[id].y)
-			local house = houses[tile.HOUSEENT or tile.HOUSE]
-			if not house then message(id, 'You are not in front of a house.', '255255255') return end
-			if house.owner and house.owner ~= player(id, 'usgn') then message(id, 'This house already has an owner.', '255255255') return end
-			if addmoney(id, -house.price) then
+			if player.usgn == 0 then 
+				player:message('You are not logged in to U.S.G.N. .') 
+				return 
+			end
+			
+			local house = tibia.house[tile.houseEntrance or tile.house]
+			if not house then 
+				player:message('You are not in front of a house.') 
+				return 
+			end
+			if house.owner and house.owner ~= player.usgn then 
+				player:message('This house already has an owner.') 
+				return 
+			end
+
+			if player:addRupee(-house.price) then
 				if house.endtime then
 					house.endtime = house.endtime + 86400
-					message(id, 'You have payed the rent for $' .. house.price .. ', 24 hours, in advance.', '255255255')
+					player:message('You have payed the rent for $' .. house.price .. ', 24 hours, in advance.')
 				else
-					house.owner = player(id, 'usgn')
+					house.owner = player.usgn
 					house.endtime = os.time() + 86400
-					message(id, 'You have bought this house for $' .. house.price .. ', 24 hours.', '255255255')
+					player:message('You have bought this house for $' .. house.price .. ', 24 hours.')
 				end
 			else
-				message(id, 'You do not have enough rupee. It costs $' .. house.price .. ' per 24 hours.', '255255255')
+				player:message('You do not have enough rupee. It costs $' .. house.price .. ' per 24 hours.')
 			end
+
+			player:save()
 		elseif p[1] == 'extend' then
-			if player(id, 'usgn') == 0 then message(id, 'You are not logged in to U.S.G.N. .', '255255255') return end
-			local house = houses[gettile(PLAYERS[id].x, PLAYERS[id].y).HOUSE]
-			if not house then message(id, 'You are not in a house.', '255255255') return end
-			if house.owner ~= player(id, 'usgn') then message(id, 'This house already has an owner.', '255255255') return end
-			if addmoney(id, -house.price) then
+			if player.usgn == 0 then player:message('You are not logged in to U.S.G.N. .') return end
+			house = tibia.house[tile.house]
+			if not house then 
+				player:message('You are not in a house.') 
+				return 
+			end
+
+			if house.owner ~= player.usgn then player:message('This house already has an owner.') return end
+			if player:addRupee(-house.price) then
 				house.endtime = house.endtime + 86400
-				message(id, 'You have payed the rent for $' .. house.price .. ', 24 hours in advance.', '255255255')
+				player:message('You have payed the rent for $' .. house.price .. ', 24 hours in advance.')
 			end
 		elseif p[1] == 'exit' then
-			local tile = gettile(PLAYERS[id].x, PLAYERS[id].y)
-			local house = houses[tile.HOUSE]
+			local house = tibia.house[tile.house]
 			if house then
-				setpos(id, house.ent[1]*32+16, house.ent[2]*32+16)
+				player:setPosition(tileToPixel(house.ent[1]), tileToPixel(house.ent[2]))
 				return
 			end
-			message(id, 'You are not in or infront of a house.', '255255255')
+
+			player:message('You are not in or infront of a house.')
 		elseif p[1] == 'allow' then
-			local house = houses[gettile(PLAYERS[id].x, PLAYERS[id].y).HOUSE]
-			if not house then message(id, 'You are not in a house.', '255255255') return end
-			if player(id, 'usgn') ~= house.owner then message(id, 'You are not the owner of this house.', '255255255') return end
+			house = tibia.house[tile.house]
+			if not house then 
+				player:message('You are not in a house.') 
+				return 
+			end
+
+			if player.usgn ~= house.owner then 
+				player:message('You are not the owner of this house.') 
+				return 
+			end
+
+			local saveData
 			p[2] = tonumber(p[2])
-			if not p[2] or not PLAYERCACHE[p[2]] then message(id, 'Please indicate a U.S.G.N. id to allow.', '255255255') return end
+			if not p[2] then
+				saveData = sea.Player.getSaveData(p[2], 'usgn')
+
+				if not saveData then 
+					player:message('Please indicate a U.S.G.N. ID to allow.') 
+					return 
+				end
+			end
+
 			for i, v in ipairs(house.allow) do
 				if v == p[2] then
 					table.remove(house.allow, i)
-					message(id, 'You have disallowed ' .. PLAYERCACHE[p[2]].name .. ' to enter your house.', '255255255')
+					player:message('You have disallowed ' .. saveData.lastName .. ' to enter your house.')
 					return
 				end
 			end
+
 			table.insert(house.allow, p[2])
-			message(id, 'You have allowed ' .. PLAYERCACHE[p[2]].name .. ' to enter your house.', '255255255')
+			player:message('You have allowed ' .. saveData.lastName .. ' to enter your house.')
 			table.sort(house.allow)
 		elseif p[1] == 'door' then
+			local dir = math.floor((player.rotation+45)/90)%4
+			local x, y = player.lastPosition.x, player.lastPosition.y
+			if dir == 0 then
+				y = y - 1
+			elseif dir == 1 then
+				x = x + 1
+			elseif dir == 2 then
+				y = y + 1
+			else
+				x = x - 1
+			end
+			local tile = sea.Tile.get(x, y)
+			local house, door
+			local entity = sea.Entity.get(x, y)
+			if entity and tile.house then
+				house = tibia.house[tile.house]
+				local name = entity.nameField
+				door = tonumber(name:sub(name:find('_')+1))
+			end
+
+			if not door then 
+				player:message('There is no door infront of you.') 
+				return 
+			end
+
+			if player.usgn ~= house.owner then 
+				player:message('You are not the owner of this house.') 
+				return 
+			end
+			
 			if p[2] == 'allow' then
-				local dir = math.floor((player(id, 'rot')+45)/90)%4
-				local x, y = PLAYERS[id].x, PLAYERS[id].y
-				if dir == 0 then
-					y = y - 1
-				elseif dir == 1 then
-					x = x + 1
-				elseif dir == 2 then
-					y = y + 1
-				else
-					x = x - 1
-				end
-				local tile = gettile(x, y)
-				local house, door
-				if entity(x, y, "exists") and tile.HOUSE then
-					house = houses[tile.HOUSE]
-					local name = entity(x, y, "name")
-					door = tonumber(name:sub(name:find('_')+1))
-				end
-				if not door then message(id, 'There is no door infront of you.', '255255255') return end
-				if player(id, 'usgn') ~= house.owner then message(id, 'You are not the owner of this house.', '255255255') return end
 				p[3] = tonumber(p[3])
-				if not p[3] or not PLAYERCACHE[p[3]] then message(id, 'Please indicate a U.S.G.N. id to allow.', '255255255') return end
+				local saveData
+				if not p[3] then
+					saveData = sea.Player.getSaveData(p[3], 'usgn')
+					if not saveData then 
+						player:message('Please indicate a U.S.G.N. ID to allow.') 
+						return 
+					end
+				end
+
 				for i, v in ipairs(house.doors[door]) do
 					if v == p[3] then
 						table.remove(house.doors[door], i)
-						message(id, 'You have disallowed ' .. PLAYERCACHE[p[3]].name .. ' to open this door.', '255255255')
+						player:message('You have disallowed ' .. saveData.lastName .. ' to open this door.')
 						return
 					end
 				end
 				table.insert(house.doors[door], p[3])
-				message(id, 'You have allowed ' .. PLAYERCACHE[p[3]].name .. ' to open this door.', '255255255')
+				player:message('You have allowed ' .. saveData.lastName .. ' to open this door.')
 				table.sort(house.doors[door])
 			elseif p[2] == 'list' then
-				local dir = math.floor((player(id, 'rot')+45)/90)%4
-				local x, y = PLAYERS[id].x, PLAYERS[id].y
-				if dir == 0 then
-					y = y - 1
-				elseif dir == 1 then
-					x = x + 1
-				elseif dir == 2 then
-					y = y + 1
-				else
-					x = x - 1
-				end
-				local tile = gettile(x, y)
-				local house, door
-				if entity(x, y, "exists") and tile.HOUSE then
-					house = houses[tile.HOUSE]
-					local name = entity(x, y, "name")
-					door = tonumber(name:sub(name:find('_')+1))
-				end
-				if not door then message(id, 'There is no door infront of you.', '255255255') return end
-				if player(id, 'usgn') ~= house.owner then message(id, 'You are not the owner of this house.', '255255255') return end
 				local text = 'Allowed players : '
 				for i, v in ipairs(house.doors[door]) do
-					text = text.. PLAYERCACHE[v].name .. ' (' .. v .. '), '
+					local saveData = sea.Player.getSaveData(v, 'usgn')
+					text = text.. saveData.lastName .. ' (' .. v .. '), '
 				end
 				text = #text == 18 and 'No players are allowed.' or text:sub(1, -3)
-				message(id, text, '255255255')
-			else
-				message(id, 'HOUSE DOOR tibia.command:', '255100100')
-				message(id, '!house door allow <usgnid> - allows the person to open the door you are facing', '255100100')
-				message(id, '!house door list - lists the people allowed to open the door you are facing', '255100100')
+				player:message(text)
 			end
 		elseif p[1] == 'list' then
-			local house = houses[gettile(PLAYERS[id].x, PLAYERS[id].y).HOUSE]
-			if not house then message(id, 'You are not in a house.', '255255255') return end
-			if player(id, 'usgn') ~= house.owner then message(id, 'You are not the owner of this house.', '255255255') return end
+			local house = tibia.house[tile.house]
+			if not house then
+				player:message('You are not in a house.') 
+				return 
+			end
+
+			if player.usgn ~= house.owner then 
+				player:message('You are not the owner of this house.') 
+				return 
+			end
+
 			local text = 'Allowed players : '
 			for i, v in ipairs(house.allow) do
-				text = text.. PLAYERCACHE[v].name .. ' (' .. v .. '), '
+				local saveData = sea.Player.getSaveData(v, 'usgn')
+				text = text.. saveData.lastName .. ' (' .. v .. '), '
 			end
 			text = #text == 18 and 'No players are allowed.' or text:sub(1, -3)
-			message(id, text, '255255255')
+			player:message(text)
 		elseif p[1] == 'transfer' then
-			local house = houses[gettile(PLAYERS[id].x, PLAYERS[id].y).HOUSE]
-			if not house then message(id, 'You are not in a house.', '255255255') return end
-			if player(id, 'usgn') ~= house.owner then message(id, 'You are not the owner of this house.', '255255255') return end
-			p[2] = tonumber(p[2])
-			if not p[2] then message(id, 'That user is not online.', '255255255') return end
-			local target
-			for _, v in ipairs(player(0, 'table')) do
-				if player(v, 'usgn') == p[2] then
-					target = v
-					break
-				end
+			local house = tibia.house[tile.house]
+			if not house then 
+				player:message('You are not in a house.') 
+				return 
 			end
-			if not target then message(id, 'That user is not online.', '255255255') return end
+
+			if player.usgn ~= house.owner then 
+				player:message('You are not the owner of this house.') 
+				return 
+			end
+			
+			p[2] = tonumber(p[2])
+			if not p[2] then 
+				player:message('Please indicate player ID to transfer.') 
+				return 
+			end
+
+			local target = sea.player[p[2]]
+			if not target then 
+				player:message('That user is not online.') 
+				return 
+			end
+
 			house.owner = p[2]
-			message(id, 'You have transfered the ownership of this house to ' .. PLAYERCACHE[p[2]].name .. '.', '255255255')
-			message(target, PLAYERCACHE[p[2]].name .. ' has transfered the ownership of this house to you.', '255255255')
+			player:message('You have transfered the ownership of this house to ' .. target.name .. '.')
+			target:message(player.name .. ' has transfered the ownership of this house to you.')
 		else
-			message(id, 'HOUSE tibia.command:', '255100100')
-			message(id, '!house - gives information about all house commands', '255100100')
-			message(id, '!house info - use infront of a house to give you information about it.', '255100100')
-			message(id, '!house buy - buys the house you are infront of', '255100100')
-			message(id, '!house extend - extends the ownership of the house you are in', '255100100')
-			message(id, '!house exit - use in a house to exit it', '255100100')
-			message(id, '!house allow <usgnid> - allows the person to enter your house', '255100100')
-			message(id, '!house door allow <usgnid> - allows the person to open the door you are facing', '255100100')
-			message(id, '!house door list - lists the people allowed to open the door you are facing', '255100100')
-			message(id, '!house list - lists the people allowed to enter your house', '255100100')
-			message(id, '!house transfer <usgnid> - transfers ownership to that player', '255100100')
+			player:message('HOUSE commands:')
+			player:message('!house - gives information about all house commands')
+			player:message('!house info - use infront of a house to give you information about it.')
+			player:message('!house buy - buys the house you are infront of')
+			player:message('!house extend - extends the ownership of the house you are in')
+			player:message('!house exit - use in a house to exit it')
+			player:message('!house allow <usgnid> - allows the person to enter your house')
+			player:message('!house door allow <usgnid> - allows the person to open the door you are facing')
+			player:message('!house door list - lists the people allowed to open the door you are facing')
+			player:message('!house list - lists the people allowed to enter your house')
+			player:message('!house transfer <usgnid> - transfers ownership to that player')
 		end
 	end, 
 }
@@ -248,9 +314,10 @@ local cmds = "The commands are : "
 for i, v in pairs(tibia.command) do
 	cmds = cmds .. i .. ", "
 end
-cmds = cmds:sub(-3)
-tibia.command.help = function(id)
-	message(id, cmds)
+cmds = cmds:sub(1, -3)
+tibia.command.help = function(player)
+	print(cmds)
+	player:message(cmds)
 end
 tibia.command.cmds = tibia.command.help
 tibia.command.commands = tibia.command.help

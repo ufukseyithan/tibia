@@ -16,6 +16,12 @@ sea.addEvent("onHookJoin", function(player)
 		equipmentImage = {}, 
 		exhaust = {}
 	}
+
+	player.lastName = player.name
+end, -1)
+
+sea.addEvent("onHookName", function(player, oldName, newName)
+	player.lastName = newName
 end, -1)
 
 sea.addEvent("onHookWalkover", function()
@@ -51,7 +57,8 @@ sea.addEvent("onHookMovetile", function(player, x, y)
 			return
 		elseif not (player.usgn == house.owner or table.contains(house.allow, player.usgn)) then
 			player:setPosition(tileToPixel(house.ent[1]), tileToPixel(house.ent[2]))
-			player:message("You are not invited into " .. PLAYERCACHE[house.owner].name .. "'s house. Type \"!house\" for a list of house commands.", "255255255")
+			local saveData = sea.Player.getSaveData(house.owner, 'data')
+			player:message("You are not invited into " .. saveData.lastName .. "'s house. Type \"!house\" for a list of house commands.", "255255255")
 			return
 		end
 	end
@@ -76,7 +83,7 @@ sea.addEvent("onHookMovetile", function(player, x, y)
 end, -1)
 
 sea.addEvent("onHookSay", function(player, words)
-	if player:exhaust("talk") then 
+	if not player:exhaust("talk") then 
 		return 1 
 	end
 
@@ -213,7 +220,13 @@ sea.addEvent("onHookMinute", function()
 				end
 
 				if not online then
-					table.insert(PLAYERCACHE[v.owner].Info, "Your house has expired. All items will be sent to your inventory.")
+					local saveData, save = sea.Player.dataStream(v.owner, 'usgn')
+
+					if saveData then
+						local info = saveData['info']
+						table.insert(info, "Your house has expired. All items will be sent to your inventory.")
+						save()
+					end
 				else
 					online:message("Your house has expired. All items will be sent to your inventory.")
 					--updateHUD(online)
@@ -309,6 +322,7 @@ end, 1)
 
 sea.addEvent("onHookUse", function(player, event, data, x, y)
 	local dir = math.floor((player.rotation + 45) / 90) % 4
+	local x, y = player.lastPosition.x, player.lastPosition.y
 	if dir == 0 then
 		y = y - 1
 	elseif dir == 1 then
@@ -320,10 +334,10 @@ sea.addEvent("onHookUse", function(player, event, data, x, y)
 	end
 
 	local tile = sea.Tile.get(x, y)
-	if tile and tile.zone.HOUSE then
-		local house = tibia.house[tile.zone.HOUSE]
-		local entity = sea.Entity.get(x, y)
-		local name = entity.name
+	local entity = sea.Entity.get(x, y)
+	if entity and tile and tile.house then
+		local house = tibia.house[tile.house]
+		local name = entity.nameField
 		local door = tonumber(name:sub(name:find('_')+1))
 		player:showTutorial("Door #1", "This door belongs to a house. The house owner can specify who is allowed to open the door.")
 

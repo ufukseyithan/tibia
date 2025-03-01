@@ -128,7 +128,8 @@ return {
 			respawnPosition = {784, 240},
 			tutorial = {},
 			info = {},
-			lastPosition = {}
+			lastPosition = {},
+			lastName = ""
 		}
 	},
 
