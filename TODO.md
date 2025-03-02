@@ -1,7 +1,7 @@
 # Refactor
 * Ground item save
 * Reverse equipment array slots (from Head to rest)
-- Commands
+* Commands
 - NPCs (Make them Entity)
 - Entity parent class (Monster and NPC will inherit from it)
 - Menu for stats

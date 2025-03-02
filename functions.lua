@@ -32,11 +32,7 @@ function tibia.explosion(x, y, size, damage, player)
 	sea.explosion(x, y, size, damage, player.id)
 end
 
-local mapSavePath = sea.app.tibia.path.mapSave
-
 function tibia.saveServer()
-	local file = io.open(mapSavePath, 'w+') or io.tmpfile()
-	
 	local tmp = {}
 	local groundItems = tibia.groundItems
 	for y = 0, sea.map.ySize do
@@ -45,6 +41,7 @@ function tibia.saveServer()
 				if groundItems[y][x] and groundItems[y][x][1] then
 					tmp[y] = tmp[y] or {}
 					tmp[y][x] = {}
+
 					for j = 1, #groundItems[y][x] do
 						local item = groundItems[y][x][j]
 						tmp[y][x][j] = {item.id, item.attributes}
@@ -54,10 +51,8 @@ function tibia.saveServer()
 		end
 	end
 
-	file:write("-- GROUND ITEMS --\n\n")
 	for k, v in pairs(tmp) do
-		local text = "TMPGROUNDITEMS[" .. table.valToString(k) .. "] = " .. table.valToString(v) .. "\n"
-		file:write(text)
+		sea.game.tempGroundItems[k] = v
 	end
 	
 	local tmp = {}
@@ -66,48 +61,29 @@ function tibia.saveServer()
 			tmp[i] = {owner = v.owner, endtime = v.endtime, allow = v.allow, doors = v.doors}
 		end
 	end
-	file:write("\n\n-- houses --\n\n")
+
 	for k, v in pairs(tmp) do
-		local text = "TMPHOUSES[" .. table.valToString(k) .. "] = " .. table.valToString(v) .. "\n"
-		file:write(text)
+		sea.game.tempHouses[k] = v
 	end
-	file:close()
-	
-	--[[file:write("\n\n-- GLOBAL STORAGES --\n\n")
-	for k, v in pairs(tibia.global) do
-		local text = "GLOBAL[" .. table.valToString(k) .. "] = " .. table.valToString(v) .. "\n"
-		file:write(text)
-	end
-	file:close()]]
 end
 
 function tibia.loadServer()
-	TMPGROUNDITEMS = {}
-	TMPHOUSES = {}
-
-	if io.exists(mapSavePath) then
-		dofile(mapSavePath)
-	
-		for y = 0, sea.map.ySize do
-			if TMPGROUNDITEMS[y] then
-				for x = 0, sea.map.xSize do
-					if TMPGROUNDITEMS[y][x] then
-						for _, item in ipairs(TMPGROUNDITEMS[y][x]) do
-							tibia.Item.spawn(item[1], x, y, item[2])
-						end
+	for y = 0, sea.map.ySize do
+		if sea.game.tempGroundItems[y] then
+			for x = 0, sea.map.xSize do
+				if sea.game.tempGroundItems[y][x] then
+					for _, item in ipairs(sea.game.tempGroundItems[y][x]) do
+						tibia.Item.spawn(item[1], x, y, item[2])
 					end
 				end
 			end
 		end
-	
-		for i, v in pairs(TMPHOUSES) do
-			for k, l in pairs(v) do
-				tibia.house[i][k] = l
-			end
+	end
+
+	for i, v in pairs(sea.game.tempHouses) do
+		for k, l in pairs(v) do
+			tibia.house[i][k] = l
 		end
-	
-		TMPGROUNDITEMS = nil
-		TMPHOUSES = nil
 	end
 end
 

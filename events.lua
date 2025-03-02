@@ -1,11 +1,12 @@
-tibia.serverLoaded = false
+sea.addEvent('onGameLoad', function()
+	tibia.loadServer()
+end)
+
+sea.addEvent('onGameSave', function()
+	tibia.saveServer()
+end)
 
 sea.addEvent("onHookJoin", function(player)
-	if not tibia.mapLoaded then
-		timerEx(5000, 'tibia.loadServer')
-		tibia.serverLoaded = true
-	end
-
 	player.tmp = {
 		inventory = tibia.Inventory.new(player.inventory),
 		equipment = tibia.Equipment.new(player.equipment),
@@ -242,10 +243,6 @@ sea.addEvent("onHookMinute", function()
 				end
 			end
 		end
-	end
-
-	if sea.game.password == "" and tibia.minutes % 5 == 0 and tibia.serverLoaded then
-		tibia.saveServer()
 	end
 end, -1)
 

@@ -232,7 +232,7 @@ sea.addEvent("onHookSay", function(player, words)
 
 			return 1
 		elseif command =='v' then
-			tibia.saveServer()
+			sea.game:save()
 
 			player:message("Saved server!")
 

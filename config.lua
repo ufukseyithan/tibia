@@ -140,7 +140,9 @@ return {
 
 		data = {
 			rain = 0,
-			time = 0
+			time = 0,
+			tempGroundItems = {},
+			tempHouses = {}
 		}
 	},
 

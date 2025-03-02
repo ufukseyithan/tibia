@@ -7,9 +7,7 @@ return {
     namespace = "tibia",
 
     path = {
-        gfx = "gfx/weiwen/",
-        
-        mapSave = "sys/lua/sea-framework/app/tibia/saves/"..sea.map.name.. ".lua"
+        gfx = "gfx/weiwen/"
     },
 
     scripts = {
