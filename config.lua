@@ -16,8 +16,6 @@ tibia.config = {
 			return (level) ^ 3 - 3 * (level) ^ 2 + 8 * (level)
 		end
 	}, 
-	
-	stats = {'Experience', 'Level', 'Money'}, --ignore
 
 	-- slot names for each slot. can be customised.
 	-- the order is important since the last item will always be rendered last
@@ -38,8 +36,6 @@ tibia.config = {
 	hudTxt = {
 		safe = 49, 
 	}, 
-	-- pixels to leave between each line of hudtxt
-	pixels = 14, 
 	
 	-- used for ^[1-9a-z] colour codes
 	colours = {
