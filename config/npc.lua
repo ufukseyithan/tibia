@@ -1,49 +1,127 @@
 tibia.config.npc = {
-	[1] = {"Robbie", pos={160, 144}, rot=180, 
-	trade={{2, 15}, {3, 15}}, 
-	greet="Need stuff, %s?", bye="Come again next time!", image="npc1"}, 
-	
-	[2] = {"Norman", pos={320, 144}, rot=180, 
-	trade={{300, 100}, {301, 200}, {302, 150}, {303, 100}, {305, 500}, {304, 850}, {306, 900}}, 
-	greet="What do you need?", bye="See you again!", image="npc2"}, 
-	
-	[3] = {"Federigo", pos={624, 208}, rot=270, image="npc3"}, 
-	
-	[4] = {"Francesco",pos={400, 2800}, rot=270, image="npc3"}, 
-	
-	[5] = {"Frodo", pos={2512, 144}, rot=180, trade={{400, 1500}, {401, 1500}, {402, 1500}, {403, 1500}, {-400, 500}, {-401, 500}, {-402, 500}, {-403, 500}}, 
-	greet="Hey! Get some horses, they're supposed to be $5000 each!", image="npc5"}, 
-	
-	[6] = {"Heckie", pos={2608, 1760}, rot=0, trade={{200, 1000}, {201, 1000}, {207, 1000}, {208, 1000}, {203, 1000}, {210, 700}, {214, 700}, {218, 700}, {219, 700}}, 
-	greet="%s! Welcome!", bye="Aww, don't need more furniture?", image="npc6"}, 
-	
-	[7] = {"Cosimo", pos={2640, 448}, rot=270, image="npc7"}, 
-	
-	[8] = {"Martin", pos={2640, 672}, rot=270, 
-	trade={{-300, 40}, {-301, 80}, {-302, 60}, {-303, 40}, {-305, 200}, {-304, 350}, {-306, 400}}, greet="Selling stuff?", bye="Come to me when you find things to sell!", image="npc8"}, 
-	
-	[9] = {"Enki", 		pos={2736, 1312}, 	rot=270, image="npc3"}, 
-	
-	[10] = {"Vieno", 		pos={2832, 1840}, 	rot=180, image="npc4"}, 
-	
-	[11] = {"Lucas", 		pos={3632, 2416}, 	rot=180, image="npc4"}, 
-	
-	[12] = {"Finnbarr", 		pos={4192, 1648}, 	rot=0, image="npc3"},
-	
-	[13] = {"Shun", 		pos={4128, 2176}, 	rot=180, image="npc2"}, 
-	
-	[14] = {"Wibo", 		pos={3536, 1200}, 	rot=180, image="npc2"}, 
-	
-	[15] = {"Eustachio", pos={4144, 1776}, rot=180, 
-	trade={{5, 10}}, 
-	greet="%s, any pizzas for you?", bye="Take a seat, if you want.", image="npc8"}, 
-	
-	[16] = {"Demoncharm", pos={2400, 3984}, rot=180, 
-	trade={{100,100}, {101,100}, {103,100}, {104,100}, {106,100}, {102,30}, {105,100}, }, 
-	greet="Want some runes..?", bye="Farewell.", image="npc4"}, 
-	
-	[17] = {"Barnsower", pos={3120, 976}, rot=180, 
-	trade={{100,100}, {101,100}, {103,100}, {104,100}, {106,100}, {102,30}, {105,100}, }, image="npc3"}, 
+    [1] = {
+        name = "Robbie",
+        pos = {160, 144},
+        rot = 180,
+        trade = {{2, 15}, {3, 15}},
+        greet = "Need stuff, %s?",
+        bye = "Come again next time!",
+        image = "gfx/weiwen/npc1.png"
+    },
+    [2] = {
+        name = "Norman",
+        pos = {320, 144},
+        rot = 180,
+        trade = {{300, 100}, {301, 200}, {302, 150}, {303, 100}, {305, 500}, {304, 850}, {306, 900}},
+        greet = "What do you need?",
+        bye = "See you again!",
+        image = "gfx/weiwen/npc2.png"
+    },
+    [3] = {
+        name = "Federigo",
+        pos = {624, 208},
+        rot = 270,
+        image = "gfx/weiwen/npc3.png"
+    },
+    [4] = {
+        name = "Francesco",
+        pos = {400, 2800},
+        rot = 270,
+        image = "gfx/weiwen/npc3.png"
+    },
+    [5] = {
+        name = "Frodo",
+        pos = {2512, 144},
+        rot = 180,
+        trade = {{400, 1500}, {401, 1500}, {402, 1500}, {403, 1500}, {-400, 500}, {-401, 500}, {-402, 500}, {-403, 500}},
+        greet = "Hey! Get some horses, they're supposed to be $5000 each!",
+        image = "gfx/weiwen/npc5.png"
+    },
+    [6] = {
+        name = "Heckie",
+        pos = {2608, 1760},
+        rot = 0,
+        trade = {{200, 1000}, {201, 1000}, {207, 1000}, {208, 1000}, {203, 1000}, {210, 700}, {214, 700}, {218, 700}, {219, 700}},
+        greet = "%s! Welcome!",
+        bye = "Aww, don't need more furniture?",
+        image = "gfx/weiwen/npc6.png"
+    },
+    [7] = {
+        name = "Cosimo",
+        pos = {2640, 448},
+        rot = 270,
+        image = "gfx/weiwen/npc7.png"
+    },
+    [8] = {
+        name = "Martin",
+        pos = {2640, 672},
+        rot = 270,
+        trade = {{-300, 40}, {-301, 80}, {-302, 60}, {-303, 40}, {-305, 200}, {-304, 350}, {-306, 400}},
+        greet = "Selling stuff?",
+        bye = "Come to me when you find things to sell!",
+        image = "gfx/weiwen/npc8.png"
+    },
+    [9] = {
+        name = "Enki",
+        pos = {2736, 1312},
+        rot = 270,
+        image = "gfx/weiwen/npc3.png"
+    },
+    [10] = {
+        name = "Vieno",
+        pos = {2832, 1840},
+        rot = 180,
+        image = "gfx/weiwen/npc4.png"
+    },
+    [11] = {
+        name = "Lucas",
+        pos = {3632, 2416},
+        rot = 180,
+        image = "gfx/weiwen/npc4.png"
+    },
+    [12] = {
+        name = "Finnbarr",
+        pos = {4192, 1648},
+        rot = 0,
+        image = "gfx/weiwen/npc3.png"
+    },
+    [13] = {
+        name = "Shun",
+        pos = {4128, 2176},
+        rot = 180,
+        image = "gfx/weiwen/npc2.png"
+    },
+    [14] = {
+        name = "Wibo",
+        pos = {3536, 1200},
+        rot = 180,
+        image = "gfx/weiwen/npc2.png"
+    },
+    [15] = {
+        name = "Eustachio",
+        pos = {4144, 1776},
+        rot = 180,
+        trade = {{5, 10}},
+        greet = "%s, any pizzas for you?",
+        bye = "Take a seat, if you want.",
+        image = "gfx/weiwen/npc8.png"
+    },
+    [16] = {
+        name = "Demoncharm",
+        pos = {2400, 3984},
+        rot = 180,
+        trade = {{100, 100}, {101, 100}, {103, 100}, {104, 100}, {106, 100}, {102, 30}, {105, 100}},
+        greet = "Want some runes..?",
+        bye = "Farewell.",
+        image = "gfx/weiwen/npc4.png"
+    },
+    [17] = {
+        name = "Barnsower",
+        pos = {3120, 976},
+        rot = 180,
+        trade = {{100, 100}, {101, 100}, {103, 100}, {104, 100}, {106, 100}, {102, 30}, {105, 100}},
+        image = "gfx/weiwen/npc3.png"
+    }
 }
 
 tibia.config.npc[3].func = function(npc, id, words, state)
@@ -412,65 +490,9 @@ tibia.config.npc[17].func = function(npc, id, words, state)
 		PLAYERS[id].tmp.npcstate = nil
 	end
 end
-for i, j in ipairs(tibia.config.npc) do
-	j.image = image("gfx/weiwen/" .. (j.image or "npc1") .. ".png", 0, 0, 0)
-	imagepos(j.image, j.pos[1], j.pos[2], j.rot)
-	if j.trade then
-		local text = j[1] .. ","
-		for k, l in ipairs(j.trade) do
-			local itemid
-			if l[1] < 0 then
-				itemid = -l[1]
-				text = text .. "sell "
-			else
-				itemid = l[1]
-				text = text .. "buy "
-			end
-			text = text .. tibia.config.item[itemid].name .. "|" .. l[2] .. ","
-		end
-		j.menu = text
-	end
-end
-function contains(words, text) words = words:lower(); return words == text or words:find(text .. " ") or words:find(" " .. text) end
-function NPCspeak(npcid, words) return radiusmsg(string.format("�255255100%s %s says : %s", os.date'%X', tibia.config.npc[npcid][1], words), tibia.config.npc[npcid].pos[1], tibia.config.npc[npcid].pos[2]) end
-function setNPCpos(npcid, x, y, rot)
-	tibia.config.npc[npcid].rot = rot or tibia.config.npc[npcid].rot
-	tibia.config.npc[npcid].pos = (x and y) and {x*32+16, y*32+16} or tibia.config.npc[npcid].pos
-	imagepos(tibia.config.npc[npcid].image, tibia.config.npc[npcid].pos[1], tibia.config.npc[npcid].pos[2], tibia.config.npc[npcid].rot)
-end
 
 --[[
-addhook("say", "NPCsay")
-function NPCsay(id, words)
-	words = words:lower()
-	if PLAYERS[id].tmp.npcstate then
-		local v = tibia.config.npc[PLAYERS[id].tmp.npcstate[1]]
-		--if inArea(player(id, "x"), player(id, "y"), v.pos[1]-96, v.pos[2]-96, v.pos[1]+96, v.pos[2]+96) then
-			--tibia.config.npc[PLAYERS[id].tmp.npcstate[1]].func(PLAYERS[id].tmp.npcstate[1], id, words, PLAYERS[id].tmp.npcstate[2])
-			--[[return
-		else
-			PLAYERS[id].tmp.npcstate = nil
-		end
-	end
-	if contains(words, "hi") or contains(words, "hello") or contains(words, "yo") or contains(words, "hey") then
-		for k, v in ipairs(tibia.config.npc) do
-			if inArea(player(id, "x"), player(id, "y"), v.pos[1]-96, v.pos[2]-96, v.pos[1]+96, v.pos[2]+96) then
-				if v.func then
-					v.func(k, id, "hi")
-				elseif v.menu then
-					menu(id, v.menu)
-				else
-					NPCspeak(k, "Hello, I'm busy right now, speak to me later.")
-					break
-				end
-				if v.greet then
-					NPCspeak(k, string.format(v.greet, player(id, "name")))
-				end
-				break
-			end
-		end
-	end
-end
+
 addhook("menu", "NPCmenu")
 function NPCmenu(id, title, button)
 	for i, v in ipairs(tibia.config.npc) do

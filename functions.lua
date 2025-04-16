@@ -51,8 +51,12 @@ function tibia.saveServer()
 		end
 	end
 
-	for k, v in pairs(tmp) do
-		sea.game.tempGroundItems[k] = v
+	if table.isEmpty(tmp) then
+		sea.game.tempGroundItems = {}
+	else
+		for k, v in pairs(tmp) do
+			sea.game.tempGroundItems[k] = v
+		end
 	end
 	
 	local tmp = {}
