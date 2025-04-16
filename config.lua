@@ -152,8 +152,6 @@ return {
 			fow = 0,
 			usgnOnly = 1,
 			maxClientsIP = 2,
-			autoMode = 0,
-			mode = 1,
 			idleKick = 0,
 			hudScale = 1,
 			hud = 65,
