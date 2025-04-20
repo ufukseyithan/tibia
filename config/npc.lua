@@ -124,411 +124,381 @@ tibia.config.npc = {
     }
 }
 
-tibia.config.npc[3].func = function(npc, id, words, state)
+local function contains(words, text) 
+	words = words:lower(); 
+	return words == text or words:find(text .. " ") or words:find(" " .. text) 
+end
+
+tibia.config.npc[3].func = function(npc, player, words, state)
 	if words == "hi" then
-		NPCspeak(npc, "Greetings! Say 'rest' if you need to take a break.")
-		PLAYERS[id].tmp.npcstate = {npc, 1}
+		npc:speak("Hello! I'm looking for my brother, Francesco. Have you seen him?")
+		player.tmp.npcState = {npc, 1}
 	elseif contains(words, "bye") then
-		NPCspeak(npc, "Goodbye.")
-		PLAYERS[id].tmp.npcstate = nil
+		npc:speak("Goodbye.")
+		player.tmp.npcState = nil
 	elseif state == 1 then
 		if contains(words, "rest") then
-			NPCspeak(npc, "Would you like to rest in the inn for $10?")
-			PLAYERS[id].tmp.npcstate = {npc, 2}
+			npc:speak("Would you like to rest in the inn for $10?")
+			player.tmp.npcState = {npc, 2}
 		elseif contains(words, "help") or contains(words, "quest") or contains(words, "mission") then
-			NPCspeak(npc, "I don't really need your help, but I haven't seen my brother in a long time.")
+			npc:speak("I don't really need your help, but I haven't seen my brother in a long time.")
 		elseif contains(words, "brother") or contains(words, "mountain") or contains(words, "francesco") then
-			if PLAYERS[id].FederigoBrother then
-				if PLAYERS[id].FederigoBrother == 4 then
-					NPCspeak(npc, "What did he say?")
-					PLAYERS[id].tmp.npcstate = {npc, 3}
-				elseif PLAYERS[id].FederigoBrother == 0 then
-					NPCspeak(npc, "Oh, I hope he's living well in the mountain.")
+			if player.federigoBrother then
+				if player.federigoBrother == 4 then
+					npc:speak("What did he say?")
+					player.tmp.npcState = {npc, 3}
+				elseif player.federigoBrother == 0 then
+					npc:speak("Oh, I hope he's living well in the mountain.")
 				else
-					NPCspeak(npc, "My brother went to the mountain in the south, if you find him, let him know that I'm looking for him.")
+					npc:speak("My brother went to the mountain in the south, if you find him, let him know that I'm looking for him.")
 				end
 			else
-				NPCspeak(npc, "My brother went to the mountain in the south, if you find him, let him know that I'm looking for him.")
-				PLAYERS[id].FederigoBrother = 1
+				npc:speak("My brother went to the mountain in the south, if you find him, let him know that I'm looking for him.")
+				player.federigoBrother = 1
 			end
 		end
 	elseif state == 2 then
 		if contains(words, "yes") then
-			if addmoney(id, -10) then
-				message(id, "You have lost $10.", "255255255")
-				NPCspeak(npc, "Have a good rest!")
-				parse("setpos " .. id .. " 784 112")
-				PLAYERS[id].Spawn = {784, 240}
-				PLAYERS[id].tmp.npcstate = nil
+			if player:addRupee(-10) then
+				player:message("You have lost $10.", sea.Color.white)
+				npc:speak("Have a good rest!")
+				player:setPosition(784, 240)
+				player.respawnPosition = {784, 240}
+				player.tmp.npcState = nil
 			else
-				NPCspeak(npc, "Don't try to enter without paying!")
-				PLAYERS[id].tmp.npcstate = nil
+				npc:speak("Don't try to enter without paying!")
+				player.tmp.npcState = nil
 			end
 		elseif contains(words, "no") then
-			NPCspeak(npc, "Alright then.")
-			PLAYERS[id].tmp.npcstate = nil
+			npc:speak("Alright then.")
+			player.tmp.npcState = nil
 		end
 	elseif state == 3 then
 		if contains(words, "sorry") or contains(words, "apologise") or contains(words, "apologize") then
-			addmoney(id, 300)
-			message(id, "You have recieved $300.", "255255255")
-			NPCspeak(npc, "Really? He's apologising to me... Thank's for you help! Here's a small token of appreciation from me.")
-			PLAYERS[id].FederigoBrother = 0
-			PLAYERS[id].tmp.npcstate = nil
+			player:addRupee(300)
+			player:message("You have recieved $300.", sea.Color.white)
+			npc:speak("Really? He's apologising to me... Thank's for you help! Here's a small token of appreciation from me.")
+			player.federigoBrother = 0
+			player.tmp.npcState = nil
 		end
 	end
 end
-tibia.config.npc[4].func = function(npc, id, words, state)
-	if contains(words, "hi") then
-		NPCspeak(npc, "...")
-		PLAYERS[id].tmp.npcstate = {npc, 1}
-	elseif contains(words, "bye") then
-		NPCspeak(npc, "...")
-		PLAYERS[id].tmp.npcstate = nil
-	elseif state == 1 then
-		if PLAYERS[id].FederigoBrother then
+
+tibia.config.npc[4].func = function(npc, player, words, state)
+    if words == "hi" then
+        npc:speak("...")
+        player.tmp.npcState = {npc, 1}
+    elseif contains(words, "bye") then
+        npc:speak("...")
+        player.tmp.npcState = nil
+    elseif state == 1 then
+		if player.federigoBrother then
 			if contains(words, "brother") or contains(words, "federigo") then
-				if PLAYERS[id].FederigoBrother == 1 or PLAYERS[id].FederigoBrother == 2 then
-					NPCspeak(npc, "Don't talk about him. Its dark here, I need a torch.")
-					PLAYERS[id].FederigoBrother = 2
-				elseif PLAYERS[id].FederigoBrother == 3 then
-					NPCspeak(npc, "Don't talk about him. I feel a little hungry now, can you please get me an apple?")
-				elseif PLAYERS[id].FederigoBrother == 4 then
-					NPCspeak(npc, "Do you really want to know about my brother?")
-					PLAYERS[id].tmp.npcstate = {npc, 2}
-				elseif PLAYERS[id].FederigoBrother == 0 then
-					NPCspeak(npc, "Thanks for helping me!")
+				if player.federigoBrother == 1 or player.federigoBrother == 2 then
+					npc:speak("Don't talk about him. It's dark here, I need a torch.")
+					player.federigoBrother = 2
+				elseif player.federigoBrother == 3 then
+					npc:speak("Don't talk about him. I feel a little hungry now, can you please get me an apple?")
+				elseif player.federigoBrother == 4 then
+					npc:speak("Do you really want to know about my brother?")
+					player.tmp.npcState = {npc, 2}
+				elseif player.federigoBrother == 0 then
+					npc:speak("Thanks for helping me!")
 				else
-					NPCspeak(npc, "Yes, that's him. Can you tell him that I'm looking for him?")
+					npc:speak("Yes, that's him. Can you tell him that I'm looking for him?")
 				end
 			elseif contains(words, "torch") then
-				if PLAYERS[id].FederigoBrother == 2 then
-					if removeitem(id, 2) then
-						NPCspeak(npc, "Thank you! However, I feel a little hungry now, can you please get me an apple?")
-						PLAYERS[id].FederigoBrother = 3
-						return
+				if player.federigoBrother == 2 then
+					if player:removeItem(2) then
+						npc:speak("Thank you! However, I feel a little hungry now, can you please get me an apple?")
+						player.federigoBrother = 3
+					else
+						npc:speak("It's dark here, I need a torch.")
 					end
+				else
+					npc:speak("It's dark here, I need a torch.")
 				end
-				NPCspeak(npc, "Its dark here, I need a torch.")
 			elseif contains(words, "apple") then
-				if PLAYERS[id].FederigoBrother == 3 then
-					if removeitem(id, 1) then
-						PLAYERS[id].FederigoBrother = 4
-						NPCspeak(npc, "Oh thank you! Do you really want to know about my brother?")
-						PLAYERS[id].tmp.npcstate = {npc, 2}
-						return
+				if player.federigoBrother == 3 then
+					if player:removeItem(1) then
+						player.federigoBrother = 4
+						npc:speak("Oh thank you! Do you really want to know about my brother?")
+						player.tmp.npcState = {npc, 2}
+					else
+						npc:speak("Mmm ... If only I could have an apple.")
 					end
-					NPCspeak(npc, "Mmm ... If only I could have an apple.")
 				end
 			end
 		else
-			NPCspeak(npc, "I have a brother, but he can't be found anywhere.")
+			npc:speak("I have a brother, but he can't be found anywhere.")
 		end
-	elseif state == 2 then
-		NPCspeak(npc, "My brother's name is Federigo. I left town after we fell out and ")
-		NPCspeak(npc, "we never talked since. Tell him that I'm sorry, please.")
-		PLAYERS[id].tmp.npcstate = {4, 1}
-	end
-end
-tibia.config.npc[7].func = function(npc, id, words, state)
-	if contains(words, "hi") then
-		if PLAYERS[id]["CheeseQuest"] then
-			if PLAYERS[id]["CheeseQuest"] == 0 then
-				NPCspeak(npc, "Hello, there!")
-			else
-				NPCspeak(npc, "Did you get them?")
-				PLAYERS[id].tmp.npcstate = {npc, 3}
-			end
-		else
-			NPCspeak(npc, "Hello. Hey, you look like you have a lot of spare time, do you?")
-			PLAYERS[id].tmp.npcstate = {npc, 1}
-		end
-	elseif contains(words, "bye") then
-		NPCspeak(npc, "Bye.")
-		PLAYERS[id].tmp.npcstate = nil
-	elseif state == 1 then
-		if contains(words, "yes") then
-			NPCspeak(npc, "Oh! Then, you can do me a favour, right?")
-			PLAYERS[id].tmp.npcstate = {npc, 2}
-		else
-			NPCspeak(npc, "Nevermind, then.")
-			PLAYERS[id].tmp.npcstate = nil
-		end
-	elseif state == 2 then
-		if contains(words, "yes") then
-			NPCspeak(npc, "Thanks! Well, I'm currently working, but I haven't had any meals!")
-			NPCspeak(npc, "Can you get me 10 slices of cheese? I heard that Ratatas carry them around frequently.")
-			PLAYERS[id]["CheeseQuest"] = 1
-			PLAYERS[id].tmp.npcstate = {npc, 1}
-		else
-			NPCspeak(npc, "Nevermind, then.")
-			PLAYERS[id].tmp.npcstate = nil
-		end
-	elseif state == 3 then
-		if contains(words, "yes") then
-			if removeitem(id, 4, 10, true) then
-				addmoney(id, 300)
-				message(id, "You have recieved $300.", "255255255")
-				NPCspeak(npc, "Thanks! Here's a reward, I earn much more than that anyway.")
-				PLAYERS[id]["CheeseQuest"] = 0
-				PLAYERS[id].tmp.npcstate = {npc, 0}
-			else
-				NPCspeak(npc, "I need 10 slices of cheese, now!")
-				PLAYERS[id].tmp.npcstate = nil
-			end
-		else
-			NPCspeak(npc, "Well? What are you waiting for?")
-			PLAYERS[id].tmp.npcstate = nil
-		end
-	end
-end
-tibia.config.npc[9].func = function(npc, id, words, state)
-	if words == "hi" then
-		NPCspeak(npc, "Welcome! Say 'rest' if you need to take a break.")
-		PLAYERS[id].tmp.npcstate = {npc, 1}
-	elseif contains(words, "bye") then
-		NPCspeak(npc, "Goodbye.")
-		PLAYERS[id].tmp.npcstate = nil
-	elseif state == 1 then
-		if contains(words, "rest") then
-			NPCspeak(npc, "Would you like to rest in the inn for $10?")
-			PLAYERS[id].tmp.npcstate = {npc, 2}
-		end
-	elseif state == 2 then
-		if contains(words, "yes") then
-			if addmoney(id, -10) then
-				message(id, "You have lost $10.", "255255255")
-				NPCspeak(npc, "Have a good rest!")
-				parse("setpos " .. id .. " 2704 1040")
-				PLAYERS[id].Spawn = {2704, 1040}
-				PLAYERS[id].tmp.npcstate = nil
-			else
-				NPCspeak(npc, "Don't try to enter without paying!")
-				PLAYERS[id].tmp.npcstate = nil
-			end
-		elseif contains(words, "no") then
-			NPCspeak(npc, "Alright then.")
-			PLAYERS[id].tmp.npcstate = nil
-		end
-	end
-end
-tibia.config.npc[10].func = function(npc, id, words, state)
-	if words == "hi" then
-		NPCspeak(npc, "Hello! Would you like to go to the new island for $10?")
-		PLAYERS[id].tmp.npcstate = {npc, 1}
-	elseif contains(words, "bye") then
-		NPCspeak(npc, "Goodbye.")
-		PLAYERS[id].tmp.npcstate = nil
-	elseif state == 1 then
-		if contains(words, "yes") then
-			if addmoney(id, -10) then
-				message(id, "You have lost $10.", "255255255")
-				NPCspeak(npc, "Bon voyage!")
-				parse("setpos " .. id .. " 3632 2448")
-				PLAYERS[id].tmp.npcstate = nil
-			else
-				NPCspeak(npc, "Don't try to enter without paying!")
-				PLAYERS[id].tmp.npcstate = nil
-			end
-		elseif contains(words, "no") then
-			NPCspeak(npc, "Alright then.")
-			PLAYERS[id].tmp.npcstate = nil
-		end
-	end
-end
-tibia.config.npc[11].func = function(npc, id, words, state)
-	if words == "hi" then
-		NPCspeak(npc, "Hello! Would you like to go to the old island for $10?")
-		PLAYERS[id].tmp.npcstate = {npc, 1}
-	elseif contains(words, "bye") then
-		NPCspeak(npc, "Goodbye.")
-		PLAYERS[id].tmp.npcstate = nil
-	elseif state == 1 then
-		if contains(words, "yes") then
-			if addmoney(id, -10) then
-				message(id, "You have lost $10.", "255255255")
-				NPCspeak(npc, "Bon voyage!")
-				parse("setpos " .. id .. " 2832 1872")
-				PLAYERS[id].tmp.npcstate = nil
-			else
-				NPCspeak(npc, "Don't try to enter without paying!")
-				PLAYERS[id].tmp.npcstate = nil
-			end
-		elseif contains(words, "no") then
-			NPCspeak(npc, "Alright then.")
-			PLAYERS[id].tmp.npcstate = nil
-		end
-	end
-end
-tibia.config.npc[12].func = function(npc, id, words, state)
-	if words == "hi" then
-		NPCspeak(npc, "Welcome! Say 'rest' if you need to take a break.")
-		PLAYERS[id].tmp.npcstate = {npc, 1}
-	elseif contains(words, "bye") then
-		NPCspeak(npc, "Goodbye.")
-		PLAYERS[id].tmp.npcstate = nil
-	elseif state == 1 then
-		if contains(words, "rest") then
-			NPCspeak(npc, "Would you like to rest in the inn for $10?")
-			PLAYERS[id].tmp.npcstate = {npc, 2}
-		end
-	elseif state == 2 then
-		if contains(words, "yes") then
-			if addmoney(id, -10) then
-				message(id, "You have lost $10.", "255255255")
-				NPCspeak(npc, "Have a good rest!")
-				parse("setpos " .. id .. " 4048 1584")
-				PLAYERS[id].Spawn = {4048, 1584}
-				PLAYERS[id].tmp.npcstate = nil
-			else
-				NPCspeak(npc, "Don't try to enter without paying!")
-				PLAYERS[id].tmp.npcstate = nil
-			end
-		elseif contains(words, "no") then
-			NPCspeak(npc, "Alright then.")
-			PLAYERS[id].tmp.npcstate = nil
-		end
-	end
+    elseif state == 2 then
+        npc:speak("My brother's name is Federigo. I left town after we fell out and we never talked since. Tell him that I'm sorry, please.")
+        player.tmp.npcState = nil
+    end
 end
 
---[[if not tibia.global.NPC13 then
-	tibia.global.NPC13 = 0
+tibia.config.npc[7].func = function(npc, player, words, state)
+    if words == "hi" then
+        if player.cheeseQuest then
+            if player.cheeseQuest == 0 then
+                npc:speak("Hello, there!")
+            else
+                npc:speak("Did you get them?")
+                player.tmp.npcState = {npc, 3}
+            end
+        else
+            npc:speak("Hello. Hey, you look like you have a lot of spare time, do you?")
+            player.tmp.npcState = {npc, 1}
+        end
+    elseif contains(words, "bye") then
+        npc:speak("Bye.")
+        player.tmp.npcState = nil
+    elseif state == 1 then
+        if contains(words, "yes") then
+            npc:speak("Oh! Then, you can do me a favour, right?")
+            player.tmp.npcState = {npc, 2}
+        else
+            npc:speak("Nevermind, then.")
+            player.tmp.npcState = nil
+        end
+    elseif state == 2 then
+        if contains(words, "yes") then
+            npc:speak("Thanks! Well, I'm currently working, but I haven't had any meals!")
+            npc:speak("Can you get me 10 slices of cheese? I heard that Ratatas carry them around frequently.")
+            player.cheeseQuest = 1
+            player.tmp.npcState = nil
+        else
+            npc:speak("Nevermind, then.")
+            player.tmp.npcState = nil
+        end
+    elseif state == 3 then
+        if contains(words, "yes") then
+            if player:removeItem(4, 10) then
+                player:addRupee(300)
+                player:message("You have received $300.", sea.Color.white)
+                npc:speak("Thanks! Here's a reward, I earn much more than that anyway.")
+                player.cheeseQuest = 0
+                player.tmp.npcState = nil
+            else
+                npc:speak("I need 10 slices of cheese, now!")
+                player.tmp.npcState = nil
+            end
+        else
+            npc:speak("Well? What are you waiting for?")
+            player.tmp.npcState = nil
+        end
+    end
 end
 
-tibia.config.npc[13].func = function(npc, id, words, state)
-	if words == "hi" then
-		NPCspeak(npc, "Care for a gamble? I'll roll a dice and if you get what you chose, you'll win 6 fold.")
-		PLAYERS[id].tmp.npcstate = {npc, 1}
-	elseif contains(words, "bye") then
-		NPCspeak(npc, "Oh, you don't want to win?")
-		PLAYERS[id].tmp.npcstate = nil
-	elseif PLAYERS[id].tmp.npcstate == 3 or PLAYERS[id].tmp.dice then
-		local number = tonumber(words)
-		if number == 1 or number == 2 or number == 3 or number == 4 or number == 5 or number == 6 then
-			local random = math.random(6)
-			if random == number then
-				local earning = PLAYERS[id].tmp.dice*6
-				addmoney(id, earning)
-				tibia.global.NPC13 = tibia.global.NPC13 - earning
-				message(id, "You have recieved $" .. earning .. ".", "255255255")
-				NPCspeak(npc, "You rolled a " .. random .. ". You won! Here's $" .. earning .. " as the prize.")
-			else
-				NPCspeak(npc, "You rolled a " .. random .. ". You lost. How about trying again?")
-			end
-			PLAYERS[id].tmp.npcstate = {npc, 1}
-			PLAYERS[id].tmp.dice = nil
-		else
-			NPCspeak(npc, "Pick a number from 1-6!")
-		end
-	elseif state == 1 then
-		if contains(words, "yes") or contains(words, "gamble") or contains(words, "bet") then
-			NPCspeak(npc, "How much do you want to bet?")
-			PLAYERS[id].tmp.npcstate = {npc, 2}
-		elseif contains(words, "no") then
-			NPCspeak(npc, "Oh, you don't want to win?")
-		elseif contains(words, "earning") or contains(words, "rupee") then
-			NPCspeak(npc, "I have $" .. tibia.global.NPC13 .. " currently.")
-		end
-	elseif state == 2 then
-		local bet = tonumber(words)
-		if bet and bet >= 1 then
-			bet = math.floor(bet)
-			if addmoney(id, -bet) then
-				tibia.global.NPC13 = tibia.global.NPC13 + bet
-				message(id, "You have lost $" .. bet .. ".", "255255255")
-				PLAYERS[id].tmp.dice = bet
-				NPCspeak(npc, "You'll win $" .. bet*6 .. " if you pick the correct number! Pick a number from 1-6!")
-				PLAYERS[id].tmp.npcstate = {npc, 3}
-			else
-				NPCspeak(npc, "You don't have that much rupee!")
-				PLAYERS[id].tmp.npcstate = {npc, 1}
-			end
-		else
-			NPCspeak(npc, "You can't bet that!")
-			PLAYERS[id].tmp.npcstate = {npc, 1}
-		end
-	end
-end]]
-tibia.config.npc[14].func = function(npc, id, words, state)
-	if words == "hi" then
-		NPCspeak(npc, "The toll is $10. Do you want to cross this bridge?")
-		PLAYERS[id].tmp.npcstate = {npc, 1}
-	elseif contains(words, "bye") then
-		NPCspeak(npc, "Not crossing?")
-		PLAYERS[id].tmp.npcstate = nil
-	elseif state == 1 then
-		if contains(words, "yes") then
-			if addmoney(id, -10) then
-				message(id, "You have lost $10.", "255255255")
-				parse("setpos " .. id .. " 3536 1264")
-			else
-				NPCspeak(npc, "No rupee, no crossing.")
-			end
-		elseif contains(words, "no") then
-			NPCspeak(npc, "Not crossing?")
-		end
-		PLAYERS[id].tmp.npcstate = nil
-	end
-end
-tibia.config.npc[17].func = function(npc, id, words, state)
-	if words == "hi" then
-		NPCspeak(npc, "Hey! Do you want to enter the PVP zone? You need to have at least $100 so you can drop them when you die!")
-		PLAYERS[id].tmp.npcstate = {npc, 1}
-	elseif contains(words, "bye") then
-		NPCspeak(npc, "Goodbye!")
-		PLAYERS[id].tmp.npcstate = nil
-	elseif state == 1 then
-		if contains(words, "yes") then
-			if getmoney(id) >= 100 then
-				parse("setpos " .. id .. " 3056 1040")
-			else
-				NPCspeak(npc, "Aww... You don't even have $100!")
-			end
-		elseif contains(words, "no") then
-			NPCspeak(npc, "Okay! Come back when you want!")
-		end
-		PLAYERS[id].tmp.npcstate = nil
-	end
+tibia.config.npc[9].func = function(npc, player, words, state)
+    if words == "hi" then
+        npc:speak("Welcome! Say 'rest' if you need to take a break.")
+        player.tmp.npcState = {npc, 1}
+    elseif contains(words, "bye") then
+        npc:speak("Goodbye.")
+        player.tmp.npcState = nil
+    elseif state == 1 then
+        if contains(words, "rest") then
+            npc:speak("Would you like to rest in the inn for $10?")
+            player.tmp.npcState = {npc, 2}
+        end
+    elseif state == 2 then
+        if contains(words, "yes") then
+            if player:addRupee(-10) then
+                player:message("You have lost $10.", sea.Color.white)
+                npc:speak("Have a good rest!")
+                player:setPosition(2704, 1040)
+                player.respawnPosition = {2704, 1040}
+                player.tmp.npcState = nil
+            else
+                npc:speak("Don't try to enter without paying!")
+                player.tmp.npcState = nil
+            end
+        elseif contains(words, "no") then
+            npc:speak("Alright then.")
+            player.tmp.npcState = nil
+        end
+    end
 end
 
---[[
+tibia.config.npc[10].func = function(npc, player, words, state)
+    if words == "hi" then
+        npc:speak("Hello! Would you like to go to the new island for $10?")
+        player.tmp.npcState = {npc, 1}
+    elseif contains(words, "bye") then
+        npc:speak("Goodbye.")
+        player.tmp.npcState = nil
+    elseif state == 1 then
+        if contains(words, "yes") then
+            if player:addRupee(-10) then
+                player:message("You have lost $10.", sea.Color.white)
+                npc:speak("Bon voyage!")
+                player:setPosition(3632, 2448)
+                player.tmp.npcState = nil
+            else
+                npc:speak("Don't try to enter without paying!")
+                player.tmp.npcState = nil
+            end
+        elseif contains(words, "no") then
+            npc:speak("Alright then.")
+            player.tmp.npcState = nil
+        end
+    end
+end
 
-addhook("menu", "NPCmenu")
-function NPCmenu(id, title, button)
-	for i, v in ipairs(tibia.config.npc) do
-		if title == v[1] then
-			if button == 0 then
-				if v.bye then
-					NPCspeak(i, v.bye)
-				end
-				return
-			end
-			local itemid = math.abs(v.trade[button][1])
-			if itemid then
-				sell = v.trade[button][1] < 0
-				price = v.trade[button][2]
-				radiusmsg(string.format("�255255100%s %s says : %s %s", os.date'%X', player(id, 'name'), price > 0 and "buy" or "sell", tibia.config.item[itemid].name), player(id, 'x'), player(id, 'y'))
-				if sell then
-					if removeitem(id, itemid, 1, true) then
-						addmoney(id, price)
-						message(id, "You have recieved $" .. price .. ".", "255255255")
-						msg2(id, "You have sold " .. tibia.config.item[itemid].article .. " " .. tibia.config.item[itemid].name .. " for $" .. price .. ".")
-						return menu(id, tibia.config.npc[i].menu)
-					end
-					msg2(id, "You do not have " .. tibia.config.item[itemid].article .. " " .. tibia.config.item[itemid].name .. " to sell.")
-					return
-				elseif addmoney(id, -price) then
-					if additem(id, itemid, 1, true) then
-						message(id, "You have lost $" .. price .. ".", "255255255")
-						msg2(id, "You have bought " .. tibia.config.item[itemid].article .. " " .. tibia.config.item[itemid].name .. " for $" .. price .. ".")
-						return menu(id, tibia.config.npc[i].menu)
-					end
-					msg2(id, "You do not have enough capacity.")
-					return
-				end
-				msg2(id, "You do not have enough rupee.")
-			end
-			return
-		end
-	end
-end]]
+tibia.config.npc[11].func = function(npc, player, words, state)
+    if words == "hi" then
+        npc:speak("Hello! Would you like to go to the old island for $10?")
+        player.tmp.npcState = {npc, 1}
+    elseif contains(words, "bye") then
+        npc:speak("Goodbye.")
+        player.tmp.npcState = nil
+    elseif state == 1 then
+        if contains(words, "yes") then
+            if player:addRupee(-10) then
+                player:message("You have lost $10.", sea.Color.white)
+                npc:speak("Bon voyage!")
+                player:setPosition(2832, 1872)
+                player.tmp.npcState = nil
+            else
+                npc:speak("Don't try to enter without paying!")
+                player.tmp.npcState = nil
+            end
+        elseif contains(words, "no") then
+            npc:speak("Alright then.")
+            player.tmp.npcState = nil
+        end
+    end
+end
+
+tibia.config.npc[12].func = function(npc, player, words, state)
+    if words == "hi" then
+        npc:speak("Welcome! Say 'rest' if you need to take a break.")
+        player.tmp.npcState = {npc, 1}
+    elseif contains(words, "bye") then
+        npc:speak("Goodbye.")
+        player.tmp.npcState = nil
+    elseif state == 1 then
+        if contains(words, "rest") then
+            npc:speak("Would you like to rest in the inn for $10?")
+            player.tmp.npcState = {npc, 2}
+        end
+    elseif state == 2 then
+        if contains(words, "yes") then
+            if player:addRupee(-10) then
+                player:message("You have lost $10.", sea.Color.white)
+                npc:speak("Have a good rest!")
+                player:setPosition(4048, 1584)
+                player.respawnPosition = {4048, 1584}
+                player.tmp.npcState = nil
+            else
+                npc:speak("Don't try to enter without paying!")
+                player.tmp.npcState = nil
+            end
+        elseif contains(words, "no") then
+            npc:speak("Alright then.")
+            player.tmp.npcState = nil
+        end
+    end
+end
+
+tibia.config.npc[13].func = function(npc, player, words, state)
+    if words == "hi" then
+        npc:speak("Care for a gamble? I'll roll a dice and if you get what you chose, you'll win 6 fold.")
+        player.tmp.npcState = {npc, 1}
+    elseif contains(words, "bye") then
+        npc:speak("Oh, you don't want to win?")
+        player.tmp.npcState = nil
+    elseif state == 1 then
+        if contains(words, "yes") or contains(words, "gamble") or contains(words, "bet") then
+            npc:speak("How much do you want to bet?")
+            player.tmp.npcState = {npc, 2}
+        elseif contains(words, "no") then
+            npc:speak("Oh, you don't want to win?")
+            player.tmp.npcState = nil
+        elseif contains(words, "earning") or contains(words, "rupee") then
+            npc:speak("I have $"..sea.game.npc13.." currently.")
+        end
+    elseif state == 2 then
+        local bet = tonumber(words)
+        if bet and bet >= 1 then
+            bet = math.floor(bet)
+            if player:addRupee(-bet) then
+                sea.game.npc13 = sea.game.npc13 + bet
+                player:message("You have lost $" .. bet .. ".", sea.Color.white)
+                player.tmp.dice = bet
+                npc:speak("You'll win $" .. bet * 6 .. " if you pick the correct number! Pick a number from 1-6!")
+                player.tmp.npcState = {npc, 3}
+            else
+                npc:speak("You don't have that much rupee!")
+                player.tmp.npcState = {npc, 1}
+            end
+        else
+            npc:speak("You can't bet that!")
+            player.tmp.npcState = {npc, 1}
+        end
+    elseif state == 3 then
+        local number = tonumber(words)
+        if number and number >= 1 and number <= 6 then
+            local random = math.random(6)
+            if random == number then
+                local earning = player.tmp.dice * 6
+                player:addRupee(earning)
+                sea.game.npc13 = sea.game.npc13 - earning
+                player:message("You have received $" .. earning .. ".", sea.Color.white)
+                npc:speak("You rolled a " .. random .. ". You won! Here's $" .. earning .. " as the prize.")
+            else
+                npc:speak("You rolled a " .. random .. ". You lost. How about trying again?")
+            end
+            player.tmp.npcState = {npc, 1}
+            player.tmp.dice = nil
+        else
+            npc:speak("Pick a number from 1-6!")
+        end
+    end
+end
+
+tibia.config.npc[14].func = function(npc, player, words, state)
+    if words == "hi" then
+        npc:speak("The toll is $10. Do you want to cross this bridge?")
+        player.tmp.npcState = {npc, 1}
+    elseif contains(words, "bye") then
+        npc:speak("Not crossing?")
+        player.tmp.npcState = nil
+    elseif state == 1 then
+        if contains(words, "yes") then
+            if player:addRupee(-10) then
+                player:message("You have lost $10.", sea.Color.white)
+                player:setPosition(3536, 1264)
+            else
+                npc:speak("No rupee, no crossing.")
+            end
+        elseif contains(words, "no") then
+            npc:speak("Not crossing?")
+        end
+        player.tmp.npcState = nil
+    end
+end
+
+tibia.config.npc[17].func = function(npc, player, words, state)
+    if words == "hi" then
+        npc:speak("Hey! Do you want to enter the PVP zone? You need to have at least $100 so you can drop them when you die!")
+        player.tmp.npcState = {npc, 1}
+    elseif contains(words, "bye") then
+        npc:speak("Goodbye!")
+        player.tmp.npcState = nil
+    elseif state == 1 then
+        if contains(words, "yes") then
+            if player.rupee >= 100 then
+                player:setPosition(3056, 1040)
+                npc:speak("Good luck in the PVP zone!")
+            else
+                npc:speak("Aww... You don't even have $100!")
+            end
+        elseif contains(words, "no") then
+            npc:speak("Okay! Come back when you want!")
+        end
+        player.tmp.npcState = nil
+    end
+end

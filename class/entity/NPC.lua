@@ -19,6 +19,22 @@ function NPC:speak(words)
 	return tibia.radiusMessage(words, self.config.pos[1], self.config.pos[2])
 end
 
+function NPC:interact(player, words)
+	local config = self.config
+
+	if config.func then
+		config.func(self, player, "hi")
+	elseif config.trade then
+		player:displayMenu(self:getTradeMenu())
+	else
+		self:speak("Hello, I'm busy right now, speak to me later.")
+	end
+
+	if config.greet then
+		self:speak(string.format(config.greet, player.name))
+	end
+end
+
 function NPC:getTradeMenu()
 	local trade = self.config.trade
 
@@ -99,9 +115,9 @@ sea.addEvent("onHookSay", function(player, words)
 
 	local npcState = player.tmp.npcState
 	if npcState then
-		local npc = tibia.config.npc[npcState[1]]
-		if isInside(player.x, player.y, npc.pos[1] - 96, npc.pos[2] - 96, npc.pos[1] + 96, npc.pos[2] + 96) then
-			npc.func(npcState[1], player, words, npcState[2])
+		local npc = npcState[1]
+		if isInside(player.x, player.y, npc.x - 96, npc.y - 96, npc.x + 96, npc.y + 96) then
+			npc.config.func(npcState[1], player, words, npcState[2])
 			return
 		else
 			player.tmp.npcState = nil
@@ -113,19 +129,7 @@ sea.addEvent("onHookSay", function(player, words)
 			local config = npc.config
 
 			if isInside(player.x, player.y, config.pos[1] - 96, config.pos[2] - 96, config.pos[1] + 96, config.pos[2] + 96) then
-				if config.func then
-					config.func(player, "hi")
-				elseif config.trade then
-					player:displayMenu(npc:getTradeMenu())
-				else
-					npc:speak("Hello, I'm busy right now, speak to me later.")
-					break
-				end
-
-				if config.greet then
-					npc:speak(string.format(config.greet, player.name))
-				end
-
+				npc:interact(player)
 				break
 			end
 		end

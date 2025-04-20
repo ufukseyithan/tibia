@@ -125,7 +125,9 @@ return {
 			tutorial = {},
 			info = {},
 			lastPosition = {},
-			lastName = ""
+			lastName = "",
+			federigoBrother = -1,
+			cheeseQuest = -1
 		}
 	},
 
@@ -138,7 +140,8 @@ return {
 			rain = 0,
 			time = 0,
 			tempGroundItems = {},
-			tempHouses = {}
+			tempHouses = {},
+			npc13 = 0 -- For betting
 		}
 	},
 
