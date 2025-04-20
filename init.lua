@@ -61,4 +61,9 @@ for y = 0, sea.map.ySize do
 	end
 end
 
+tibia.hudImage = sea.Image.create('gfx/weiwen/1x1.png', 775, 407 + #tibia.config.stats * tibia.config.pixels / 2, 2)
+tibia.hudImage:scale(130, tibia.config.pixels + #tibia.config.stats * tibia.config.pixels)
+tibia.hudImage.alpha = 0.5
+
 tibia.minutes = 0
+

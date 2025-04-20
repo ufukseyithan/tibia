@@ -15,8 +15,17 @@ sea.addEvent("onHookJoin", function(player)
 		defence = 1, 
 		speed = 0, 
 		equipmentImage = {}, 
-		exhaust = {}
+		exhaust = {},
+		ui = {},
 	}
+
+	player.ui:createText(player.usgn ~= 0 and player.name or "NOT LOGGED IN", 775, 407-tibia.config.pixels, sea.Style.new({align = 1, color = sea.Color.new(255, 100, 100)}))
+
+	for k, v in pairs(tibia.config.stats) do
+		local y = 407 + (k - 1) * tibia.config.pixels
+		player.ui:createText(v, 720, y)
+		player.tmp.ui['text'..v] = player.ui:createText(player[v:lower()], 820, y, sea.Style.new({align = 1, color = sea.Color.yellow}))
+	end
 
 	player.lastName = player.name
 end, -1)
@@ -163,8 +172,7 @@ sea.addEvent("onHookSpawn", function(player)
 		player:setPosition(unpack(player.respawnPosition))
 	end
 
-	--updateHUD(id)
-	--hudtxt2(id,0,player.usgn ~= 0 and player.name or "NOT LOGGED IN","255100100", 565, 407-tibia.config.pixels, 1)
+	player:updateHUD()
 
 	player:updateStats()
 
@@ -230,7 +238,7 @@ sea.addEvent("onHookMinute", function()
 					end
 				else
 					online:message("Your house has expired. All items will be sent to your inventory.")
-					--updateHUD(online)
+					online:updateHUD()
 				end
 
 				tibia.houseExpire(i)

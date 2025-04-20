@@ -17,6 +17,8 @@ tibia.config = {
 		end
 	}, 
 
+	stats = {'XP', 'Level', 'Rupee'}, --ignore
+
 	-- slot names for each slot. can be customised.
 	-- the order is important since the last item will always be rendered last
 	slots = {
@@ -36,6 +38,9 @@ tibia.config = {
 	hudTxt = {
 		safe = 49, 
 	}, 
+
+	-- pixels to leave between each line of hudtxt
+	pixels = 14, 
 	
 	-- used for ^[1-9a-z] colour codes
 	colours = {

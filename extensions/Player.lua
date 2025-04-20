@@ -35,7 +35,15 @@ function sea.Player:addExp(amount)
 		self:playSound("fun/Victory_Fanfare.ogg")
 	end
 
+	self:updateHUD()
+
 	return true
+end
+
+function sea.Player:updateHUD()
+	for i, v in ipairs(tibia.config.stats) do
+		self.tmp.ui['text'..v]:setText(self[v:lower()])
+	end
 end
 
 function sea.Player:hit(source, itemType, damage)
@@ -113,6 +121,8 @@ function sea.Player:addRupee(amount)
 	end
 
 	self.rupee = self.rupee + amount
+
+	self:updateHUD()
 	
 	return true
 end
