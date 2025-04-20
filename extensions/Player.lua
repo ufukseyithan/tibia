@@ -157,7 +157,11 @@ function sea.Player:removeItem(id, amount, tell)
 			-- self:message("You have lost "..item.fullName..".")
 			self:message("You have lost item.")
 		end
+
+		return true
 	end
+
+	return false
 end
 
 function sea.Player:pickItem()

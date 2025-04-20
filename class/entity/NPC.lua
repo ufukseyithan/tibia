@@ -32,27 +32,29 @@ function NPC:getTradeMenu()
 
 	for _, button in pairs(trade) do
 		local itemId, price = unpack(button)
-		local sell = price < 0
+		local sell = itemId < 0
+		itemId = math.abs(itemId)
 
 		local itemConfig = tibia.config.item[itemId]
+		local itemName = itemConfig.article..' '..itemConfig.name
 
-		menu:addButton(itemConfig.name, function(player)
+		menu:addButton((sell and 'sell' or 'buy')..' '..itemConfig.name, function(player)
 			if sell then
 				if player:removeItem(itemId, 1, true) then
 					player:addRupee(price)
-					player:message("You have lost $" .. price .. ".", sea.Color.white)
-					player:message("You have sold " .. itemConfig.article .. " " .. itemConfig.name .. " for $" .. price .. ".")
+					player:message("You have recieved $"..price..".", sea.Color.white)
+					player:message("You have sold "..itemName.." for $"..price..".")
 					return true
 				end
 				
-				player:message("You do not have "..itemConfig.article.." "..tibia.config.item[itemid].name.." to sell.")
+				player:message("You do not have "..itemName.." to sell.")
 				return
 			elseif player:addRupee(-price) then
 				local item = tibia.Item.create(itemId)
 
 				if player:addItem(item, true) then
 					player:message("You have lost $"..price..".", sea.Color.white)
-					player:message("You have bought "..itemConfig.article.." "..itemConfig.name.." for $"..price..".")
+					player:message("You have bought "..itemName.." for $"..price..".")
 					return true
 				end
 
@@ -113,7 +115,7 @@ sea.addEvent("onHookSay", function(player, words)
 			if isInside(player.x, player.y, config.pos[1] - 96, config.pos[2] - 96, config.pos[1] + 96, config.pos[2] + 96) then
 				if config.func then
 					config.func(player, "hi")
-				elseif config.menu then
+				elseif config.trade then
 					player:displayMenu(npc:getTradeMenu())
 				else
 					npc:speak("Hello, I'm busy right now, speak to me later.")
