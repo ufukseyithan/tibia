@@ -19,7 +19,9 @@ sea.addEvent("onHookJoin", function(player)
 		ui = {},
 	}
 
-	player.ui:createText(player.usgn ~= 0 and player.name or "NOT LOGGED IN", 775, 407-tibia.config.pixels, sea.Style.new({align = 1, color = sea.Color.new(255, 100, 100)}))
+	player.tmp.ui['textZone'] = player.ui:createText('', 425, 240, sea.Style.new({align = 1, color = sea.Color.new(255, 64, 0)}))
+
+	player.tmp.ui['textName'] = player.ui:createText(player.usgn ~= 0 and player.name or "NOT LOGGED IN", 775, 407-tibia.config.pixels, sea.Style.new({align = 1, color = sea.Color.new(255, 100, 100)}))
 
 	for k, v in pairs(tibia.config.stats) do
 		local y = 407 + (k - 1) * tibia.config.pixels
@@ -31,7 +33,13 @@ sea.addEvent("onHookJoin", function(player)
 end, -1)
 
 sea.addEvent("onHookName", function(player, oldName, newName)
+	local check = newname:lower()
+	if (check:find('admin') or check:find('gm')) and not tibia.isAdmin(player) then
+		return 1
+	end
+
 	player.lastName = newName
+	player.tmp.ui['textName']:setText(player.usgn ~= 0 and newName or "NOT LOGGED IN")
 end, -1)
 
 sea.addEvent("onHookWalkover", function()
@@ -77,7 +85,7 @@ sea.addEvent("onHookMovetile", function(player, x, y)
 		player:showTutorial("Pick", "You have stumbled upon something. Press the drop weapon button (default G) to pick it up.")
 	end
 
-	--hudtxt2(id, tibia.config.hudTxt.safe, (tile.zone.SAFE and "SAFE") or (tile.zone.NOMONSTERSPVP and "NO tibia.monster") or (tile.zone.NOPVP and "NO PVP") or (tile.zone.PVP and "DEATHMATCH") or "","255064000", 320, 200, 1)
+	player.tmp.ui['textZone']:setText(tile.zone.SAFE and "SAFE" or (tile.zone.NOMONSTERSPVP and "NO tibia.monster") or (tile.zone.NOPVP and "NO PVP") or (tile.zone.PVP and "DEATHMATCH") or "")
 	
 	if not tile.zone.SAFE then
 		player:showTutorial("Safe", "You have left a SAFE zone. From now, you will be able to both damage and be damaged.")
