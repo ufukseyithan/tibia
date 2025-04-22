@@ -99,13 +99,17 @@ function Item:occupy(slot)
 		self:destroy()
 
 		self.slot = slot
+
 		self:updateSlot()
 		
 		return true
 	elseif config.stackable and slot.item.id == self.id then
 		local temp = self.amount
 
-		return slot.item:restore(self:consume()) >= temp or self
+		local restore = slot.item:restore(temp)
+		self:consume(restore)
+		
+		return restore >= temp or self
 	end
 
 	return false
@@ -219,7 +223,7 @@ end
 --        CONST        --
 -------------------------
 
-Item.defaultMaxStack = 200
+Item.defaultMaxStack = 10
 
 function Item.create(id, attributes)
 	local config = tibia.config.item[id]
