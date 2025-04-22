@@ -106,14 +106,11 @@ function Item:occupy(slot)
 
 			newStack.slot = slot
 			newStack:updateSlot()
-
-			return self.amount > 0 and self or true
 		elseif slot.item.id == self.id then
-			local restore = slot.item:restore(temp)
-			self:consume(restore)
-			
-			return restore >= temp or self
+			self:consume(slot.item:restore(temp))
 		end
+
+		return self.amount > 0 and self or true
 	else
 		if not slot:isOccupied() then
 			self:destroy()

@@ -75,7 +75,7 @@ tibia.config.item = {
 			sea.explosion(player.x, player.y, 64, 15, player.id)
 			sea.effect("colorsmoke", player.x, player.y, 100, 64, 255, 128, 0)
 			sea.effect("colorsmoke", player.x, player.y, 75, 64, 255, 0, 0)
-			self:destroy()
+			self:consume(1)
 		end, equip},
 	},
 
@@ -91,12 +91,13 @@ tibia.config.item = {
 			sea.explosion(player.x, player.y, 64, 15, player.id)
 			sea.effect("colorsmoke", player.x, player.y, 100, 64, 255, 255, 255)
 			sea.effect("colorsmoke", player.x, player.y, 75, 64, 128, 128, 255)
-			self:destroy()
+			self:consume(1)
 		end, equip},
 	},
 
 	[102] = {
 		name = "healing rune", 
+		stackable = true,
 		desc = "You may only use it once.", 
 		r = 128, g = 255, b = 255, 
 		action = {"cast","hold"}, 
@@ -107,7 +108,7 @@ tibia.config.item = {
 			sea.explosion(player.x, player.y, 32, -30, player.id)
 			sea.effect("colorsmoke", player.x, player.y, 5, 5, 128, 255, 255)
 			sea.Player.playSoundForAll("materials/glass2.wav", player.x, player.y)
-			self:destroy()
+			self:consume(1)
 		end, equip},
 	},
 
@@ -123,7 +124,7 @@ tibia.config.item = {
 			sea.explosion(player.x, player.y, 64, 15, player.id)
 			sea.effect("colorsmoke", player.x, player.y, 100, 64, 255, 255, 0)
 			sea.effect("colorsmoke", player.x, player.y, 75, 64, 255, 255, 255)
-			self:destroy()
+			self:consume(1)
 		end, equip},
 	},
 
@@ -140,7 +141,7 @@ tibia.config.item = {
 			timerEx(1000, function()
 				player:strip(46)
 			end)
-			self:destroy()
+			self:consume(1)
 		end, equip},
 	},
 
@@ -166,7 +167,7 @@ tibia.config.item = {
 
 					sea.Player.playSoundForAll("materials/glass2.wav", player.x, player.y)
 
-					self:destroy()
+					self:consume(1)
 				else
 					tibia.radiusMessage(player.name..' failed to cast a teleport rune.', player.x, player.y)
 				end
@@ -186,7 +187,7 @@ tibia.config.item = {
 			tibia.radiusMessage(player.name..' casts a poison fog rune.', player.x, player.y)
 			sea.explosion(player.x, player.y, 64, 15, player.id)
 			sea.effect("colorsmoke", player.x, player.y, 100, 96, 128, 128, 0)
-			self:destroy()
+			self:consume(1)
 		end, equip},
 	},
 

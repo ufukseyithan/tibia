@@ -146,19 +146,16 @@ function sea.Player:addItem(item, tell)
 		return true
 	end
 
-	local left = self.tmp.inventory:addItem(item)
-
-	if left then
-		if tell then
-			if type(left) == "table" then
-				self:message("You have received "..item.fullName..". "..left.amount.." are dropped due to lack of space.")
-			else
-				self:message("You have received "..item.fullName..".")
-			end
+	local leftover = self.tmp.inventory:addItem(item)
+	if tell then
+		if type(leftover) == "table" then
+			self:message("You have received "..item.fullName..". "..leftover.amount.." are dropped due to lack of space.")
+		else
+			self:message("You have received "..item.fullName..".")
 		end
 	end
 
-	return left
+	return leftover
 end
 
 function sea.Player:removeItem(id, amount, tell)
@@ -181,24 +178,22 @@ function sea.Player:pickItem()
 		local item = ground[height]
 		local tempAmount = item.amount
 
-		local addItem = self:addItem(item)
-		if addItem then
-			if item.config.currency then
-				self:message("You have picked up "..item.amount.." rupees.")
-			else
-				if type(addItem) == "table" then
-					local pickedUp = tempAmount - addItem.amount
+		local leftover = self:addItem(item)
+		if item.config.currency then
+			self:message("You have picked up "..item.amount.." rupees.")
+		else
+			if type(addItem) == "table" then
+				local pickedUp = tempAmount - addItem.amount
 
-					if pickedUp > 0 then
-						self:message("You have picked up "..tibia.Item.getFullName(item.id, pickedUp)..".")
-					end
-				else
-					self:message("You have picked up "..tibia.Item.getFullName(item.id, tempAmount)..".")
+				if pickedUp > 0 then
+					self:message("You have picked up "..tibia.Item.getFullName(item.id, pickedUp)..".")
 				end
+			else
+				self:message("You have picked up "..tibia.Item.getFullName(item.id, tempAmount)..".")
 			end
-			
-			self:showTutorial("Pick", "You have picked up something. Press F3 to access your inventory!")
 		end
+		
+		self:showTutorial("Pick", "You have picked up something. Press F3 to access your inventory!")
 	end
 
 	return true
