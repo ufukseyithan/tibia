@@ -38,8 +38,9 @@ function tibia.saveServer()
 	for y = 0, sea.map.ySize do
 		if groundItems[y] then
 			for x = 0, sea.map.xSize do
+				tmp[y] = tmp[y] or {}
+				
 				if groundItems[y][x] and groundItems[y][x][1] then
-					tmp[y] = tmp[y] or {}
 					tmp[y][x] = {}
 
 					for j = 1, #groundItems[y][x] do
@@ -51,12 +52,8 @@ function tibia.saveServer()
 		end
 	end
 
-	if table.isEmpty(tmp) then
-		sea.game.tempGroundItems = {}
-	else
-		for k, v in pairs(tmp) do
-			sea.game.tempGroundItems[k] = v
-		end
+	for k, v in pairs(tmp) do
+		sea.game.tempGroundItems[k] = not table.isEmpty(v) and v or nil
 	end
 	
 	local tmp = {}
