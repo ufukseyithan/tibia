@@ -204,7 +204,7 @@ tibia.config.monster = {
 			fire:setPosition(x1 + x2 * 64, y1 + y2 * 64, math.deg(rot) + 180)
 			fire:scale(1.5, 2)
 			fire.color = sea.Color.new(255, 64, 0)
-			fire.blend = 1
+			fire.blendMode = 1
 			fire:destroyIn(500)
 
 			sea.explosion(x1 + x2 * 100, y1 + y2 * 100, 48, 40)
