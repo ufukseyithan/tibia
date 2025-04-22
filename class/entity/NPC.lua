@@ -51,7 +51,7 @@ function NPC:getTradeMenu()
 		local sell = itemId < 0
 		itemId = math.abs(itemId)
 
-		local itemName = tibia.Item.getFullName(itemId, 1)
+		local itemName = tibia.Item.getFullName(itemId)
 
 		menu:addButton((sell and 'sell' or 'buy')..' '..itemName, function(player)
 			if sell then
@@ -67,7 +67,7 @@ function NPC:getTradeMenu()
 			elseif player:addRupee(-price) then
 				local item = tibia.Item.create(itemId)
 
-				if player:addItem(item) then
+				if player:addItem(item, true) then
 					player:message("You have lost "..price.." rupees.", sea.Color.white)
 					player:message("You have bought "..itemName.." for "..price.." rupees.")
 					return true

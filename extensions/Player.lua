@@ -146,10 +146,13 @@ function sea.Player:addItem(item, tell)
 		return true
 	end
 
+	local tempAmount = item.amount
 	local leftover = self.tmp.inventory:addItem(item)
 	if tell then
 		if type(leftover) == "table" then
-			self:message("You have received "..item.fullName..". "..leftover.amount.." are dropped due to lack of space.")
+			local received = tempAmount - leftover.amount
+
+			self:message("You have received "..tibia.Item.getFullName(item.id, received)..". "..leftover.amount.." are dropped due to lack of space.")
 		else
 			self:message("You have received "..item.fullName..".")
 		end
@@ -182,8 +185,8 @@ function sea.Player:pickItem()
 		if item.config.currency then
 			self:message("You have picked up "..item.amount.." rupees.")
 		else
-			if type(addItem) == "table" then
-				local pickedUp = tempAmount - addItem.amount
+			if type(leftover) == "table" then
+				local pickedUp = tempAmount - leftover.amount
 
 				if pickedUp > 0 then
 					self:message("You have picked up "..tibia.Item.getFullName(item.id, pickedUp)..".")
