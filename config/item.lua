@@ -44,6 +44,7 @@ tibia.config.item = {
 	
 	[4] = {
 		name = "cheese", 
+		stackable = true,
 		desc = "A solid food prepared from the pressed curd of milk.", 
 		r = 255, g = 255, b = 0, 
 		action = "eat", 
@@ -54,6 +55,7 @@ tibia.config.item = {
 
 	[5] = {
 		name = "pizza", 
+		stackable = true,
 		desc = "Italian open pie made of thin bread dough spread with a spiced mixture of tomato sauce and cheese.", 
 		action = "eat", 
 		food = function() return math.random(25,50) end, 
