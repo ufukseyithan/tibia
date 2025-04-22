@@ -150,7 +150,7 @@ function sea.Player:addItem(item, tell)
 
 	if left then
 		if tell then
-			if type(addition) == "table" then
+			if type(left) == "table" then
 				self:message("You have received "..item.fullName..". "..left.amount.." are dropped due to lack of space.")
 			else
 				self:message("You have received "..item.fullName..".")
@@ -164,8 +164,7 @@ end
 function sea.Player:removeItem(id, amount, tell)
 	if self.tmp.inventory:removeItem(id, amount) then
 		if tell then
-			-- self:message("You have lost "..item.fullName..".")
-			self:message("You have lost item.")
+			self:message("You have lost "..tibia.Item.getFullName(id, amount)..".")
 		end
 
 		return true
@@ -180,13 +179,22 @@ function sea.Player:pickItem()
 
 	if height > 0 then
 		local item = ground[height]
-		local itemName = item.fullName
+		local tempAmount = item.amount
 
-		if self:addItem(item) then
+		local addItem = self:addItem(item)
+		if addItem then
 			if item.config.currency then
 				self:message("You have picked up "..item.amount.." rupees.")
 			else
-				self:message("You have picked up "..itemName..".")
+				if type(addItem) == "table" then
+					local pickedUp = tempAmount - addItem.amount
+
+					if pickedUp > 0 then
+						self:message("You have picked up "..tibia.Item.getFullName(item.id, pickedUp)..".")
+					end
+				else
+					self:message("You have picked up "..tibia.Item.getFullName(item.id, tempAmount)..".")
+				end
 			end
 			
 			self:showTutorial("Pick", "You have picked up something. Press F3 to access your inventory!")

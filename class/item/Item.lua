@@ -54,7 +54,10 @@ function Item:split(amount)
 
 	amount = amount or math.ceil(self.amount / 2)
 
-	local newStack = Item.create(self.id, self.attributes)
+	local attributes = deepcopy(self.attributes)
+	attributes.amount = 0
+
+	local newStack = Item.create(self.id, attributes)
 
 	newStack:restore(self:consume(amount))
 
@@ -95,21 +98,31 @@ function Item:occupy(slot)
 		return false
 	end
 
-	if not slot:isOccupied() then
-		self:destroy()
-
-		self.slot = slot
-
-		self:updateSlot()
-		
-		return true
-	elseif config.stackable and slot.item.id == self.id then
+	if config.stackable then
 		local temp = self.amount
 
-		local restore = slot.item:restore(temp)
-		self:consume(restore)
-		
-		return restore >= temp or self
+		if not slot:isOccupied() then
+			local newStack = self:split(self.maxStack)
+
+			newStack.slot = slot
+			newStack:updateSlot()
+
+			return self.amount > 0 and self or true
+		elseif slot.item.id == self.id then
+			local restore = slot.item:restore(temp)
+			self:consume(restore)
+			
+			return restore >= temp or self
+		end
+	else
+		if not slot:isOccupied() then
+			self:destroy()
+	
+			self.slot = slot
+			self:updateSlot()
+
+			return true
+		end
 	end
 
 	return false
@@ -203,19 +216,13 @@ function Item:amountProperty()
 	return function(self)
         return self.attributes.amount
     end, function(self, value)
-		self.attributes.amount = math.clamp(value, 0, self.maxStack)
+		self.attributes.amount = self:isInSlot() and math.clamp(value, 0, self.maxStack) or math.max(value, 0)
 	end
 end
 
 function Item:fullNameProperty()
 	return function(self)
-        local config, amount = self.config, self.amount
-
-        if not amount or amount == 1 then
-            return config.article.." "..config.name
-        else
-            return amount.." "..config.plural
-        end
+		return self.getFullName(self.id, self.amount)
     end
 end
 
@@ -243,6 +250,19 @@ function Item.get(x, y)
     tibia.groundItems[y][x] = tibia.groundItems[y][x] or {}
 
     return tibia.groundItems[y][x]
+end
+
+function Item.getFullName(id, amount)
+	local config = tibia.config.item[id]
+	if not config then
+        return
+    end
+
+	if not amount or amount == 1 then
+		return config.article.." "..config.name
+	else
+		return amount.." "..config.plural
+	end
 end
 
 function Item.spawn(id, x, y, attributes)
