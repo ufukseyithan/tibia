@@ -126,7 +126,8 @@ function Item:occupy(slot)
 end
 
 function Item:swap(slot)
-	if not self:isInSlot() then
+	local tempSlot = self:isInSlot()
+	if not tempSlot then
 		return
 	end
 
@@ -135,8 +136,8 @@ function Item:swap(slot)
 	slot.item = self
 	self:updateSlot()
 
-	self.slot.item = temp
-	self.slot:updateSlot()
+	temp.slot = tempSlot
+	temp:updateSlot()
 end
 
 function Item:reposition(x, y)

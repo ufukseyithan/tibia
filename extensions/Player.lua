@@ -134,7 +134,7 @@ function sea.Player:showTutorial(name, message)
 	end
 end
 
-function sea.Player:addItem(item, tell)
+function sea.Player:addItem(item, tell, drop)
 	if item.config.currency then		
 		self:addRupee(item.amount)
 		item:destroy()
@@ -148,12 +148,30 @@ function sea.Player:addItem(item, tell)
 
 	local tempAmount = item.amount
 	local leftover = self.tmp.inventory:addItem(item)
-	if tell then
-		if type(leftover) == "table" then
-			local received = tempAmount - leftover.amount
+	if type(leftover) == "table" then
+		local received = tempAmount - leftover.amount
+		local leftoverAmount = leftover.amount
+		local dropMessage
 
-			self:message("You have received "..tibia.Item.getFullName(item.id, received)..". "..leftover.amount.." are dropped due to lack of space.")
-		else
+		if leftoverAmount > 0 then
+			if drop then
+				leftover:reposition(self.lastPosition.x, self.lastPosition.y)
+
+				dropMessage = leftover.amount.." are dropped due to lack of space."
+			end
+		end
+
+		local receiveMessage = received > 0 and "You have received "..tibia.Item.getFullName(item.id, received).."." or ""
+
+		if tell then
+			self:message(receiveMessage..(dropMessage and (" "..dropMessage) or ""))
+		end
+
+		if received == 0 and not drop then
+			return false
+		end
+	elseif leftover == true then
+		if tell then
 			self:message("You have received "..item.fullName..".")
 		end
 	end
@@ -182,17 +200,19 @@ function sea.Player:pickItem()
 		local tempAmount = item.amount
 
 		local leftover = self:addItem(item)
-		if item.config.currency then
-			self:message("You have picked up "..item.amount.." rupees.")
-		else
-			if type(leftover) == "table" then
-				local pickedUp = tempAmount - leftover.amount
-
-				if pickedUp > 0 then
-					self:message("You have picked up "..tibia.Item.getFullName(item.id, pickedUp)..".")
-				end
+		if leftover then
+			if item.config.currency then
+				self:message("You have picked up "..item.amount.." rupees.")
 			else
-				self:message("You have picked up "..tibia.Item.getFullName(item.id, tempAmount)..".")
+				if type(leftover) == "table" then
+					local pickedUp = tempAmount - leftover.amount
+
+					if pickedUp > 0 then
+						self:message("You have picked up "..tibia.Item.getFullName(item.id, pickedUp)..".")
+					end
+				else
+					self:message("You have picked up "..tibia.Item.getFullName(item.id, tempAmount)..".")
+				end
 			end
 		end
 		
@@ -298,6 +318,7 @@ function sea.Player:equipItem(item, equip)
 
 	if equip then
 		if not self:addItem(item) then
+			self:message("You do not have enough capacity.")
 			return
 		end
 	else
@@ -329,7 +350,6 @@ function sea.Player:equipItem(item, equip)
 		end
 
 		local targetSlot = equipmentSlots[slotName]
-
 		if targetSlot:isOccupied() then
 			if self:addItem(targetSlot.item) then
 				item:occupy(targetSlot)
