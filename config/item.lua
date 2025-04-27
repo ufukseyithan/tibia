@@ -65,6 +65,7 @@ tibia.config.item = {
 
 	[100] = {
 		name = "ember rune", 
+		stackable = true,
 		desc = "You may only use it once.", 
 		r = 128, g = 0, b = 0, 
 		action = {"cast","hold"}, 
@@ -81,6 +82,7 @@ tibia.config.item = {
 
 	[101] = {
 		name = "water gun rune", 
+		stackable = true,
 		desc = "You may only use it once.", 
 		r = 128, g = 128, b = 255, 
 		action = {"cast","hold"}, 
@@ -114,6 +116,7 @@ tibia.config.item = {
 
 	[103] = {
 		name = "thundershock rune", 
+		stackable = true,
 		desc = "An electrical attack that may paralyze the foe.",  
 		r = 255, g = 255, b = 0, 
 		action = {"cast","hold"}, 
@@ -130,6 +133,7 @@ tibia.config.item = {
 
 	[104] = {
 		name = "flamethrower rune", 
+		stackable = true,
 		desc = "You may only use it once.", 
 		r = 185, g = 25, b = 25, 
 		action = {"cast","hold"}, 
@@ -147,6 +151,7 @@ tibia.config.item = {
 
 	[105] = {
 		name = "teleport rune", 
+		stackable = true,
 		desc = "You may only use it once.", 
 		r = 255, g = 255, b = 255, 
 		action = {"cast","hold"}, 
@@ -178,6 +183,7 @@ tibia.config.item = {
 
 	[106] = {
 		name = "poison fog rune", 
+		stackable = true,
 		desc = "You may only use it once.", 
 		r = 128, g = 128, b = 0, 
 		action = {"cast","hold"}, 
