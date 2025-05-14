@@ -4,7 +4,7 @@ Vanilla Tibia, ported to [Sea Framework](https://github.com/ufukseyithan/sea).
 ## Installation
 - Drop this repo in apps folder
 
-_Note: It is recommended that this app be loaded solely since it could conflict with other apps._
+_Note: It is recommended that this app to be loaded solely since it could conflict with other apps._
 
 ## Features
 Some of the existing features were modernized:
