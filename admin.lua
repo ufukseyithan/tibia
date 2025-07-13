@@ -30,7 +30,7 @@ Admin Commands
 !u - shutdown
 !v - save server
 ]]
-sea.addEvent("onHookSay", function(player, words)
+sea.listen("say", function(player, words)
 	if tibia.isAdmin(player) and words:sub(1,1) =='!' then
 		local command = words:lower():sub(2,2)
 		if words:sub(3,3) ~= ' ' and #words ~= 2 then 

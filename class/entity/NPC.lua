@@ -109,7 +109,7 @@ local function contains(words, text)
 	return words == text or words:find(text .. " ") or words:find(" " .. text) 
 end
 
-sea.addEvent("onHookSay", function(player, words)
+sea.listen("say", function(player, words)
 	words = words:lower()
 
 	local npcState = player.tmp.npcState

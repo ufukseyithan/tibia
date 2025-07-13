@@ -1,12 +1,12 @@
-sea.addEvent('onGameLoad', function()
+sea.listen('gameLoaded', function()
 	tibia.loadServer()
 end)
 
-sea.addEvent('onGameSave', function()
+sea.listen('gameSaved', function()
 	tibia.saveServer()
 end)
 
-sea.addEvent("onHookJoin", function(player)
+sea.listen("join", function(player)
 	player.tmp = {
 		inventory = tibia.Inventory.new(player.inventory),
 		equipment = tibia.Equipment.new(player.equipment),
@@ -32,7 +32,7 @@ sea.addEvent("onHookJoin", function(player)
 	player.lastName = player.name
 end, -1)
 
-sea.addEvent("onHookName", function(player, oldName, newName)
+sea.listen("name", function(player, oldName, newName)
 	local check = newname:lower()
 	if (check:find('admin') or check:find('gm')) and not tibia.isAdmin(player) then
 		return 1
@@ -42,11 +42,11 @@ sea.addEvent("onHookName", function(player, oldName, newName)
 	player.tmp.ui['textName']:setText(player.usgn ~= 0 and newName or "NOT LOGGED IN")
 end, -1)
 
-sea.addEvent("onHookWalkover", function()
+sea.listen("walkover", function()
 	return 1
 end, -1)
 
-sea.addEvent("onHookMovetile", function(player, x, y)
+sea.listen("movetile", function(player, x, y)
 	local entity = sea.Entity.new(x, y)
 	local entityTypeName = entity.typeName
 
@@ -100,7 +100,7 @@ sea.addEvent("onHookMovetile", function(player, x, y)
 	player.lastPosition.x, player.lastPosition.y = x, y
 end, -1)
 
-sea.addEvent("onHookSay", function(player, words)
+sea.listen("say", function(player, words)
 	if not player:exhaust("talk") then 
 		return 1 
 	end
@@ -160,7 +160,7 @@ sea.addEvent("onHookSay", function(player, words)
 	return 1
 end, -1)
 
-sea.addEvent("onHookSpawn", function(player)
+sea.listen("spawn", function(player)
 	if not player.usgn then
 		player:message("Please register a U.S.G.N. account at \"http://www.usgn.de/\" and make sure that you are logged in!", sea.Color.red)
 	else
@@ -189,7 +189,7 @@ sea.addEvent("onHookSpawn", function(player)
 	return 'x'
 end, -1)
 
-sea.addEvent("onHookDrop", function(player, item, itemType, ammoIn, ammo, mode, x, y)
+sea.listen("drop", function(player, item, itemType, ammoIn, ammo, mode, x, y)
 	if not player:exhaust("pick") then
 		if tibia.Item.get(x, y)[1] then
 			player:showTutorial("Pick Exhaust", "Try not to spam picking up, as there is an exhaust of half a second per try.")
@@ -201,7 +201,7 @@ sea.addEvent("onHookDrop", function(player, item, itemType, ammoIn, ammo, mode, 
 	player:pickItem()
 end, -1)
 
-sea.addEvent("onHookSecond", function()
+sea.listen("second", function()
 	tibia.updateTime()
 
 	for _, player in ipairs(sea.Player.get()) do
@@ -221,7 +221,7 @@ sea.addEvent("onHookSecond", function()
 	end
 end, -1)
 
-sea.addEvent("onHookMinute", function()
+sea.listen("minute", function()
 	tibia.minutes = tibia.minutes + 1
 	
 	for i, v in ipairs(tibia.house) do
@@ -262,7 +262,7 @@ sea.addEvent("onHookMinute", function()
 	end
 end, -1)
 
-sea.addEvent("onHookServeraction", function(player, action)
+sea.listen("serveraction", function(player, action)
 	if not player.alive then 
 		return 
 	end
@@ -276,9 +276,9 @@ sea.addEvent("onHookServeraction", function(player, action)
 	end
 end)
 
-sea.addEvent("onHookHit", sea.Player.hit, -1)
+sea.listen("hit", sea.Player.hit, -1)
 
-sea.addEvent("onHookKill", function(killer, victim, weapon, x, y)
+sea.listen("kill", function(killer, victim, weapon, x, y)
 	if victim:isAtZone("PVP") then
 		return
 	end
@@ -293,7 +293,7 @@ sea.addEvent("onHookKill", function(killer, victim, weapon, x, y)
 	killer:addExp(math.floor(xp * math.random(50, 150) / 100 * tibia.config.expRate))
 end, -1)
 
-sea.addEvent("onHookDie", function(victim, killer, weapon, x, y)
+sea.listen("die", function(victim, killer, weapon, x, y)
 	local tileX, tileY = pixelToTile(x), pixelToTile(y)
 	local PVP = sea.Tile.get(tileX, tileY).zone.PVP
 	
@@ -333,7 +333,7 @@ sea.addEvent("onHookDie", function(victim, killer, weapon, x, y)
 	tibia.radiusSound("weapons/c4_explode.wav", x, y)
 end, 1)
 
-sea.addEvent("onHookUse", function(player, event, data, x, y)
+sea.listen("use", function(player, event, data, x, y)
 	local dir = math.floor((player.rotation + 45) / 90) % 4
 	local x, y = player.lastPosition.x, player.lastPosition.y
 	if dir == 0 then

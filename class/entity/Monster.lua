@@ -137,7 +137,7 @@ end
 --        INIT         --
 -------------------------
 
-sea.addEvent("onHookHitzone", function(image, player, object, itemType)
+sea.listen("hitzone", function(image, player, object, itemType)
 	local tile = sea.Tile.get(player.lastPosition.x, player.lastPosition.y)
 	if tile.zone.SAFE or tile.zone.NOMONSTERS then
 		return
@@ -158,7 +158,7 @@ end, -1)
 
 if tibia.config.maxMonsters > 0 then
     local t = 0
-    sea.addEvent("onHookMs100", function()
+    sea.listen("ms100", function()
         t = t + 1
 
         if t % 100 == 0 then
