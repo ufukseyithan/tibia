@@ -224,6 +224,12 @@ function Item:fullNameProperty()
     end
 end
 
+function Item:singularNameProperty()
+	return function(self)
+		return self.getFullName(self.id)
+    end
+end
+
 -------------------------
 --        CONST        --
 -------------------------

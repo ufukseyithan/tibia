@@ -141,11 +141,8 @@ sea.listen("say", function(player, words)
 			if name then
 				for i, v in pairs(tibia.config.monster) do
 					if v.name:lower() == name:lower() then
-						local m = deepcopy(v)
-						m.x, m.y = player(id, 'x'), player(id, 'y')
-						Monster:new(m)
+						tibia.Monster.spawn(v, player.x, player.y)
 						player:message("Monster "..name.." spawned.")
-
 						return 1
 					end
 				end

@@ -304,7 +304,7 @@ function sea.Player:updateStats()
 end
 
 function sea.Player:eat(item)
-	tibia.radiusMessage(self.name.." eats "..item.config.name..".", self.x, self.y, 384)
+	tibia.radiusMessage(self.name.." eats "..item.singularName..".", self.x, self.y, 384)
 
 	self.health = self.health + item.config.food()
 
