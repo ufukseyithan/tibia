@@ -22,8 +22,8 @@ tibia.config = {
 	-- slot names for each slot. can be customised.
 	-- the order is important since the last item will always be rendered last
 	slots = {
-		"Legs", 
 		"Feet", 
+		"Legs", 
 		"Mount", 
 		"Accessories", 
 		

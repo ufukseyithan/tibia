@@ -26,7 +26,7 @@ sea.listen("join", function(player)
 	for k, v in pairs(tibia.config.stats) do
 		local y = 407 + (k - 1) * tibia.config.pixels
 		player.ui:createText(v, 720, y)
-		player.tmp.ui['text'..v] = player.ui:createText(player[v:lower()], 820, y, sea.Style.new({align = 1, color = sea.Color.yellow}))
+		player.tmp.ui['text'..v] = player.ui:createText(player[v:lower()], 830, y, sea.Style.new({align = 1, color = sea.Color.yellow}))
 	end
 
 	player.lastName = player.name

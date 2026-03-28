@@ -15,4 +15,5 @@ Some of the existing features were modernized:
 - Menu pages are now scrolled instead of using the next/previous buttons
 - Player money is now displayed in the Inventory menu
 - The game uses the framework's save/load system, even for houses and ground items
+- HUD improvements
 
