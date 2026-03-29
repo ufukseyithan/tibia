@@ -356,13 +356,13 @@ tibia.config.monsterSkill = {
 		self.image.color = sea.Color.white
 		self.agility = nil
 	end,
-	endRage = function(id)
+	endRage = function(self)
 		self.attack = self._atk
 		self._atk = nil
 		self.image.color = sea.Color.white
 		self.rage = nil
 	end,
-	endHarden = function(id)
+	endHarden = function(self)
 		self.defence = self._def
 		self._def = nil
 		self.image.color = sea.Color.white
