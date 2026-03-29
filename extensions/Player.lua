@@ -367,8 +367,6 @@ end
 function sea.Player:viewInventory(page)
 	local menu = self.tmp.inventory:getMenu()
 
-	menu:setStaticButton(9, "Rupees", nil, self.rupee)
-
 	self:displayMenu(menu, page)
 end
 

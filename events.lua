@@ -85,16 +85,16 @@ sea.listen("movetile", function(player, x, y)
 		player:showTutorial("Pick", "You have stumbled upon something. Press the drop weapon button (default G) to pick it up.")
 	end
 
-	player.tmp.ui['textZone']:setText(tile.zone.SAFE and "SAFE" or (tile.zone.NOMONSTERSPVP and "NO tibia.monster") or (tile.zone.NOPVP and "NO PVP") or (tile.zone.PVP and "DEATHMATCH") or "")
+	player.tmp.ui['textZone']:setText(tile.zone.SAFE and "SAFE" or (tile.zone.NOMONSTERSPVP and "NO MONSTERS") or (tile.zone.NOPVP and "NO PVP") or (tile.zone.PVP and "DEATHMATCH") or "")
 	
 	if not tile.zone.SAFE then
-		player:showTutorial("Safe", "You have left a SAFE zone. From now, you will be able to both damage and be damaged.")
+		player:showTutorial("SAFE", "You have left a SAFE zone. From now, you will be able to both damage and be damaged.")
 	elseif tile.zone.NOMONSTERS and not tile.zone.PVP then
-		player:showTutorial("No Monsters", "You have entered a NO tibia.monster zone. No monsters will spawn here. However, PVP is still allowed!")
+		player:showTutorial("NOMONSTERS", "You have entered a NO MONSTERS zone. No monsters will spawn here. However, PVP is still allowed!")
 	elseif tile.zone.NOPVP then
-		player:showTutorial("No PvP", "You have entered a NO PVP zone. PVP is disabled here, but monsters can still spawn.")
+		player:showTutorial("NO PVP", "You have entered a NO PVP zone. PVP is disabled here, but monsters can still spawn.")
 	elseif tile.zone.PVP then
-		player:showTutorial("PvP", "You have entered a DEATHMATCH zone. In this area, you may fight for rupee. If you die here, you will drop a maximum of $100.")
+		player:showTutorial("PVP", "You have entered a DEATHMATCH zone. In this area, you may fight for rupee. If you die here, you will drop a maximum of $100.")
 	end
 
 	player.lastPosition.x, player.lastPosition.y = x, y
@@ -166,7 +166,7 @@ sea.listen("spawn", function(player)
 	else
 		if player.info[1] then
 			for i, v in ipairs(player.info) do
-				player:message(v, "255100100")
+				player:message(v, sea.Color.new(255, 100, 100))
 			end
 
 			player.info = {}
@@ -323,8 +323,9 @@ sea.listen("die", function(victim, killer, weapon, x, y)
 
 		local rupee = victim.rupee
 		if rupee ~= 0 then
+			rupee = math.min(100, rupee)
 			if victim:addRupee(rupee) then
-				tibia.Item.spawn(math.max(100, rupee), tileX, tileY)
+				tibia.Item.spawnRupee(rupee, tileX, tileY)
 			end
 		end
 	end
