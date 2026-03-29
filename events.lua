@@ -21,7 +21,7 @@ sea.listen("join", function(player)
 
 	player.tmp.ui['textZone'] = player.ui:createText('', 425, 240, sea.Style.new({align = 1, color = sea.Color.new(255, 64, 0)}))
 
-	player.tmp.ui['textName'] = player.ui:createText(player.usgn ~= 0 and player.name or "NOT LOGGED IN", 775, 407-tibia.config.pixels, sea.Style.new({align = 1, color = sea.Color.new(255, 100, 100)}))
+	player.tmp.ui['textName'] = player.ui:createText((player.usgn ~= 0 or player.steamID ~= "0") and player.name or "NOT LOGGED IN", 775, 407-tibia.config.pixels, sea.Style.new({align = 1, color = sea.Color.new(255, 100, 100)}))
 
 	for k, v in pairs(tibia.config.stats) do
 		local y = 407 + (k - 1) * tibia.config.pixels
@@ -39,7 +39,7 @@ sea.listen("name", function(player, oldName, newName)
 	end
 
 	player.lastName = newName
-	player.tmp.ui['textName']:setText(player.usgn ~= 0 and newName or "NOT LOGGED IN")
+	player.tmp.ui['textName']:setText((player.usgn ~= 0 or player.steamID ~= "0") and newName or "NOT LOGGED IN")
 end, -1)
 
 sea.listen("walkover", function()
@@ -161,7 +161,7 @@ sea.listen("say", function(player, words)
 end, -1)
 
 sea.listen("spawn", function(player)
-	if not player.usgn then
+	if not (player.usgn ~= 0 or player.steamID ~= "0") then
 		player:message("Please register a U.S.G.N. account at \"http://www.usgn.de/\" and make sure that you are logged in!", sea.Color.red)
 	else
 		if player.info[1] then
