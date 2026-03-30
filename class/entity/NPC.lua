@@ -51,7 +51,7 @@ function NPC:getTradeMenu()
 		local sell = itemId < 0
 		itemId = math.abs(itemId)
 
-		local itemConfig = tibia.item.config[itemId]
+		local itemConfig = tibia.config.item[itemId]
 		local itemFullName = tibia.Item.getFullName(itemId)
 
 		menu:addButton((sell and 'sell' or 'buy')..' '..itemConfig.name, function(player)
