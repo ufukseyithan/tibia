@@ -36,7 +36,7 @@ function Monster:move(dir, amt)
 	local tileX, tileY = pixelToTile(x), pixelToTile(y)
 	local tile = sea.Tile.get(tileX, tileY)
 
-	if tile and tile.walkable and tile.frame ~= 34 and not tile.zone.SAFE and not tile.zone.NOMONSTERS then
+	if tile and tile.walkable and not tile:isWaterTile() and not tile.zone.SAFE and not tile.zone.NOMONSTERS then
 		self:setPosition(x, y)
 		return true
 	end
@@ -184,7 +184,7 @@ if tibia.config.maxMonsters > 0 then
                     not tile.zone.SAFE and 
                     not tile.zone.NOMONSTERS and 
                     tile.walkable and 
-                    tile.frame ~= 34
+                    not tile:isWaterTile()
 
                 Monster.spawn(config, tileToPixel(tileX), tileToPixel(tileY))
             end
