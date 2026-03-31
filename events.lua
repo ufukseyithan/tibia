@@ -33,7 +33,7 @@ sea.listen("join", function(player)
 end, -1)
 
 sea.listen("name", function(player, oldName, newName)
-	local check = newname:lower()
+	local check = newName:lower()
 	if (check:find('admin') or check:find('gm')) and not tibia.isAdmin(player) then
 		return 1
 	end
