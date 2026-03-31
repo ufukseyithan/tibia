@@ -101,6 +101,10 @@ sea.listen("movetile", function(player, x, y)
 end, -1)
 
 sea.listen("say", function(player, words)
+	return 1
+end, -1)
+
+sea.listen("say", function(player, words)
 	if not player:exhaust("talk") then 
 		return 1 
 	end
@@ -155,10 +159,10 @@ sea.listen("say", function(player, words)
 	end
 
 	local text = string.format("%s %s %s : %s", os.date'%X', player.name, action or "says", words)
-	tibia.radiusMessage(text, player.x, player.y, radiusX, radiusY, colour or 255255100)
+	tibia.radiusMessage(text, player.x, player.y, radiusX, radiusY, colour or sea.Color.new(255, 255, 100))
 	
 	return 1
-end, -1)
+end, 1)
 
 sea.listen("spawn", function(player)
 	if not (player.usgn ~= 0 or player.steamID ~= "0") then

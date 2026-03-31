@@ -14,9 +14,9 @@ function NPC:constructor(config)
 end
 
 function NPC:speak(words)
-	local text = string.format("�255255100%s %s says : %s", os.date'%X',  self.config.name, words)
+	local text = string.format("%s %s says : %s", os.date'%X',  self.config.name, words)
 
-	return tibia.radiusMessage(words, self.config.pos[1], self.config.pos[2])
+	return tibia.radiusMessage(text, self.config.pos[1], self.config.pos[2], nil, nil, sea.Color.new(255, 255, 100))
 end
 
 function NPC:interact(player, words)
@@ -28,6 +28,7 @@ function NPC:interact(player, words)
 		player:displayMenu(self:getTradeMenu())
 	else
 		self:speak("Hello, I'm busy right now, speak to me later.")
+		return
 	end
 
 	if config.greet then

@@ -131,7 +131,7 @@ end
 
 tibia.config.npc[3].func = function(npc, player, words, state)
 	if words == "hi" then
-		npc:speak("Hello! I'm looking for my brother, Francesco. Have you seen him?")
+		npc:speak("Greetings! Say 'rest' if you need to take a break.")
 		player.tmp.npcState = {npc, 1}
 	elseif contains(words, "bye") then
 		npc:speak("Goodbye.")
