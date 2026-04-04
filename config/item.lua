@@ -163,7 +163,7 @@ tibia.config.item = {
 
 			timerEx(1500, function()
 				if player.health == health then
-					tibia.radiusMessage(player.name..' failed to cast a teleport rune.', player.x, player.y)
+					tibia.radiusMessage(player.name..' completed casting a teleport rune.', player.x, player.y)
 					sea.effect('colorsmoke', player.x, player.y, 5, 5, 255, 255, 255)
 
 					local spawnX, spawnY = player.respawnPosition[1], player.respawnPosition[2]
