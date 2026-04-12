@@ -206,7 +206,7 @@ end
 
 function Item:maxStackProperty()
 	return function(self)
-		return self.config.stackable and self.config.maxStack or self.defaultMaxStack 
+		return self.config.stackable == true and self.defaultMaxStack or self.config.stackable or 1 
 	end
 end
 

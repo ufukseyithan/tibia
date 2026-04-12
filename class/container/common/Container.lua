@@ -54,9 +54,21 @@ function Container:removeItem(id, amount)
 end
 
 function Container:addItem(item)
+	if item.config.stackable then
+		for _, slot in pairs(self.slots) do
+			if slot:isOccupied() and slot.item.id == item.id then
+				if item:occupy(slot) == true then
+					return true
+				end
+			end
+		end
+	end
+
 	for _, slot in pairs(self.slots) do
-		if item:occupy(slot) == true then
-			return true
+		if not slot:isOccupied() then
+			if item:occupy(slot) == true then
+				return true
+			end
 		end
 	end
 
