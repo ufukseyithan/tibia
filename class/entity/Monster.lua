@@ -11,7 +11,12 @@ function Monster:constructor(id, config, x, y)
     self.image = image
 
     self.x, self.y = x, y
+
     self.health = config.health
+    self.attack = config.attack
+    self.defence = config.defence
+    self.speed = config.speed
+
     self.angle = 0
     self.imageAngle = 0
 end
@@ -30,7 +35,7 @@ end
 function Monster:move(dir, amt)
     local config = self.config
 
-	local x, y = -math.sin(dir) * amt * config.speed, math.cos(dir) * amt * config.speed
+	local x, y = -math.sin(dir) * amt * self.speed, math.cos(dir) * amt * self.speed
 	x, y = self.x + x, self.y + y
 	
 	local tileX, tileY = pixelToTile(x), pixelToTile(y)
@@ -88,7 +93,7 @@ function Monster:hit(player, damage)
 		tibia.radiusSound("weapons/knife_hit.wav", self.x, self.y)
 	end
 
-    player:hit(self, -1, damage * self.config.attack)
+    player:hit(self, -1, damage * self.attack)
 end
 
 function Monster:die()
@@ -151,7 +156,7 @@ sea.listen("hitzone", function(image, player, object, itemType)
 
     for _, monster in pairs(tibia.monster) do
         if monster.image == image then
-            monster:damage(player, math.ceil(20 * ((player.level + 50) * player.tmp.attack / monster.config.defence) / math.random(60, 140)), itemType)
+            monster:damage(player, math.ceil(20 * ((player.level + 50) * player.tmp.attack / monster.defence) / math.random(60, 140)), itemType)
         end
     end
 end, -1)

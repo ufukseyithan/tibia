@@ -103,8 +103,8 @@ tibia.config.monster = {
 				tibia.radiusMessage("Spearow uses agility!", self.x, self.y)
 				sea.effect("colorsmoke", self.x, self.y, 5, 5, 155, 255, 155)
 				tibia.radiusSound("weapons/g_flash.wav", self.x, self.y)
-				self._spd = self.config.speed
-				self.config.speed = 10
+				self._spd = self.speed
+				self.speed = 10
 				self.agility = true
 				self.image.color = sea.Color.new(155, 255, 155)
 				timerEx(5000, "tibia.config.monsterSkill.endAgility", 1, self)
@@ -294,8 +294,8 @@ tibia.config.monster = {
 				tibia.radiusMessage("Onix uses harden!", self.x, self.y)
 				sea.effect("colorsmoke", self.x, self.y, 5, 5, 192, 192, 192)
 				tibia.radiusSound("weapons/g_flash.wav", self.x, self.y)
-				self._def = self.config.defence
-				self.config.defence = 7.5
+				self._def = self.defence
+				self.defence = 7.5
 				self.harden = true
 				self.image.color = sea.Color.new(155, 155, 255)
 				timerEx(5000, "tibia.config.monsterSkill.endHarden", 1, self)
