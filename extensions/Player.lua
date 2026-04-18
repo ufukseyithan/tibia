@@ -250,7 +250,7 @@ function sea.Player:updateStats()
 		local slot = equipmentSlots[slotName]
 
 		if slot:isOccupied() then
-			local item = equipmentSlots[slotName].item
+			local item = slot.item
 			local config = item.config
 
 			hp = hp + (config.hp or 0)
