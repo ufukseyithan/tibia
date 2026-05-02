@@ -68,7 +68,7 @@ sea.listen("movetile", function(player, x, y)
 	if tile.zone.HOUSE then
 		player:showTutorial("House", "This is a house. For more information about houses, type !house")
 
-		house = tibia.house[tile.zone.HOUSE]
+		local house = tibia.house[tile.zone.HOUSE]
 		if not house.owner then
 			player:setPosition(tileToPixel(lastPosition.x), tileToPixel(lastPosition.y))
 			player:message("This house has no owner. Type \"!house\" for a list of house commands.")
