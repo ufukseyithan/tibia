@@ -75,7 +75,7 @@ sea.listen("movetile", function(player, x, y)
 			return
 		elseif not (player.usgn == house.owner or table.contains(house.allow, player.usgn)) then
 			player:setPosition(tileToPixel(house.ent[1]), tileToPixel(house.ent[2]))
-			local saveData = sea.Player.getSaveData(house.owner, 'data')
+			local saveData = sea.Player.getSaveData(house.owner, 'usgn')
 			player:message("You are not invited into " .. saveData.lastName .. "'s house. Type \"!house\" for a list of house commands.", "255255255")
 			return
 		end

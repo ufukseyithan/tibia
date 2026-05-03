@@ -164,15 +164,15 @@ tibia.command = {
 				return 
 			end
 
-			local saveData
 			p[2] = tonumber(p[2])
 			if not p[2] then
-				saveData = sea.Player.getSaveData(p[2], 'usgn')
+				player:message('Please indicate a U.S.G.N. ID to allow.') 
+				return 
+			end
 
-				if not saveData then 
-					player:message('Please indicate a U.S.G.N. ID to allow.') 
-					return 
-				end
+			local saveData = sea.Player.getSaveData(p[2], 'usgn')
+			if not saveData then
+				return 
 			end
 
 			for i, v in ipairs(house.allow) do
@@ -219,13 +219,14 @@ tibia.command = {
 			
 			if p[2] == 'allow' then
 				p[3] = tonumber(p[3])
-				local saveData
 				if not p[3] then
-					saveData = sea.Player.getSaveData(p[3], 'usgn')
-					if not saveData then 
-						player:message('Please indicate a U.S.G.N. ID to allow.') 
-						return 
-					end
+					player:message('Please indicate a U.S.G.N. ID to allow.') 
+					return 
+				end
+
+				local saveData = sea.Player.getSaveData(p[3], 'usgn')
+				if not saveData then
+					return
 				end
 
 				for i, v in ipairs(house.doors[door]) do
@@ -242,7 +243,10 @@ tibia.command = {
 				local text = 'Allowed players : '
 				for i, v in ipairs(house.doors[door]) do
 					local saveData = sea.Player.getSaveData(v, 'usgn')
-					text = text.. saveData.lastName .. ' (' .. v .. '), '
+
+					if saveData then
+						text = text.. saveData.lastName .. ' (' .. v .. '), '
+					end
 				end
 				text = #text == 18 and 'No players are allowed.' or text:sub(1, -3)
 				player:message(text)
@@ -262,7 +266,10 @@ tibia.command = {
 			local text = 'Allowed players : '
 			for i, v in ipairs(house.allow) do
 				local saveData = sea.Player.getSaveData(v, 'usgn')
-				text = text.. saveData.lastName .. ' (' .. v .. '), '
+
+				if saveData then
+					text = text.. saveData.lastName .. ' (' .. v .. '), '
+				end
 			end
 			text = #text == 18 and 'No players are allowed.' or text:sub(1, -3)
 			player:message(text)
@@ -290,7 +297,7 @@ tibia.command = {
 				return 
 			end
 
-			house.owner = p[2]
+			house.owner = target.usgn
 			player:message('You have transfered the ownership of this house to ' .. target.name .. '.')
 			target:message(player.name .. ' has transfered the ownership of this house to you.')
 		else
@@ -304,7 +311,7 @@ tibia.command = {
 			player:message('!house door allow <usgnid> - allows the person to open the door you are facing')
 			player:message('!house door list - lists the people allowed to open the door you are facing')
 			player:message('!house list - lists the people allowed to enter your house')
-			player:message('!house transfer <usgnid> - transfers ownership to that player')
+			player:message('!house transfer <playerid> - transfers ownership to that player')
 		end
 	end, 
 }
