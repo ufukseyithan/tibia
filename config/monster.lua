@@ -153,7 +153,7 @@ tibia.config.monster = {
 		exp = 18, rupee = 120, loot = {}, 
 		spc = {1000, function(self) 
 			tibia.radiusMessage("Sandshrew uses sand attack!", self.x, self.y)
-			sea.flashPositionAt(self.x, self.y, 100)
+			sea.flashAtPosition(self.x, self.y, 100)
 		end},
 	},
 	{
