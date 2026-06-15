@@ -166,7 +166,7 @@ function tibia.houseExpire(id)
 				local item = ground[height]
 
 				if online then
-					online.character:addItem(item)
+					online:addItem(item)
 				else
 					if item.config.currency then
 						save('rupee', playerData.rupee + item.amount)
